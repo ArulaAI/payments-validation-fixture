@@ -51,6 +51,15 @@ const suitePasses = (): boolean => {
 };
 
 export function run(opts: { base?: string } = {}): Result {
+  /*
+   * A mutant is "killed" when the suite fails with it applied. If the suite already
+   * fails without it, every mutant looks killed and the command reports a confident
+   * zero. That is worse than useless, so refuse to run and say why.
+   */
+  if (!suitePasses()) {
+    return { findings: [], skipped: 'suite is red before mutation, so survivors cannot be measured' };
+  }
+
   const targets = changedFiles(opts.base ?? 'main');
   const files = targets.length > 0 ? targets : DEFAULT_TARGETS;
   const findings: Finding[] = [];

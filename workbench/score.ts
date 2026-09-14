@@ -26,16 +26,20 @@ const decisions = decisionsPath && existsSync(decisionsPath)
   ? read(decisionsPath)
   : { confirmed: [], refuted: [], escalated: [], invented: [] };
 
-type Defect = { id: string; class: string; file: string; line: number; caughtBy: string | null; reserved: boolean };
+type Defect = { id: string; class: string; file: string; line: number; caughtBy: string | null; reserved: boolean; action: string };
 const defects: Defect[] = manifest.defects;
 
+/*
+ * A defect counts as surfaced when the check the manifest names produced at least one
+ * finding. Matching on file path as well would be stricter, but a check often reports at
+ * its detection site rather than the defect site: differential reports against the golden
+ * corpus, not against the line that changed.
+ */
 const surfaced = new Set<string>();
 for (const check of bundle.checks) {
-  if (!check.ran) continue;
-  for (const finding of check.findings) {
-    for (const d of defects) {
-      if (d.caughtBy === check.id && finding.file === d.file) surfaced.add(d.id);
-    }
+  if (!check.ran || check.findings.length === 0) continue;
+  for (const d of defects) {
+    if (d.caughtBy === check.id) surfaced.add(d.id);
   }
 }
 
@@ -50,7 +54,11 @@ const wasted = ranChecks.filter((c: { covers: string[] }) => c.covers.length > 0
 
 const pathologyIds = new Set(manifest.pathologies.map((p: { id: string }) => p.id));
 const falsePositivesAccepted = decisions.confirmed.filter((id: string) => pathologyIds.has(id)).length;
-const truePositivesDismissed = decisions.refuted.filter((id: string) => findable.some(d => d.id === id)).length;
+// Only a defect whose correct action is `confirm` can be wrongly dismissed. A defect
+// the manifest says to refute is a pathology wearing a defect id, and refuting it is right.
+const truePositivesDismissed = decisions.refuted.filter((id: string) =>
+  findable.some(d => d.id === id && d.action === 'confirm'),
+).length;
 
 const report = {
   round: manifest.round,

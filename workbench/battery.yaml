@@ -33,6 +33,11 @@ order:
 
 # A failing gate stops the chain. Spending agent time on a tree that does not compile,
 # or that leaks a PAN, is waste.
+#
+# Gating on pan-scan is a real tradeoff and worth arguing about. The hook has documented
+# false positives, and a false positive at a gate blinds every check after it for no
+# reason. Run with --no-gates to see the whole chain, then decide whether this gate earns
+# its place on your change.
 gates:
   - typecheck
   - pan-scan

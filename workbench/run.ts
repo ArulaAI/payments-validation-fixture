@@ -9,6 +9,12 @@
  *   node workbench/run.ts                 run the whole chain
  *   node workbench/run.ts --only=hook     hooks only
  *   node workbench/run.ts --base=main     diff base for scope-guard and mutation
+ *   node workbench/run.ts --no-gates      keep going past a failing gate
+ *
+ * On --no-gates. A gate exists so that agent time is not spent on a tree that does not
+ * compile or that leaks a PAN. The cost is that one finding at a gate blinds everything
+ * downstream, and a false positive at a gate blinds it for no reason. That tradeoff is
+ * the substance of composing a chain, so the flag exists and the default does not use it.
  */
 
 import { readFileSync, writeFileSync } from 'node:fs';
@@ -91,7 +97,7 @@ const main = async (): Promise<void> => {
       reports.push({ ...base_(check), ran: false, reason: `filtered out by --only=${only}`, durationMs: 0, evidence: 'silence', findings: [] });
       continue;
     }
-    if (gateFailed) {
+    if (gateFailed && !process.argv.includes('--no-gates')) {
       reports.push({ ...base_(check), ran: false, reason: `chain stopped at failing gate ${gateFailed}`, durationMs: 0, evidence: 'silence', findings: [] });
       continue;
     }

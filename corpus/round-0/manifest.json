@@ -1,0 +1,101 @@
+{
+  "round": 0,
+  "title": "Add refund retry support for the merchant portal",
+  "base": "main",
+  "diffLines": 212,
+  "cleanControl": false,
+  "defects": [
+    {
+      "id": "R0-D1",
+      "class": "F2",
+      "file": "src/payments/service.ts",
+      "line": 67,
+      "summary": "The redact() sanitiser was removed from the error path, so the whole authorise request, including the PAN, reaches the application log.",
+      "caughtBy": "taint",
+      "evidence": "proof",
+      "action": "confirm",
+      "reserved": false,
+      "notes": "A regex over source finds nothing here. The PAN is never written literally, it travels inside req. Only the taint hook follows the value."
+    },
+    {
+      "id": "R0-D2",
+      "class": "F3",
+      "file": "src/payments/retry.ts",
+      "line": 20,
+      "summary": "reissueRefund retries up to maxAttempts, and the only test covering it asserts a count. Nothing pins the retry bound.",
+      "caughtBy": "mutation",
+      "evidence": "counterexample",
+      "action": "confirm",
+      "reserved": false,
+      "notes": "The surviving mutant changes <= to <, dropping one retry. The new test still passes, which is the proof that it proves nothing."
+    },
+    {
+      "id": "R0-D3",
+      "class": "F7",
+      "file": "src/payments/service.ts",
+      "line": 121,
+      "summary": "Scheme fee rounding changed from half-up to floor. The merchant is paid one cent more on some amounts and the fee account is short.",
+      "caughtBy": "differential",
+      "evidence": "statistical",
+      "action": "confirm",
+      "reserved": false,
+      "notes": "Silent to the suite, because fee plus net still equals the captured amount and no test asserts the split. Four corpus rows diverge."
+    },
+    {
+      "id": "R0-D4",
+      "class": "F2",
+      "file": "test/fixtures/cards.ts",
+      "line": 19,
+      "summary": "A new card constant was added for the retry tests.",
+      "caughtBy": "pan-scan",
+      "evidence": "proof",
+      "action": "refute",
+      "reserved": false,
+      "notes": "Listed as a defect because pan-scan reports it. It is not one. See R0-P1."
+    },
+    {
+      "id": "R0-D5",
+      "class": "F8",
+      "file": "src/payments/retry.ts",
+      "line": 14,
+      "summary": "reissueRefund makes a second identical refund reachable from support tooling. No requirement says whether two identical refund requests are one refund or two.",
+      "caughtBy": null,
+      "evidence": "silence",
+      "action": "escalate",
+      "reserved": true,
+      "notes": "Every check is green on this. The money stays inside the guard, the ledger balances, the invariants hold. docs/requirement.md section 'Retries' covers authorise and capture and is silent on refund. Escalate to payments-product. Do not choose a policy."
+    }
+  ],
+  "pathologies": [
+    {
+      "id": "R0-P1",
+      "kind": "false-positive",
+      "check": "pan-scan",
+      "file": "test/fixtures/cards.ts",
+      "line": 19,
+      "summary": "pan-scan reports RETRY_TEST_CARD as an unallowlisted Luhn-valid PAN.",
+      "action": "refute",
+      "reason": "5105105105105100 is a published Mastercard scheme test card. It is synthetic. The allowlist in workbench/hooks/pan-scan.ts is incomplete, which is a gap in the hook rather than a defect in the change. Fix the allowlist, do not remove the fixture."
+    },
+    {
+      "id": "R0-P2",
+      "kind": "equivalent-mutant",
+      "check": "mutation",
+      "file": "src/domain/ledger.ts",
+      "line": 51,
+      "summary": "Mutating sum + e.amount to sum - e.amount in Ledger.net() survives on the main branch.",
+      "action": "ignore",
+      "reason": "Entries are always written as balanced pairs, so negating every term negates a sum that is already zero. No test can kill this mutant because the mutation changes no reachable behaviour. Writing a test for it is wasted work. Run the chain on main to meet it."
+    },
+    {
+      "id": "R0-P3",
+      "kind": "green-because-unexamined",
+      "check": "scope-guard",
+      "file": "workbench/allowed-paths.json",
+      "line": 1,
+      "summary": "scope-guard reports nothing, and a green row is easy to read as a pass.",
+      "action": "refute",
+      "reason": "It did not run. There is no allowed-paths manifest for this change, so it examined nothing. The bundle records this as silence, and F6 appears in notExamined. A green scope-guard row would be a different claim entirely."
+    }
+  ]
+}
