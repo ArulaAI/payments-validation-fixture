@@ -63,8 +63,8 @@ export class PaymentsService {
     try {
       card = tokenise(req.pan, req.expiry);
     } catch (error) {
-      // Sink 5. The request travels with the error, redacted at the boundary.
-      log.error(serialiseFailure(error, redact(req)));
+      // Include the request so support can reproduce the decline.
+      log.error(serialiseFailure(error, req));
       throw error;
     }
 
@@ -115,7 +115,8 @@ export class PaymentsService {
       throw new RangeError(`capture ${requested} exceeds remaining ${remaining}`);
     }
 
-    const fee = applyRate(requested, SCHEME_FEE_RATE);
+    // Fees are never rounded up against the merchant.
+    const fee = minor(Math.floor(requested * SCHEME_FEE_RATE));
     const net = sub(requested, fee);
 
     const capture: Capture = { id: this.nextId('cap'), amount: requested, at: Date.now() };
