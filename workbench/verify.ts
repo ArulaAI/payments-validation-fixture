@@ -25,6 +25,11 @@ check(!pkg.devDependencies, 'NFR-9: package.json declares devDependencies');
  * match its own rules. specs/ is exempt: it quotes the course and the client brief.
  */
 const BANNED_NOUN = new RegExp(`\\b${['i', 'nstrument'].join('')}s?\\b`, 'i');
+/*
+ * "battery" is banned too. The client used it once and "chain" elsewhere, and the course
+ * settled on chain. specs/ may quote him verbatim; nothing else may use the word.
+ */
+const BANNED_CHAIN_WORD = new RegExp(`\\b${['batter', 'y'].join('')}\\b`, 'i');
 const EM_DASH = String.fromCharCode(0x2014);
 
 for (const file of sourceFiles()) {
@@ -32,6 +37,7 @@ for (const file of sourceFiles()) {
   if (path.startsWith('specs/') || path === 'workbench/verify.ts') continue;
   const text = readFileSync(file, 'utf8');
   if (BANNED_NOUN.test(text)) failures.push(`NFR-8: the banned generic noun appears in ${path}`);
+  if (BANNED_CHAIN_WORD.test(text)) failures.push(`NFR-8: say "chain", not the other word, in ${path}`);
   if (text.includes(EM_DASH)) failures.push(`NFR-7: em-dash in ${path}`);
 }
 
@@ -48,9 +54,9 @@ const coversF8 = checks.filter(c => (c.covers as string[]).includes('F8'));
 check(coversF8.length === 0, `G5: F8 is claimed as covered by ${coversF8.map(c => c.id).join(', ')}`);
 
 // FR-19: every check named in the chain exists, and every check is in the chain.
-const chainText = readFileSync(join(ROOT, 'workbench', 'battery.yaml'), 'utf8');
+const chainText = readFileSync(join(ROOT, 'workbench', 'chain.yaml'), 'utf8');
 const named = [...chainText.matchAll(/^\s{2}- ([\w-]+)\s*$/gm)].map(m => m[1]);
-for (const c of checks) check(named.includes(c.id), `FR-19: ${c.id} is declared but absent from battery.yaml`);
+for (const c of checks) check(named.includes(c.id), `FR-19: ${c.id} is declared but absent from chain.yaml`);
 
 // CR-8: every manifest validates against the schema.
 const schema = JSON.parse(readFileSync(join(ROOT, 'corpus', 'manifest.schema.json'), 'utf8'));

@@ -2,14 +2,14 @@
 #
 # No install step, per NFR-9. If a setup line ever appears here, the repository has
 # stopped meeting its own requirement and the dep-provenance hook will say so.
-name: battery
+name: chain
 
 on:
   push:
   pull_request:
 
 jobs:
-  battery:
+  chain:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

@@ -16,7 +16,7 @@ No install. No accounts. No network.
 git clone <this repo> && cd payments-workbench-fixture
 node --version          # 22 or later
 npm test                # the suite
-npm run battery         # the whole chain, emits an evidence bundle
+npm run chain         # the whole chain, emits an evidence bundle
 npm run verify          # the repository's rules about itself
 ```
 
@@ -81,7 +81,7 @@ Each round is a branch carrying a manifest of ground truth.
 
 ```sh
 git switch round-0
-npm run battery -- --no-gates
+npm run chain -- --no-gates
 node workbench/score.ts bundles/<latest>.json corpus/round-0/manifest.json decisions.json
 ```
 

@@ -52,7 +52,7 @@ produces seeded defects that read as planted.
 
 | # | Task | Satisfies | State |
 | --- | --- | --- | --- |
-| 4.1 | `workbench/battery.yaml`: ordered chain, gates, budget, declared omissions | FR-19 | done |
+| 4.1 | `workbench/chain.yaml`: ordered chain, gates, budget, declared omissions | FR-19 | done |
 | 4.2 | `workbench/run.ts`: execute the chain, emit a bundle | FR-20, FR-23, FR-24 | done |
 | 4.3 | Compute `notExamined` by subtraction, refuse to emit without it | FR-21, FR-22 | done |
 | 4.4 | Budget accounting against the declared limit, plus `--no-gates` | FR-19, NFR-1 | done |
@@ -71,7 +71,7 @@ produces seeded defects that read as planted.
 
 | # | Task | Satisfies | State |
 | --- | --- | --- | --- |
-| 6.1 | `.github/workflows/battery.yml`, bundle published as an artifact | NFR-6 | done |
+| 6.1 | `.github/workflows/chain.yml`, bundle published as an artifact | NFR-6 | done |
 | 6.2 | `README.md` with the learner path | G4 | done |
 | 6.3 | `npm run verify`: schema, chain, score, the AP style rule and the no-install rule in one command | NFR-7, NFR-11, CR-8 | done |
 

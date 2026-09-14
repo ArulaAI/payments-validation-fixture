@@ -69,7 +69,7 @@ teaches learners to read and Chapter 8 scores.
 
 ```json
 {
-  "chain": "workbench/battery.yaml",
+  "chain": "workbench/chain.yaml",
   "round": 0,
   "startedAt": "2026-09-14T12:00:00.000Z",
   "durationMs": 41230,

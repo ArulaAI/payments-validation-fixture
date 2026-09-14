@@ -74,7 +74,7 @@ coding agent in order to run a chain.
 
 ## Functional: the chain runner
 
-**FR-19** A chain MUST be declared as data in `workbench/battery.yaml`, giving ordered
+**FR-19** A chain MUST be declared as data in `workbench/chain.yaml`, giving ordered
 checks, gates, a budget and declared omissions.
 
 **FR-20** The runner MUST emit an evidence bundle containing, for every check: the check
@@ -148,10 +148,12 @@ force-pushed once published, because learners pin against them.
 pairs, no negative-then-positive constructions. Verbatim third-party text is exempt.
 
 **NFR-8** The vocabulary is hooks, commands and skills. The word "instrument" MUST NOT be
-used as a generic noun.
+used as a generic noun. An ordered set of checks is a **chain**. The word "battery" MUST
+NOT be used, even though the client used it once in MS3, because the course settled on
+"chain" and one word has to win. Verbatim quotation of the client is the only exception.
 
 **NFR-9** The entire codebase MUST run locally with no install step. `git clone` followed
-by `npm test`, `npm run battery`, `npm run score` and `npm run verify` MUST all work
+by `npm test`, `npm run chain`, `npm run score` and `npm run verify` MUST all work
 before `npm install` has ever been run, and with no network access. There MUST be no
 required `dependencies` or `devDependencies` in `package.json`.
 

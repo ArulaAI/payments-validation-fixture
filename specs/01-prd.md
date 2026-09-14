@@ -70,7 +70,7 @@ escalating F8 has patched a symptom, which is the Chapter 5 lesson.
 
 The repository succeeds when all of the following are true.
 
-1. A clean clone runs `npm run battery` and produces an evidence bundle in under 90
+1. A clean clone runs `npm run chain` and produces an evidence bundle in under 90
    seconds with no network access.
 2. Round 0 seeds five defects. A typical room finds one or two by hand in six minutes.
 3. Every check has a positive ref where its target defect is present and a negative ref

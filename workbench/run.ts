@@ -52,7 +52,7 @@ const arg = (name: string, fallback: string): string =>
  * breach NFR-9, and the chain file is ours, so its shape is known.
  */
 const readChain = (): { budgetMs: number; order: string[]; gates: string[] } => {
-  const text = readFileSync(join(ROOT, 'workbench', 'battery.yaml'), 'utf8');
+  const text = readFileSync(join(ROOT, 'workbench', 'chain.yaml'), 'utf8');
   const list = (key: string): string[] => {
     const lines = text.split('\n');
     const start = lines.findIndex(l => l.trim() === `${key}:`);
@@ -90,7 +90,7 @@ const main = async (): Promise<void> => {
 
   for (const id of chain.order) {
     const check = checks.find(c => c.id === id);
-    if (!check) throw new Error(`battery.yaml names an unknown check: ${id}`);
+    if (!check) throw new Error(`chain.yaml names an unknown check: ${id}`);
 
     // FR-24: a check that did not run still appears, with evidence `silence`.
     if (only && check.kind !== only) {
@@ -147,7 +147,7 @@ const main = async (): Promise<void> => {
 
   const spentMs = Date.now() - t0;
   const bundle: Bundle = {
-    chain: 'workbench/battery.yaml',
+    chain: 'workbench/chain.yaml',
     round: Number(arg('round', '')) || null,
     startedAt,
     durationMs: spentMs,
