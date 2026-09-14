@@ -1,6 +1,6 @@
 # 04. Build plan
 
-Status: in progress. Derived from [00-analysis.md](00-analysis.md),
+Status: phases 1 to 4 and 6 complete, phase 5 partially complete. See the state column. Derived from [00-analysis.md](00-analysis.md),
 [01-prd.md](01-prd.md), [02-requirements.md](02-requirements.md) and
 [03-manifest-schema.md](03-manifest-schema.md). Every task cites the requirements it
 satisfies. A task with no citation does not belong in the plan.
@@ -43,7 +43,7 @@ produces seeded defects that read as planted.
 | 3.5 | `workbench/hooks/dep-provenance.ts`: lockfile agreement, no new packages | FR-13 | done |
 | 3.6 | `workbench/hooks/typecheck.ts`: resolves every relative import and verifies named imports exist, with no `tsc` required | FR-13, NFR-9, NFR-10 | done |
 | 3.7 | `workbench/commands/test.ts` and `invariant.ts` | FR-15, FR-9 | done |
-| 3.8 | `workbench/commands/mutation.ts`: changed files only, reports survivors | FR-15, FR-16 | done |
+| 3.8 | `workbench/commands/mutation.ts`: changed files only, reports survivors, refuses to run against a red suite | FR-15, FR-16 | done |
 | 3.9 | `workbench/commands/property.ts`: generated operation sequences | FR-10, FR-15 | done |
 | 3.10 | `workbench/commands/differential.ts`: golden corpus replay | FR-15, F7 home | done |
 | 3.11 | `workbench/skills/*.md`: four skill contracts, no agent required to run a chain | FR-18 | done |
@@ -55,7 +55,7 @@ produces seeded defects that read as planted.
 | 4.1 | `workbench/battery.yaml`: ordered chain, gates, budget, declared omissions | FR-19 | done |
 | 4.2 | `workbench/run.ts`: execute the chain, emit a bundle | FR-20, FR-23, FR-24 | done |
 | 4.3 | Compute `notExamined` by subtraction, refuse to emit without it | FR-21, FR-22 | done |
-| 4.4 | Budget accounting against the declared limit | FR-19, NFR-1 | done |
+| 4.4 | Budget accounting against the declared limit, plus `--no-gates` | FR-19, NFR-1 | done |
 
 ## Phase 5. Corpus
 
@@ -91,6 +91,34 @@ of authoring, not of engineering.
 skill, which needs a coding agent. The contract is declared in
 `workbench/skills/zero-context-review.md`. Recording a canned wrong review for offline
 use is the obvious next step and is not yet done.
+
+## Found while building, and fixed
+
+Recording these because each one is a defect the course itself is about.
+
+**Mutation against a red suite reports a confident zero.** A mutant is killed when the
+suite fails with it applied. If the suite already fails, every mutant looks killed. The
+command now refuses to run and reports silence. This is the exact shape of the lesson:
+the check was not wrong, it was answering a different question than the one being asked.
+
+**The first F7 seed was almost an equivalent mutant.** Deriving net from the rate instead
+of subtracting the fee changes the result only when the fee lands on exactly half a minor
+unit, which no corpus row hit. Replaced with floor rounding on the fee, which diverges on
+four of six rows and stays invisible to the suite because fee plus net still equals the
+captured amount.
+
+**`NO_PAN_AT_REST` matched every timestamp.** A millisecond timestamp is 13 digits, so a
+length-only rule reported every record carrying an `at` field. Now Luhn-validated over
+string fields only. The same mistake in a scanner is the difference between a hook people
+keep enabled and one they turn off.
+
+**The answer key failed the gate.** The round 0 manifest quoted the test card literally,
+and pan-scan scans the whole tree, so a clean main failed on its own documentation. The
+manifest names the constant instead.
+
+**A false positive at a gate blinds the chain.** pan-scan gates, and its documented false
+positive stopped every check after it on round 0. Kept, because it is a real composition
+tradeoff worth arguing about, with `--no-gates` as the escape and a note in the chain file.
 
 ## Risks carried
 
