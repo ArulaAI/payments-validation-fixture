@@ -1,0 +1,37 @@
+# CI. Plan 6.1, satisfying NFR-6.
+#
+# No install step, per NFR-9. If a setup line ever appears here, the repository has
+# stopped meeting its own requirement and the dep-provenance hook will say so.
+name: battery
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  battery:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # scope-guard and mutation diff against the base
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Verify the repository's own rules
+        run: node workbench/verify.ts
+
+      - name: Suite
+        run: node --test "test/**/*.test.ts"
+
+      - name: Chain
+        run: node workbench/run.ts
+        continue-on-error: true # findings are the output, not a build break
+
+      - name: Publish the evidence bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: evidence-bundle
+          path: bundles/*.json

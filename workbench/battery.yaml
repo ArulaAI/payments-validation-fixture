@@ -1,0 +1,44 @@
+# The chain. Plan 4.1, satisfying FR-19.
+#
+# Ordered by cost and precision, per Rule 1. Hooks first because they are cheap and
+# decisive. Commands next. Skills last and narrowest, pointed only at classes the
+# earlier stages cannot decide.
+#
+# `omissions` is a declaration, not documentation. Anything listed here is a class this
+# chain knowingly does not examine, and the runner will still compute `notExamined`
+# independently from the check declarations. If the two disagree, the declaration lying.
+
+name: default
+budgetMs: 90000
+
+order:
+  # Hooks. Target: under ten seconds in total, per FR-12.
+  - typecheck
+  - dep-provenance
+  - pan-scan
+  - secret-scan
+  - taint
+  - scope-guard
+  # Commands.
+  - test
+  - invariant
+  - property
+  - mutation
+  - differential
+  # Skills. Run only when a coding agent is configured, and report silence otherwise.
+  - zero-context-review
+  - red-team
+  - intent-conformance
+  - requirements-coverage
+
+# A failing gate stops the chain. Spending agent time on a tree that does not compile,
+# or that leaks a PAN, is waste.
+gates:
+  - typecheck
+  - pan-scan
+
+omissions:
+  - class: F8
+    reason: >
+      No check decides a specification gap. requirements-coverage narrows the surface a
+      human must read and declares covers: []. The residual is escalated to a named role.

@@ -1,0 +1,19 @@
+{
+  "name": "payments-workbench-fixture",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test \"test/**/*.test.ts\"",
+    "battery": "node workbench/run.ts",
+    "score": "node workbench/score.ts",
+    "verify": "node workbench/verify.ts",
+    "hooks": "node workbench/run.ts --only=hook"
+  },
+  "optionalDevDependencies": {
+    "typescript": "^5.9.3"
+  }
+}
