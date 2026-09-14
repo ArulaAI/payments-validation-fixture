@@ -18,6 +18,18 @@ node --version          # 22 or later
 npm test                # the suite
 npm run chain         # the whole chain, emits an evidence bundle
 npm run verify          # the repository's rules about itself
+npm run workbench:doctor  # what will actually run if you start a chain now
+```
+
+For the course command interface, add the repository's vendored executable to this
+shell's path. This does not install anything:
+
+```sh
+export PATH="$PWD/bin:$PATH"
+workbench diagnose
+workbench plan
+workbench validate
+workbench report
 ```
 
 There is no `npm install` step and no build step. `package.json` declares no
@@ -95,6 +107,17 @@ thing that measures your judgment, and boundary calibration cannot pass without 
 check, and one finding at a gate stops everything after it. Meeting that is the point.
 Decide for yourself afterwards whether the gate earns its place.
 
+Chapter 6 asks you to commission a repair and re-run. Diff the two bundles:
+
+```sh
+npm run diff -- bundles/<before>.json bundles/<after>.json
+```
+
+It separates `newly clean` from `newly silent`, and that distinction is the whole
+command. A check that stopped running has no findings, exactly like a check that started
+passing. On any summary that counts findings they are the same number. One means the
+defect is gone. The other means nobody looked.
+
 ### Exit codes
 
 | Command | 0 | 1 | 2 |
@@ -102,6 +125,8 @@ Decide for yourself afterwards whether the gate earns its place.
 | `npm run chain` | ran, no findings | ran, findings present | refused to emit a bundle |
 | `npm run score` | scored, boundary held | boundary calibration failed | bad arguments |
 | `npm run verify` | rules hold | a rule is broken | |
+| `npm run workbench:doctor` | every hook and command usable | a hook or command is not | |
+| `npm run diff` | no check went silent | a check stopped running, or the repair added findings | bad arguments |
 
 A chain exiting 1 is not a failure. It means checks found something, which is what they
 are for. CI treats it that way too.

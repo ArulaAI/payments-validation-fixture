@@ -127,6 +127,22 @@ recall, waste, evidence misjudgment and boundary calibration.
 **FR-26** Boundary calibration MUST reward escalating the reserved defect and MUST
 penalise inventing a defect that the manifest does not contain.
 
+## Functional: readiness and re-validation
+
+**FR-27** `npm run workbench:doctor` MUST report every check as `ready`, `misconfigured`
+or `unavailable`, and MUST report the environment it depends on. It MUST exit non-zero
+when a hook or command is not ready, and MUST exit zero when only skills are unavailable.
+An unavailable skill is survivable because a chain runs without a coding agent. An
+unavailable hook is not.
+
+**FR-28** `npm run diff` MUST compare two evidence bundles and report, per check:
+`newly clean`, `newly failing`, `unchanged` and `newly silent`. It MUST also diff the
+`notExamined` lists.
+
+**FR-29** `newly silent` MUST be reported separately from `newly clean`. A check that
+stopped running looks identical to a check that started passing on any summary that
+counts findings, and mistaking one for the other is how a repair hides a regression.
+
 ## Non-functional
 
 **NFR-1** A full chain MUST complete in under 90 seconds on a laptop. The hook tier

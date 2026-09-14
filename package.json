@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "bin": {
+    "workbench": "bin/workbench"
+  },
   "engines": {
     "node": ">=22"
   },
@@ -11,7 +14,9 @@
     "score": "node workbench/score.ts",
     "verify": "node workbench/verify.ts",
     "hooks": "node workbench/run.ts --only=hook",
-    "chain": "node workbench/run.ts"
+    "chain": "node workbench/run.ts",
+    "workbench:doctor": "node workbench/doctor.ts",
+    "diff": "node workbench/diff.ts"
   },
   "optionalDevDependencies": {
     "typescript": "^5.9.3"

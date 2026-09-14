@@ -67,6 +67,18 @@ produces seeded defects that read as planted.
 | 5.4 | Paired fixture tags for every check | CR-7 | **not started**, see below |
 | 5.5 | Rounds 1 to 5 | CR-1 to CR-5 | **not started**, see below |
 
+## Phase 7. Commands the course already promises
+
+The course site tells learners these exist. They did not. Found by auditing the site's
+prepare page against this repository's scripts.
+
+| # | Task | Satisfies | State |
+| --- | --- | --- | --- |
+| 7.1 | `workbench/doctor.ts`, wired as `npm run workbench:doctor` to match the name the site uses | FR-27 | done |
+| 7.2 | `workbench/diff.ts`, wired as `npm run diff`, producing the Chapter 6 re-validation delta | FR-28, FR-29 | done |
+| 7.3 | Correct the site's prepare page: it tells learners to run `npm ci` and `npm install`, which NFR-9 forbids, and names `baseline.yaml`, which is `chain.yaml` | NFR-9 | done |
+| 7.4 | A profile command for Chapter 1 profile cards | CR-7 | **blocked on 5.4**, the paired fixture tags |
+
 ## Phase 6. Delivery
 
 | # | Task | Satisfies | State |

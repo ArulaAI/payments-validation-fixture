@@ -1,0 +1,75 @@
+#!/usr/bin/env node
+
+import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
+import { dirname, join, resolve } from 'node:path';
+import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
+import { allClassIds, failureClasses } from '../corpus/classes.ts';
+import { checks } from '../workbench/checks.ts';
+
+const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const args = process.argv.slice(2);
+const command = args.shift();
+
+const usage = () => {
+  console.log(`Usage:
+  workbench diagnose [--out=.validation/risk-surface.yaml]
+  workbench plan [--out=.validation/workflow.yaml]
+  workbench validate [runner options]
+  workbench run <check-id> [runner options]
+  workbench review --fresh-context
+  workbench report [bundle.json]`);
+};
+
+const option = (name, fallback) => args.find(value => value.startsWith(`--${name}=`))?.split('=')[1] ?? fallback;
+
+const run = runnerArgs => {
+  const result = spawnSync(process.execPath, ['workbench/run.ts', ...runnerArgs], { cwd: ROOT, stdio: 'inherit' });
+  process.exit(result.status ?? 2);
+};
+
+if (command === 'diagnose') {
+  const out = resolve(ROOT, option('out', '.validation/risk-surface.yaml'));
+  mkdirSync(dirname(out), { recursive: true });
+  const rows = allClassIds.map(id => {
+    const failure = failureClasses.find(item => item.id === id);
+    return `  - id: ${id}\n    failureMode: ${failure?.title ?? id}\n    plausible: undecided\n    signal: ""\n    costOfMissing: undecided`;
+  });
+  writeFileSync(out, `# Complete this from the requirement and change before choosing checks.\nfailureModes:\n${rows.join('\n')}\n`);
+  console.log(`diagnosis worksheet: ${out.replace(`${ROOT}/`, '')}`);
+} else if (command === 'plan') {
+  const out = resolve(ROOT, option('out', '.validation/workflow.yaml'));
+  mkdirSync(dirname(out), { recursive: true });
+  writeFileSync(out, readFileSync(join(ROOT, 'workbench', 'chain.yaml'), 'utf8'));
+  console.log(`workflow draft: ${out.replace(`${ROOT}/`, '')}`);
+  console.log('Review its order, gates and omissions against your completed risk surface.');
+} else if (command === 'validate') {
+  run(args);
+} else if (command === 'run') {
+  const id = args.shift();
+  if (!id) { usage(); process.exit(2); }
+  run([`--check=${id}`, ...args]);
+} else if (command === 'review' && args.includes('--fresh-context')) {
+  console.log(readFileSync(join(ROOT, 'workbench', 'skills', 'zero-context-review.md'), 'utf8'));
+  console.log('\nStart a fresh coding-agent session and invoke this skill with the requirement and diff only.');
+} else if (command === 'report') {
+  const supplied = args.find(value => !value.startsWith('--'));
+  const bundleDir = join(ROOT, 'bundles');
+  const candidates = existsSync(bundleDir) ? readdirSync(bundleDir).filter(file => file.endsWith('.json')).sort() : [];
+  const path = supplied ? resolve(ROOT, supplied) : join(bundleDir, candidates.at(-1) ?? '');
+  if (!existsSync(path) || !path.endsWith('.json')) {
+    console.error('No evidence bundle found. Run `workbench validate` first.');
+    process.exit(2);
+  }
+  const bundle = JSON.parse(readFileSync(path, 'utf8'));
+  const ran = bundle.checks.filter(check => check.ran);
+  const findings = ran.flatMap(check => check.findings);
+  console.log(`bundle: ${path.replace(`${ROOT}/`, '')}`);
+  console.log(`checks run: ${ran.length}/${bundle.checks.length}`);
+  console.log(`findings: ${findings.length}`);
+  console.log(`classes not examined: ${bundle.notExamined.map(item => item.class).join(', ') || 'none'}`);
+  console.log(`within budget: ${bundle.budget.withinBudget ? 'yes' : 'no'}`);
+} else {
+  usage();
+  process.exit(command ? 2 : 0);
+}

@@ -86,7 +86,7 @@ for (const dir of rounds) {
  */
 const readme = readFileSync(join(ROOT, 'README.md'), 'utf8');
 const scripts = Object.keys(pkg.scripts ?? {});
-for (const m of readme.matchAll(/npm run ([a-z-]+)/g)) {
+for (const m of readme.matchAll(/npm run ([a-z][a-z0-9:-]*)/g)) {
   check(scripts.includes(m[1]), `README tells the learner to run "npm run ${m[1]}", which is not a script`);
 }
 for (const m of readme.matchAll(/node (workbench\/[a-z-]+\.ts)/g)) {

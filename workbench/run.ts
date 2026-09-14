@@ -81,6 +81,7 @@ const runCheck = async (check: Check, base: string): Promise<Result> => {
 const main = async (): Promise<void> => {
   const chain = readChain();
   const only = arg('only', '');
+  const selected = arg('check', '');
   const base = arg('base', 'main');
   const startedAt = new Date().toISOString();
   const t0 = Date.now();
@@ -92,6 +93,10 @@ const main = async (): Promise<void> => {
     const check = checks.find(c => c.id === id);
     if (!check) throw new Error(`chain.yaml names an unknown check: ${id}`);
 
+    if (selected && check.id !== selected) {
+      reports.push({ ...base_(check), ran: false, reason: `filtered out by --check=${selected}`, durationMs: 0, evidence: 'silence', findings: [] });
+      continue;
+    }
     // FR-24: a check that did not run still appears, with evidence `silence`.
     if (only && check.kind !== only) {
       reports.push({ ...base_(check), ran: false, reason: `filtered out by --only=${only}`, durationMs: 0, evidence: 'silence', findings: [] });
@@ -124,6 +129,11 @@ const main = async (): Promise<void> => {
     if (ran && chain.gates.includes(check.id) && result.findings.length > 0) {
       gateFailed = check.id;
     }
+  }
+
+  if (selected && !checks.some(check => check.id === selected)) {
+    console.error(`unknown check: ${selected}`);
+    process.exit(2);
   }
 
   /*
