@@ -79,6 +79,20 @@ for (const dir of rounds) {
   }
 }
 
+/*
+ * Every command the README tells a learner to run must exist. A README that names a
+ * script nobody kept is the same failure as markup naming a CSS class nobody kept: the
+ * tests pass, and the first person to follow the instructions hits a wall.
+ */
+const readme = readFileSync(join(ROOT, 'README.md'), 'utf8');
+const scripts = Object.keys(pkg.scripts ?? {});
+for (const m of readme.matchAll(/npm run ([a-z-]+)/g)) {
+  check(scripts.includes(m[1]), `README tells the learner to run "npm run ${m[1]}", which is not a script`);
+}
+for (const m of readme.matchAll(/node (workbench\/[a-z-]+\.ts)/g)) {
+  check(existsSync(join(ROOT, m[1])), `README references ${m[1]}, which does not exist`);
+}
+
 if (failures.length > 0) {
   console.error(`verify: ${failures.length} failure${failures.length === 1 ? '' : 's'}`);
   for (const f of failures) console.error(`  ${f}`);

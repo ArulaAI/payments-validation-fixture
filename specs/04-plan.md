@@ -73,7 +73,8 @@ produces seeded defects that read as planted.
 | --- | --- | --- | --- |
 | 6.1 | `.github/workflows/chain.yml`, bundle published as an artifact | NFR-6 | done |
 | 6.2 | `README.md` with the learner path | G4 | done |
-| 6.3 | `npm run verify`: schema, chain, score, the AP style rule and the no-install rule in one command | NFR-7, NFR-11, CR-8 | done |
+| 6.3 | `npm run verify`: schema, chain, score, the AP style rule, the no-install rule and every command the README names | NFR-7, NFR-11, CR-8 | done |
+| 6.4 | `corpus/decisions.example.json`, documented exit codes, and the reason `--no-gates` is needed on round 0 | FR-25, G4 | done |
 
 ## Deliberately not done in this pass
 
@@ -115,6 +116,14 @@ keep enabled and one they turn off.
 **The answer key failed the gate.** The round 0 manifest quoted the test card literally,
 and pan-scan scans the whole tree, so a clean main failed on its own documentation. The
 manifest names the constant instead.
+
+**The documented learner path did not work.** The README told a learner to pass
+`decisions.json` to the scorer, and nothing created it, described its shape or shipped a
+template. Following the instructions exactly produced "boundary calibration failed" with
+no explanation. There is now a template, the scorer says what is missing and why, and
+`npm run verify` fails if the README names a script or file that does not exist. That
+last guard is there because the same class of mistake, documentation naming something
+nobody kept, had already broken the sibling website's stylesheet.
 
 **A false positive at a gate blinds the chain.** pan-scan gates, and its documented false
 positive stopped every check after it on round 0. Kept, because it is a real composition

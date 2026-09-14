@@ -82,8 +82,34 @@ Each round is a branch carrying a manifest of ground truth.
 ```sh
 git switch round-0
 npm run chain -- --no-gates
+
+cp corpus/decisions.example.json decisions.json   # then edit it as you work the round
 node workbench/score.ts bundles/<latest>.json corpus/round-0/manifest.json decisions.json
 ```
+
+`decisions.json` is your evidence ledger. It records what you confirmed, refuted,
+escalated and invented. The chain measures what was surfaced. The ledger is the only
+thing that measures your judgment, and boundary calibration cannot pass without it.
+
+`--no-gates` is needed on round 0 because a documented false positive sits on a gating
+check, and one finding at a gate stops everything after it. Meeting that is the point.
+Decide for yourself afterwards whether the gate earns its place.
+
+### Exit codes
+
+| Command | 0 | 1 | 2 |
+| --- | --- | --- | --- |
+| `npm run chain` | ran, no findings | ran, findings present | refused to emit a bundle |
+| `npm run score` | scored, boundary held | boundary calibration failed | bad arguments |
+| `npm run verify` | rules hold | a rule is broken | |
+
+A chain exiting 1 is not a failure. It means checks found something, which is what they
+are for. CI treats it that way too.
+
+On `main`, the chain exits 1 with exactly one finding: the equivalent mutant in
+`Ledger.net()`. That is deliberate and documented as `R0-P2`. No test can kill it, and
+fixing it is wasted work. Every other check is clean on `main`, so any other finding on a
+round branch was introduced by that round.
 
 Round 0 seeds five defects. Four are reachable by some check. One is not, and the correct
 response to that one is to escalate rather than to fix. It also carries three evidence

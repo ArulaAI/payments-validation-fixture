@@ -22,9 +22,22 @@ if (!bundlePath || !manifestPath) {
 const read = (p: string) => JSON.parse(readFileSync(p, 'utf8'));
 const bundle = read(bundlePath);
 const manifest = read(manifestPath);
-const decisions = decisionsPath && existsSync(decisionsPath)
-  ? read(decisionsPath)
-  : { confirmed: [], refuted: [], escalated: [], invented: [] };
+/*
+ * The decisions file is your evidence ledger. Without it the scorer can measure what the
+ * chain surfaced but nothing about your judgment, so every judgment axis reads as zero
+ * and boundary calibration fails. Say that plainly rather than failing silently.
+ */
+let decisions = { confirmed: [], refuted: [], escalated: [], invented: [] };
+if (decisionsPath && existsSync(decisionsPath)) {
+  decisions = read(decisionsPath);
+} else if (decisionsPath) {
+  console.error(`no decisions file at ${decisionsPath}.`);
+  console.error('Copy corpus/decisions.example.json to decisions.json and record what you');
+  console.error('confirmed, refuted, escalated and invented. Scoring judgment without it');
+  console.error('is not possible, so the axes below are measured against an empty ledger.\n');
+} else {
+  console.error('no decisions file given, so only recall and waste are meaningful.\n');
+}
 
 type Defect = { id: string; class: string; file: string; line: number; caughtBy: string | null; reserved: boolean; action: string };
 const defects: Defect[] = manifest.defects;
