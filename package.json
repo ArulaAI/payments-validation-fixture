@@ -13,10 +13,9 @@
     "test": "node --test \"test/**/*.test.ts\"",
     "score": "node workbench/score.ts",
     "verify": "node workbench/verify.ts",
-    "hooks": "node workbench/run.ts --only=hook",
-    "chain": "node workbench/run.ts",
     "workbench:doctor": "node workbench/doctor.ts",
-    "diff": "node workbench/diff.ts"
+    "diff": "node workbench/diff.ts",
+    "sync-contract": "node workbench/sync-contract.ts"
   },
   "optionalDevDependencies": {
     "typescript": "^5.9.3"

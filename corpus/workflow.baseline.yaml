@@ -1,11 +1,11 @@
-# The chain. Plan 4.1, satisfying FR-19.
+# The workflow. Plan 4.1, satisfying FR-19.
 #
 # Ordered by cost and precision, per Rule 1. Hooks first because they are cheap and
 # decisive. Commands next. Skills last and narrowest, pointed only at classes the
-# earlier stages cannot decide.
+# earlier steps cannot decide.
 #
 # `omissions` is a declaration, not documentation. Anything listed here is a class this
-# chain knowingly does not examine, and the runner will still compute `notExamined`
+# workflow knowingly does not examine, and the runner will still compute `notExamined`
 # independently from the check declarations. If the two disagree, the declaration lying.
 
 name: default
@@ -31,12 +31,12 @@ order:
   - intent-conformance
   - requirements-coverage
 
-# A failing gate stops the chain. Spending agent time on a tree that does not compile,
+# A failing gate stops the workflow. Spending agent time on a tree that does not compile,
 # or that leaks a PAN, is waste.
 #
 # Gating on pan-scan is a real tradeoff and worth arguing about. The hook has documented
 # false positives, and a false positive at a gate blinds every check after it for no
-# reason. Run with --no-gates to see the whole chain, then decide whether this gate earns
+# reason. Run with --no-gates to see the whole workflow, then decide whether this gate earns
 # its place on your change.
 gates:
   - typecheck

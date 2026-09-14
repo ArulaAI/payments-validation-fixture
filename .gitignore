@@ -1,3 +1,5 @@
 node_modules/
 bundles/*.json
 !bundles/.gitkeep
+.validation/
+decisions.json

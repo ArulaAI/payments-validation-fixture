@@ -1,7 +1,7 @@
 # payments-workbench-fixture
 
 The codebase the Validation Workbench course validates. A small card-payments
-authorisation service with a double-entry ledger, a vendored set of checks, a chain
+authorisation service with a double-entry ledger, a vendored set of checks, a workflow
 runner that emits evidence bundles, and a versioned corpus of seeded defects.
 
 It is not a payments product. It is a teaching artifact that behaves like one, built so
@@ -16,9 +16,9 @@ No install. No accounts. No network.
 git clone <this repo> && cd payments-workbench-fixture
 node --version          # 22 or later
 npm test                # the suite
-npm run chain         # the whole chain, emits an evidence bundle
+workbench validate         # the whole workflow, emits an evidence bundle
 npm run verify          # the repository's rules about itself
-npm run workbench:doctor  # what will actually run if you start a chain now
+npm run workbench:doctor  # what will actually run if you start a workflow now
 ```
 
 For the course command interface, add the repository's vendored executable to this
@@ -36,7 +36,7 @@ There is no `npm install` step and no build step. `package.json` declares no
 dependencies, and `npm run verify` fails if that ever stops being true. TypeScript runs
 directly through Node's native type stripping.
 
-## What a chain run tells you
+## What a workflow run tells you
 
 ```
   hook     taint                  1 finding    proof
@@ -46,8 +46,8 @@ directly through Node's native type stripping.
   skill    zero-context-review    not run      silence      no coding agent configured
 
   classes not examined
-    F5  No check in this chain examined F5 on this run.
-    F6  No check in this chain examined F6 on this run.
+    F5  No check in this workflow examined F5 on this run.
+    F6  No check in this workflow examined F6 on this run.
     F8  No check covers F8. It is human-reserved by design.
 ```
 
@@ -70,7 +70,7 @@ The workbench ships three kinds of thing, and the difference matters.
 
 There is no generic noun for all three beyond "check". Do not reintroduce one.
 
-Chains run without a coding agent. Skills then report silence, which is honest and is
+Workflows run without a coding agent. Skills then report silence, which is honest and is
 usually a learner's first encounter with the idea.
 
 ## Layout
@@ -93,14 +93,14 @@ Each round is a branch carrying a manifest of ground truth.
 
 ```sh
 git switch round-0
-npm run chain -- --no-gates
+workbench validate -- --no-gates
 
 cp corpus/decisions.example.json decisions.json   # then edit it as you work the round
 node workbench/score.ts bundles/<latest>.json corpus/round-0/manifest.json decisions.json
 ```
 
 `decisions.json` is your evidence ledger. It records what you confirmed, refuted,
-escalated and invented. The chain measures what was surfaced. The ledger is the only
+escalated and invented. The workflow measures what was surfaced. The ledger is the only
 thing that measures your judgment, and boundary calibration cannot pass without it.
 
 `--no-gates` is needed on round 0 because a documented false positive sits on a gating
@@ -122,16 +122,16 @@ defect is gone. The other means nobody looked.
 
 | Command | 0 | 1 | 2 |
 | --- | --- | --- | --- |
-| `npm run chain` | ran, no findings | ran, findings present | refused to emit a bundle |
+| `workbench validate` | ran, no findings | ran, findings present | refused to emit a bundle |
 | `npm run score` | scored, boundary held | boundary calibration failed | bad arguments |
 | `npm run verify` | rules hold | a rule is broken | |
 | `npm run workbench:doctor` | every hook and command usable | a hook or command is not | |
 | `npm run diff` | no check went silent | a check stopped running, or the repair added findings | bad arguments |
 
-A chain exiting 1 is not a failure. It means checks found something, which is what they
+A workflow exiting 1 is not a failure. It means checks found something, which is what they
 are for. CI treats it that way too.
 
-On `main`, the chain exits 1 with exactly one finding: the equivalent mutant in
+On `main`, the workflow exits 1 with exactly one finding: the equivalent mutant in
 `Ledger.net()`. That is deliberate and documented as `R0-P2`. No test can kill it, and
 fixing it is wasted work. Every other check is clean on `main`, so any other finding on a
 round branch was introduced by that round.

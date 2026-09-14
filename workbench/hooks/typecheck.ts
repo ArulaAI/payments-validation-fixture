@@ -7,7 +7,7 @@
  *
  * That catches a hallucinated method, a renamed export and a moved file. It does not
  * catch a type error, and the profile card must say so. If tsc happens to be installed,
- * the chain gains a deeper check. If not, the shallow one still runs.
+ * the workflow gains a deeper check. If not, the shallow one still runs.
  */
 import { existsSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';

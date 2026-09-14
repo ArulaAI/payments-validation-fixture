@@ -24,7 +24,7 @@ const bundle = read(bundlePath);
 const manifest = read(manifestPath);
 /*
  * The decisions file is your evidence ledger. Without it the scorer can measure what the
- * chain surfaced but nothing about your judgment, so every judgment axis reads as zero
+ * workflow surfaced but nothing about your judgment, so every judgment axis reads as zero
  * and boundary calibration fails. Say that plainly rather than failing silently.
  */
 let decisions = { confirmed: [], refuted: [], escalated: [], invented: [] };

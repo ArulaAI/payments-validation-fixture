@@ -6,7 +6,7 @@
  * evidence about test strength.
  *
  * Changed files only, per FR-16. Mutating the whole tree would blow the 90-second budget
- * (NFR-1), and a chain that cannot finish is a chain nobody runs.
+ * (NFR-1), and a workflow that cannot finish is a workflow nobody runs.
  *
  * Not every survivor is a defect. An equivalent mutant changes the source without
  * changing behaviour, so no test can kill it and fixing it is wasted work. Telling those

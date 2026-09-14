@@ -7,7 +7,7 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { checks } from './checks.ts';
-import { allClassIds } from '../corpus/classes.ts';
+import { allClassIds, contract } from '../corpus/classes.ts';
 import { ROOT, sourceFiles, rel } from './lib.ts';
 
 const failures: string[] = [];
@@ -24,21 +24,58 @@ check(!pkg.devDependencies, 'NFR-9: package.json declares devDependencies');
  * Built from character codes rather than written out, because this file would otherwise
  * match its own rules. specs/ is exempt: it quotes the course and the client brief.
  */
-const BANNED_NOUN = new RegExp(`\\b${['i', 'nstrument'].join('')}s?\\b`, 'i');
 /*
- * "battery" is banned too. The client used it once and "chain" elsewhere, and the course
- * settled on chain. specs/ may quote him verbatim; nothing else may use the word.
+ * Conformance to the course contract. The course is the standard, so every rule in this
+ * block is read from corpus/course-contract.json rather than written here.
+ *
+ * Exempt from the vocabulary scan: specs/, which quotes the course and the client
+ * verbatim; this file, which necessarily names the words it bans; and the contract
+ * itself, which defines them.
  */
-const BANNED_CHAIN_WORD = new RegExp(`\\b${['batter', 'y'].join('')}\\b`, 'i');
+const EXEMPT = new Set(['workbench/verify.ts', 'corpus/course-contract.json']);
 const EM_DASH = String.fromCharCode(0x2014);
 
 for (const file of sourceFiles()) {
   const path = rel(file);
-  if (path.startsWith('specs/') || path === 'workbench/verify.ts') continue;
+  if (path.startsWith('specs/') || path.startsWith('.validation/') || EXEMPT.has(path)) continue;
   const text = readFileSync(file, 'utf8');
-  if (BANNED_NOUN.test(text)) failures.push(`NFR-8: the banned generic noun appears in ${path}`);
-  if (BANNED_CHAIN_WORD.test(text)) failures.push(`NFR-8: say "chain", not the other word, in ${path}`);
+  for (const word of contract.vocabulary.banned) {
+    if (new RegExp(`\\b${word}s?\\b`, 'i').test(text)) {
+      failures.push(`vocabulary: the course bans "${word}", found in ${path}`);
+    }
+  }
   if (text.includes(EM_DASH)) failures.push(`NFR-7: em-dash in ${path}`);
+}
+
+// The composed artifact must be named what the course calls it.
+const baseline = join(ROOT, 'corpus', 'workflow.baseline.yaml');
+check(existsSync(baseline), 'corpus/workflow.baseline.yaml is missing, so `workbench plan` has nothing to write from');
+
+// Kinds and evidence types come from the course, not from here.
+const contractKinds = Object.keys(contract.vocabulary.kinds).sort();
+const usedKinds = [...new Set(checks.map(c => c.kind))].sort();
+check(
+  usedKinds.every(k => contractKinds.includes(k)),
+  `check kinds ${usedKinds.join(',')} are not all in the course contract (${contractKinds.join(',')})`,
+);
+const contractEvidence = new Set(contract.evidenceTypes.map(e => e.key));
+for (const c of checks) {
+  check(contractEvidence.has(c.evidence), `${c.id} uses evidence type "${c.evidence}", which the course does not define`);
+}
+
+/*
+ * Every class the course teaches must have somewhere to be met. A class with no seeded
+ * defect is the course claiming coverage the fixture cannot back.
+ */
+const seeded = new Set<string>();
+for (const dir of readdirSync(join(ROOT, 'corpus')).filter(d => d.startsWith('round-'))) {
+  const mf = join(ROOT, 'corpus', dir, 'manifest.json');
+  if (!existsSync(mf)) continue;
+  for (const d of JSON.parse(readFileSync(mf, 'utf8')).defects) seeded.add(d.class);
+}
+const unseeded = contract.failureClasses.filter(c => !seeded.has(c.id)).map(c => c.id);
+if (unseeded.length > 0) {
+  failures.push(`the course teaches ${unseeded.join(', ')} but no round seeds a defect for them`);
 }
 
 // FR-11 and FR-21: every check declares a kind and covers only real classes.
@@ -53,10 +90,10 @@ for (const c of checks) {
 const coversF8 = checks.filter(c => (c.covers as string[]).includes('F8'));
 check(coversF8.length === 0, `G5: F8 is claimed as covered by ${coversF8.map(c => c.id).join(', ')}`);
 
-// FR-19: every check named in the chain exists, and every check is in the chain.
-const chainText = readFileSync(join(ROOT, 'workbench', 'chain.yaml'), 'utf8');
+// FR-19: every check named in the workflow exists, and every check is in the workflow.
+const chainText = readFileSync(baseline, 'utf8');
 const named = [...chainText.matchAll(/^\s{2}- ([\w-]+)\s*$/gm)].map(m => m[1]);
-for (const c of checks) check(named.includes(c.id), `FR-19: ${c.id} is declared but absent from chain.yaml`);
+for (const c of checks) check(named.includes(c.id), `FR-19: ${c.id} is declared but absent from workflow.yaml`);
 
 // CR-8: every manifest validates against the schema.
 const schema = JSON.parse(readFileSync(join(ROOT, 'corpus', 'manifest.schema.json'), 'utf8'));

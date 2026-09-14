@@ -1,5 +1,5 @@
 {
-  "_what_this_is": "Your evidence ledger for a round. Copy to decisions.json and edit. The scorer reads it to judge what you did with each finding, not just what the chain surfaced.",
+  "_what_this_is": "Your evidence ledger for a round. Copy to decisions.json and edit. The scorer reads it to judge what you did with each finding, not just what the workflow surfaced.",
   "_confirmed": "Findings you accepted as real defects.",
   "confirmed": ["R0-D1", "R0-D2", "R0-D3"],
   "_refuted": "Findings you rejected. A false positive belongs here, with your reason recorded in your own notes.",

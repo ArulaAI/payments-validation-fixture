@@ -4,21 +4,26 @@ import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 
 import { dirname, join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { allClassIds, failureClasses } from '../corpus/classes.ts';
+import { allClassIds, contract, failureClasses } from '../corpus/classes.ts';
 import { checks } from '../workbench/checks.ts';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const args = process.argv.slice(2);
 const command = args.shift();
 
+/*
+ * Usage is generated from the course contract. The course is the standard, so the verbs
+ * it names are the verbs that must exist. `run` is ours, kept because Course 2 needs a
+ * way to exercise one check at a time.
+ */
 const usage = () => {
-  console.log(`Usage:
-  workbench diagnose [--out=.validation/risk-surface.yaml]
-  workbench plan [--out=.validation/workflow.yaml]
-  workbench validate [runner options]
-  workbench run <check-id> [runner options]
-  workbench review --fresh-context
-  workbench report [bundle.json]`);
+  console.log('\nUsage:');
+  for (const entry of contract.cli.commands) {
+    const flags = entry.flags?.length ? ` [${entry.flags.join(' ')}]` : '';
+    console.log(`  workbench ${(entry.name + flags).padEnd(28)} ${entry.summary}`);
+    if (entry.writes) console.log(`  ${''.padEnd(38)} writes ${entry.writes}`);
+  }
+  console.log(`  workbench ${'run <check-id>'.padEnd(28)} Exercise a single check.\n`);
 };
 
 const option = (name, fallback) => args.find(value => value.startsWith(`--${name}=`))?.split('=')[1] ?? fallback;
@@ -40,7 +45,7 @@ if (command === 'diagnose') {
 } else if (command === 'plan') {
   const out = resolve(ROOT, option('out', '.validation/workflow.yaml'));
   mkdirSync(dirname(out), { recursive: true });
-  writeFileSync(out, readFileSync(join(ROOT, 'workbench', 'chain.yaml'), 'utf8'));
+  writeFileSync(out, readFileSync(join(ROOT, 'corpus', 'workflow.baseline.yaml'), 'utf8'));
   console.log(`workflow draft: ${out.replace(`${ROOT}/`, '')}`);
   console.log('Review its order, gates and omissions against your completed risk surface.');
 } else if (command === 'validate') {
@@ -64,11 +69,24 @@ if (command === 'diagnose') {
   const bundle = JSON.parse(readFileSync(path, 'utf8'));
   const ran = bundle.checks.filter(check => check.ran);
   const findings = ran.flatMap(check => check.findings);
-  console.log(`bundle: ${path.replace(`${ROOT}/`, '')}`);
-  console.log(`checks run: ${ran.length}/${bundle.checks.length}`);
-  console.log(`findings: ${findings.length}`);
-  console.log(`classes not examined: ${bundle.notExamined.map(item => item.class).join(', ') || 'none'}`);
-  console.log(`within budget: ${bundle.budget.withinBudget ? 'yes' : 'no'}`);
+  console.log(`\nbundle: ${path.replace(`${ROOT}/`, '')}\n`);
+
+  console.log('classes not examined');
+  if (bundle.notExamined.length === 0) console.log('  none, which should be impossible while F8 exists');
+  for (const item of bundle.notExamined) console.log(`  ${item.class}  ${item.reason}`);
+
+  const silent = bundle.checks.filter(check => !check.ran);
+  console.log(`\nchecks that did not run (${silent.length})`);
+  for (const check of silent) console.log(`  ${check.id.padEnd(22)} ${check.reason ?? ''}`);
+
+  console.log(`\nfindings (${findings.length})`);
+  for (const check of ran.filter(item => item.findings.length > 0)) {
+    for (const finding of check.findings) {
+      console.log(`  ${check.id.padEnd(22)} ${check.evidence.padEnd(15)} ${finding.file}:${finding.line}  ${finding.summary}`);
+    }
+  }
+
+  console.log(`\nchecks run: ${ran.length}/${bundle.checks.length}   budget: ${bundle.budget.spentMs} ms of ${bundle.budget.limitMs} ms${bundle.budget.withinBudget ? '' : '  OVER'}\n`);
 } else {
   usage();
   process.exit(command ? 2 : 0);

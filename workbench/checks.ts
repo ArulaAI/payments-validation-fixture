@@ -128,7 +128,7 @@ export const checks: Check[] = [
   },
 
   // Skills. The coding agent invokes them. FR-18.
-  // No module: a chain runs without an agent, and these report silence when absent.
+  // No module: a workflow runs without an agent, and these report silence when absent.
   {
     id: 'zero-context-review',
     kind: 'skill',

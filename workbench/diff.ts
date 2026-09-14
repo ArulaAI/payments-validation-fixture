@@ -2,7 +2,7 @@
  * Bundle diff. Plan 7.2, satisfying FR-28 and FR-29.
  *
  * Produces the Chapter 6 artifact, the re-validation delta. You commissioned a repair,
- * you ran the chain again, and now you have two bundles. The question is what the repair
+ * you ran the workflow again, and now you have two bundles. The question is what the repair
  * actually changed.
  *
  *   node workbench/diff.ts <before.json> <after.json>

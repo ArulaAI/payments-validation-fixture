@@ -2,9 +2,9 @@
  * Readiness report. Plan 7.1, satisfying FR-27.
  *
  * The course tells learners to run this before the lab, so it has to answer one question
- * honestly: if I start a chain now, what will actually run?
+ * honestly: if I start a workflow now, what will actually run?
  *
- * An unavailable skill is survivable. A chain runs without a coding agent and reports
+ * An unavailable skill is survivable. A workflow runs without a coding agent and reports
  * silence, which is a true statement about what was examined. An unavailable hook is not
  * survivable, because a hook that cannot run is a class nobody looked at, and the whole
  * point of the exercise is not to mistake those for each other.

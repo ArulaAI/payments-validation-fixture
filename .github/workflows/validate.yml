@@ -2,14 +2,14 @@
 #
 # No install step, per NFR-9. If a setup line ever appears here, the repository has
 # stopped meeting its own requirement and the dep-provenance hook will say so.
-name: chain
+name: workflow
 
 on:
   push:
   pull_request:
 
 jobs:
-  chain:
+  workflow:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -26,7 +26,7 @@ jobs:
       - name: Suite
         run: node --test "test/**/*.test.ts"
 
-      - name: Chain
+      - name: Workflow
         run: node workbench/run.ts
         continue-on-error: true # findings are the output, not a build break
 

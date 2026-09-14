@@ -85,7 +85,7 @@
       "line": 51,
       "summary": "Mutating sum + e.amount to sum - e.amount in Ledger.net() survives on the main branch.",
       "action": "ignore",
-      "reason": "Entries are always written as balanced pairs, so negating every term negates a sum that is already zero. No test can kill this mutant because the mutation changes no reachable behaviour. Writing a test for it is wasted work. Run the chain on main to meet it."
+      "reason": "Entries are always written as balanced pairs, so negating every term negates a sum that is already zero. No test can kill this mutant because the mutation changes no reachable behaviour. Writing a test for it is wasted work. Run the workflow on main to meet it."
     },
     {
       "id": "R0-P3",

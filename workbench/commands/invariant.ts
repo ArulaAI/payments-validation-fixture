@@ -1,6 +1,6 @@
 /*
  * The four invariants after a fixed scenario. Plan 3.7, satisfying FR-9 and FR-15.
- * A violation here is a counterexample, which is the strongest result the chain returns.
+ * A violation here is a counterexample, which is the strongest result the workflow returns.
  */
 import { PaymentsService } from '../../src/payments/service.ts';
 import { checkAll } from '../../src/domain/invariants.ts';

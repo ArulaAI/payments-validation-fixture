@@ -1,25 +1,27 @@
 /*
- * The chain runner. Plan 4.2 to 4.4, satisfying FR-20 to FR-24 and NFR-1.
+ * The workflow runner. Plan 4.2 to 4.4, satisfying FR-20 to FR-24 and NFR-1.
  *
  * The whole point of this file is the negative space. Findings are the easy half. What
  * makes a bundle honest is that it names every class nothing examined, and it computes
  * that itself rather than believing a declaration.
  *
  * Usage:
- *   node workbench/run.ts                 run the whole chain
+ *   node workbench/run.ts                 run the whole workflow
  *   node workbench/run.ts --only=hook     hooks only
+ *   node workbench/run.ts --check=mutation one named check
+ *   node workbench/run.ts --config=.validation/workflow.yaml use a drafted workflow
  *   node workbench/run.ts --base=main     diff base for scope-guard and mutation
  *   node workbench/run.ts --no-gates      keep going past a failing gate
  *
  * On --no-gates. A gate exists so that agent time is not spent on a tree that does not
  * compile or that leaks a PAN. The cost is that one finding at a gate blinds everything
  * downstream, and a false positive at a gate blinds it for no reason. That tradeoff is
- * the substance of composing a chain, so the flag exists and the default does not use it.
+ * the substance of composing a workflow, so the flag exists and the default does not use it.
  */
 
-import { readFileSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
-import { allClassIds, failureClasses } from '../corpus/classes.ts';
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { join, resolve } from 'node:path';
+import { allClassIds, contract, failureClasses } from '../corpus/classes.ts';
 import { type Check, type Evidence, checks } from './checks.ts';
 import { type Result, ROOT } from './lib.ts';
 
@@ -35,7 +37,7 @@ type CheckReport = {
 };
 
 type Bundle = {
-  chain: string;
+  workflow: string;
   round: number | null;
   startedAt: string;
   durationMs: number;
@@ -49,10 +51,10 @@ const arg = (name: string, fallback: string): string =>
 
 /*
  * A three-line YAML reader for the two keys we need. Bringing in a YAML parser would
- * breach NFR-9, and the chain file is ours, so its shape is known.
+ * breach NFR-9, and the workflow file is ours, so its shape is known.
  */
-const readChain = (): { budgetMs: number; order: string[]; gates: string[] } => {
-  const text = readFileSync(join(ROOT, 'workbench', 'chain.yaml'), 'utf8');
+const readChain = (path: string): { budgetMs: number; order: string[]; gates: string[] } => {
+  const text = readFileSync(resolve(ROOT, path), 'utf8');
   const list = (key: string): string[] => {
     const lines = text.split('\n');
     const start = lines.findIndex(l => l.trim() === `${key}:`);
@@ -71,7 +73,7 @@ const readChain = (): { budgetMs: number; order: string[]; gates: string[] } => 
 
 const runCheck = async (check: Check, base: string): Promise<Result> => {
   if (!check.module) {
-    // A skill with no runner. FR-18: a chain runs without a coding agent.
+    // A skill with no runner. FR-18: a workflow runs without a coding agent.
     return { findings: [], skipped: 'no coding agent configured for this skill' };
   }
   const mod = await import(join(ROOT, 'workbench', check.module));
@@ -79,7 +81,13 @@ const runCheck = async (check: Check, base: string): Promise<Result> => {
 };
 
 const main = async (): Promise<void> => {
-  const chain = readChain();
+  /*
+   * The learner's workflow, once `workbench plan` has written one. Before that, fall back
+   * to the baseline this repository ships, so a fresh clone can validate immediately.
+   */
+  const preferred = arg('config', contract.paths.workflow);
+  const config = existsSync(join(ROOT, preferred)) ? preferred : 'corpus/workflow.baseline.yaml';
+  const workflow = readChain(config);
   const only = arg('only', '');
   const selected = arg('check', '');
   const base = arg('base', 'main');
@@ -89,9 +97,9 @@ const main = async (): Promise<void> => {
   const reports: CheckReport[] = [];
   let gateFailed: string | null = null;
 
-  for (const id of chain.order) {
+  for (const id of workflow.order) {
     const check = checks.find(c => c.id === id);
-    if (!check) throw new Error(`chain.yaml names an unknown check: ${id}`);
+    if (!check) throw new Error(`workflow.yaml names an unknown check: ${id}`);
 
     if (selected && check.id !== selected) {
       reports.push({ ...base_(check), ran: false, reason: `filtered out by --check=${selected}`, durationMs: 0, evidence: 'silence', findings: [] });
@@ -103,7 +111,7 @@ const main = async (): Promise<void> => {
       continue;
     }
     if (gateFailed && !process.argv.includes('--no-gates')) {
-      reports.push({ ...base_(check), ran: false, reason: `chain stopped at failing gate ${gateFailed}`, durationMs: 0, evidence: 'silence', findings: [] });
+      reports.push({ ...base_(check), ran: false, reason: `workflow stopped at failing gate ${gateFailed}`, durationMs: 0, evidence: 'silence', findings: [] });
       continue;
     }
 
@@ -126,7 +134,7 @@ const main = async (): Promise<void> => {
       findings: result.findings,
     });
 
-    if (ran && chain.gates.includes(check.id) && result.findings.length > 0) {
+    if (ran && workflow.gates.includes(check.id) && result.findings.length > 0) {
       gateFailed = check.id;
     }
   }
@@ -139,7 +147,7 @@ const main = async (): Promise<void> => {
   /*
    * FR-21. Subtract the classes covered by checks that actually ran from all eight.
    * This is computed, never supplied. A check that was skipped covers nothing, which is
-   * why a chain full of unconfigured skills produces a long notExamined list rather than
+   * why a workflow full of unconfigured skills produces a long notExamined list rather than
    * a short green one.
    */
   const examined = new Set(reports.filter(r => r.ran).flatMap(r => r.covers));
@@ -151,17 +159,17 @@ const main = async (): Promise<void> => {
         class: id,
         reason: cls.humanReserved
           ? `No check covers ${id}. It is human-reserved by design.`
-          : `No check in this chain examined ${id} on this run.`,
+          : `No check in this workflow examined ${id} on this run.`,
       };
     });
 
   const spentMs = Date.now() - t0;
   const bundle: Bundle = {
-    chain: 'workbench/chain.yaml',
+    workflow: config,
     round: Number(arg('round', '')) || null,
     startedAt,
     durationMs: spentMs,
-    budget: { limitMs: chain.budgetMs, spentMs, withinBudget: spentMs <= chain.budgetMs },
+    budget: { limitMs: workflow.budgetMs, spentMs, withinBudget: spentMs <= workflow.budgetMs },
     checks: reports,
     notExamined,
   };
@@ -187,7 +195,7 @@ const base_ = (check: Check) => ({
 
 const report = (bundle: Bundle, out: string): void => {
   const pad = (s: string, n: number) => s.padEnd(n);
-  console.log(`\nchain: ${bundle.chain}   ${bundle.durationMs} ms of ${bundle.budget.limitMs} ms budget\n`);
+  console.log(`\nchain: ${bundle.workflow}   ${bundle.durationMs} ms of ${bundle.budget.limitMs} ms budget\n`);
   for (const c of bundle.checks) {
     const state = c.ran
       ? c.findings.length > 0
