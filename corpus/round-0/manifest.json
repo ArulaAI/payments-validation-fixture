@@ -75,7 +75,7 @@
       "line": 19,
       "summary": "pan-scan reports RETRY_TEST_CARD as an unallowlisted Luhn-valid PAN.",
       "action": "refute",
-      "reason": "5105105105105100 is a published Mastercard scheme test card. It is synthetic. The allowlist in workbench/hooks/pan-scan.ts is incomplete, which is a gap in the hook rather than a defect in the change. Fix the allowlist, do not remove the fixture."
+      "reason": "RETRY_TEST_CARD is a published Mastercard scheme test card, BIN 510510. It is synthetic. The allowlist in workbench/hooks/pan-scan.ts is incomplete, which is a gap in the hook rather than a defect in the change. Fix the allowlist, do not remove the fixture."
     },
     {
       "id": "R0-P2",
