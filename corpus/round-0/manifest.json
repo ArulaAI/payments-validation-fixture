@@ -69,7 +69,7 @@
       "evidence": "silence",
       "action": "escalate",
       "reserved": true,
-      "notes": "Every check is green on this. The money stays inside the guard, the ledger balances, the invariants hold. specs/product/requirement.md section 'Retries' covers authorise and capture and is silent on refund. Escalate to payments-product. Do not choose a policy."
+      "notes": "Every check is green on this. The money stays inside the guard, the ledger balances, the invariants hold. specs/product/payments.md section 'Retries' covers authorise and capture and is silent on refund. Escalate to payments-product. Do not choose a policy."
     }
   ],
   "pathologies": [

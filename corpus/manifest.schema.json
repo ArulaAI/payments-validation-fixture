@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Round manifest",
-  "description": "Ground truth for one round. See specs/03-manifest-schema.md.",
+  "description": "Ground truth for one round. See docs/03-manifest-schema.md.",
   "type": "object",
   "required": [
     "round",

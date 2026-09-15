@@ -84,7 +84,7 @@ corpus/         Failure classes, the manifest schema, one directory per round
 docs/           requirement.md, which is what the skills compare the code against
 ```
 
-Start with [`specs/04-plan.md`](specs/04-plan.md). It cites the requirement behind every
+Start with [`docs/04-plan.md`](docs/04-plan.md). It cites the requirement behind every
 task and says plainly what is not built yet.
 
 ## Rounds

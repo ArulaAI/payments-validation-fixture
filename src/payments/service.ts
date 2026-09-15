@@ -6,7 +6,7 @@
  * Read FR-6 before changing refund. Authorise and capture take an idempotency key.
  * Refund does not, and that is the F8 specification gap the course reserves for human
  * judgment. The requirement is silent on whether a refund is idempotent, so the code is
- * silent too. Adding a key here without amending specs/product/requirement.md would close the
+ * silent too. Adding a key here without amending specs/product/payments.md would close the
  * teaching gap and quietly change the product's behaviour on a question nobody has
  * answered.
  */

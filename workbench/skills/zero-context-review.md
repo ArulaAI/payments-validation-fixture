@@ -7,7 +7,7 @@ Covers F5. Evidence type: opinion. Never proof.
 Start a session that has seen nothing else. Give it exactly two things:
 
 1. the diff under review
-2. `specs/product/requirement.md` for this change
+2. `specs/product/payments.md` for this change
 
 Do not give it the authoring transcript, the author's summary, the plan, or any earlier
 message in the session that produced the code. Independence is the configuration, not the

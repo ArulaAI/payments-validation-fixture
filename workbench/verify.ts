@@ -37,7 +37,7 @@ const EM_DASH = String.fromCharCode(0x2014);
 
 for (const file of sourceFiles()) {
   const path = rel(file);
-  if (path.startsWith('specs/') || path.startsWith('.validation/') || EXEMPT.has(path)) continue;
+  if (path.startsWith('docs/') || path.startsWith('.validation/') || EXEMPT.has(path)) continue;
   const text = readFileSync(file, 'utf8');
   for (const word of contract.vocabulary.banned) {
     if (new RegExp(`\\b${word}s?\\b`, 'i').test(text)) {
@@ -129,18 +129,30 @@ for (const dir of rounds) {
 }
 
 /*
- * The learner's requirement, specs/product/requirement.md, must stay silent on refund
+ * The learner's requirement, specs/product/payments.md, must stay silent on refund
  * idempotency. That silence is F8 and it is the whole of Course 5.
  *
  * FR-6 in our build spec asks a human to remember this. A human remembering is the
  * weakest guard there is, so check it.
  */
-const productRequirement = readFileSync(join(ROOT, 'specs', 'product', 'requirement.md'), 'utf8');
+const productRequirement = readFileSync(join(ROOT, 'specs', 'product', 'payments.md'), 'utf8');
 const retries = productRequirement.slice(productRequirement.indexOf('## Retries'));
 check(
   !/refund/i.test(retries.slice(0, retries.indexOf('##', 3))),
-  'specs/product/requirement.md now mentions refund under Retries. That closes the F8 gap Course 5 depends on',
+  'specs/product/payments.md now mentions refund under Retries. That closes the F8 gap Course 5 depends on',
 );
+
+/*
+ * Spec layout, per the SPEED convention in docs/writing-specs.md.
+ *
+ * specs/ is the payments service and belongs to the learner. docs/ is this repository and
+ * belongs to us. Collapsing the two is how a learner ends up judging a change against our
+ * build notes.
+ */
+for (const required of ['specs/README.md', 'specs/product/payments.md', 'specs/tech/payments.md', 'specs/defects/TEMPLATE.md', 'docs/README.md']) {
+  check(existsSync(join(ROOT, required)), `spec layout: ${required} is missing`);
+}
+check(!existsSync(join(ROOT, 'specs', '02-requirements.md')), 'our build spec is in specs/, where learners will read it as the requirement');
 
 /*
  * Every command the README tells a learner to run must exist. A README that names a
