@@ -2,6 +2,14 @@
 
 Owner: payments-product. Version 1.3.
 
+> **This is the in-world product requirement. Learners read this one.**
+>
+> It states what the payments service is supposed to do, as payments-product wrote it.
+> It is deliberately incomplete, and finding what it does not say is Course 5.
+>
+> Do not confuse it with `specs/02-requirements.md`, which is our own build spec for this
+> teaching repository and which learners never see.
+
 ## Scope
 
 A merchant authorises a card payment, captures all or part of it, and may refund against

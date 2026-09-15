@@ -129,6 +129,20 @@ for (const dir of rounds) {
 }
 
 /*
+ * The learner's requirement, specs/product/requirement.md, must stay silent on refund
+ * idempotency. That silence is F8 and it is the whole of Course 5.
+ *
+ * FR-6 in our build spec asks a human to remember this. A human remembering is the
+ * weakest guard there is, so check it.
+ */
+const productRequirement = readFileSync(join(ROOT, 'specs', 'product', 'requirement.md'), 'utf8');
+const retries = productRequirement.slice(productRequirement.indexOf('## Retries'));
+check(
+  !/refund/i.test(retries.slice(0, retries.indexOf('##', 3))),
+  'specs/product/requirement.md now mentions refund under Retries. That closes the F8 gap Course 5 depends on',
+);
+
+/*
  * Every command the README tells a learner to run must exist. A README that names a
  * script nobody kept is the same failure as markup naming a CSS class nobody kept: the
  * tests pass, and the first person to follow the instructions hits a wall.

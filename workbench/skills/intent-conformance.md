@@ -9,7 +9,7 @@ the code but absent from the requirement.
 
 ## Prompt
 
-> Compare this diff to `docs/requirement.md`. List behaviour the code implements that the
+> Compare this diff to `specs/product/requirement.md`. List behaviour the code implements that the
 > requirement does not ask for, and requirement clauses the code does not implement. Do
 > not judge whether the extra behaviour is good.
 

@@ -3,6 +3,14 @@
 Status: draft for review. Built on [01-prd.md](01-prd.md). Every plan task in
 [04-plan.md](04-plan.md) cites at least one requirement id from this file.
 
+> **This is our build spec for the teaching repository. Learners never see it.**
+>
+> It says what this repository must do, in RFC-2119 language, with ids the plan cites.
+>
+> The document learners actually read is
+> [`specs/product/requirement.md`](product/requirement.md), the in-world payments
+> requirement. That one is deliberately incomplete. This one explains why.
+
 Keywords follow RFC 2119. MUST is binding. SHOULD is a strong default that needs a
 recorded reason to break.
 

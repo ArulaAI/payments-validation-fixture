@@ -13,7 +13,7 @@ The second set is where unspecified policy hides.
 
 ## Prompt
 
-> Map every clause in `docs/requirement.md` to the code that implements it. Then list
+> Map every clause in `specs/product/requirement.md` to the code that implements it. Then list
 > behaviour in the diff that no clause authorises. Do not decide whether any gap matters.
 
 ## Why this covers nothing
