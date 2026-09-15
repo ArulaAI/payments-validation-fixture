@@ -4,7 +4,7 @@ Status: draft for review. Built on [00-analysis.md](00-analysis.md).
 
 ## Product
 
-`payments-workbench-fixture` is the codebase the Validation Workbench course validates.
+`payments-validation-fixture` is the codebase the Validation Workbench course validates.
 It is a small card-payments authorisation service with a double-entry ledger, shipped
 alongside a vendored set of checks, a chain runner that emits evidence bundles and a
 versioned corpus of seeded defects.

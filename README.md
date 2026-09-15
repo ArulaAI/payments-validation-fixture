@@ -1,4 +1,4 @@
-# payments-workbench-fixture
+# payments-validation-fixture
 
 The codebase the Validation Workbench course validates. A small card-payments
 authorisation service with a double-entry ledger, a vendored set of checks, a workflow
@@ -13,7 +13,7 @@ manifest before they meet it.
 No install. No accounts. No network.
 
 ```sh
-git clone <this repo> && cd payments-workbench-fixture
+git clone <this repo> && cd payments-validation-fixture
 node --version          # 22 or later
 npm test                # the suite
 workbench validate         # the whole workflow, emits an evidence bundle

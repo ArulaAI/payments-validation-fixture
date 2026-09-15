@@ -126,7 +126,7 @@ them. This keeps the branch list short enough to be navigation.
 
 ### Open questions for the client
 
-1. Is there a real GitHub organisation? `meridian-labs` was illustrative.
+1. Is there a real GitHub organisation? `ArulaAI` was illustrative.
 2. Is Meridian on GitHub at all, rather than GitLab or Bitbucket? Classroom has no
    equivalent elsewhere and would need building.
 3. Is the course internal to Meridian or sold by Arula? A commercial course cannot have
