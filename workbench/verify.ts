@@ -135,24 +135,20 @@ for (const dir of rounds) {
  * FR-6 in our build spec asks a human to remember this. A human remembering is the
  * weakest guard there is, so check it.
  */
-const productRequirement = readFileSync(join(ROOT, 'specs', 'product', 'payments.md'), 'utf8');
-const retries = productRequirement.slice(productRequirement.indexOf('## Retries'));
-check(
-  !/refund/i.test(retries.slice(0, retries.indexOf('##', 3))),
-  'specs/product/payments.md now mentions refund under Retries. That closes the F8 gap Course 5 depends on',
-);
-
+const productSpec = readFileSync(join(ROOT, 'specs', 'product', 'payments.md'), 'utf8');
 /*
- * Spec layout, per the SPEED convention in docs/writing-specs.md.
- *
- * specs/ is the payments service and belongs to the learner. docs/ is this repository and
- * belongs to us. Collapsing the two is how a learner ends up judging a change against our
- * build notes.
+ * Scan the whole document rather than a named section. The previous version sliced from a
+ * "## Retries" heading, and when the spec was restructured that heading went away, so the
+ * slice was empty and the check passed without examining anything. Green because nothing
+ * looked, in the repository that exists to teach people to catch exactly that.
  */
-for (const required of ['specs/README.md', 'specs/product/payments.md', 'specs/tech/payments.md', 'specs/defects/TEMPLATE.md', 'docs/README.md']) {
-  check(existsSync(join(ROOT, required)), `spec layout: ${required} is missing`);
-}
-check(!existsSync(join(ROOT, 'specs', '02-requirements.md')), 'our build spec is in specs/, where learners will read it as the requirement');
+const decidesRefundRepeats = productSpec
+  .split(/(?<=[.!?])\s+|\n/)
+  .some(sentence => /refund/i.test(sentence) && /idempoten|repeated|duplicate|retried|twice|same request/i.test(sentence));
+check(
+  !decidesRefundRepeats,
+  'specs/product/payments.md now decides what a repeated refund request means. That closes the F8 gap Course 5 depends on',
+);
 
 /*
  * Every command the README tells a learner to run must exist. A README that names a

@@ -106,6 +106,13 @@
           },
           "notes": {
             "type": "string"
+          },
+          "violates": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The requirement id this defect violates, from specs/tech or specs/product. Null when no requirement covers it, which is itself worth knowing."
           }
         }
       }
