@@ -2,7 +2,13 @@
   "round": 0,
   "title": "Add refund retry support for the merchant portal",
   "base": "main",
-  "diffLines": 212,
+  "diffLines": 54,
+  "provenance": {
+    "author": "agent",
+    "model": "unspecified",
+    "transcript": null,
+    "selfReview": "The change was reported as complete and correct, with the new test cited as evidence that retries behave."
+  },
   "cleanControl": false,
   "defects": [
     {

@@ -105,6 +105,18 @@ for (const dir of rounds) {
   for (const key of schema.required) {
     check(key in manifest, `CR-8: ${dir}/manifest.json is missing "${key}"`);
   }
+  // The manifest claimed 212 lines against a 54-line diff. Measure it.
+  if (typeof manifest.diffLines === 'number') {
+    try {
+      const stat = execFileSync('git', ['diff', '--numstat', `${manifest.base}...${dir.replace('round-', 'round-')}`], {
+        cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'],
+      });
+      const actual = stat.trim().split('\n').filter(Boolean)
+        .reduce((n, line) => { const [a, d] = line.split('\t'); return n + (Number(a) || 0) + (Number(d) || 0); }, 0);
+      if (actual > 0) check(actual === manifest.diffLines, `${dir} claims diffLines ${manifest.diffLines}, the diff is ${actual}`);
+    } catch { /* branch not present in this checkout */ }
+  }
+
   // CR-3: exactly one reserved defect.
   const reserved = manifest.defects.filter((d: { reserved: boolean }) => d.reserved);
   check(reserved.length === 1, `CR-3: ${dir} has ${reserved.length} reserved defects, expected exactly 1`);
