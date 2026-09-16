@@ -42,9 +42,6 @@ export const webhook = (url: string, status: number, body: unknown): void => {
  * Sink 5. Serialising a caught error together with the request that caused it is a
  * standard and useful debugging habit. It is also how a whole request object, including
  * whatever it holds, leaves the process.
- *
- * On this branch the context is redacted first, so the baseline is clean. Removing or
- * bypassing `redact` is a realistic one-line change and is exactly what round 0 seeds.
  */
 const PAN_FIELDS = new Set(['pan', 'cardNumber', 'primaryAccountNumber', 'cvv', 'cvc']);
 

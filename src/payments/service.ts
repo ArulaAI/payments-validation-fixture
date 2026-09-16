@@ -4,11 +4,7 @@
  * Flows: authorise, capture (including partial), refund, void.
  *
  * Read FR-6 before changing refund. Authorise and capture take an idempotency key.
- * Refund does not, and that is the F8 specification gap the course reserves for human
- * judgment. The requirement is silent on whether a refund is idempotent, so the code is
- * silent too. Adding a key here without amending specs/product/payments.md would close the
- * teaching gap and quietly change the product's behaviour on a question nobody has
- * answered.
+ * Refund does not.
  */
 
 import { type Minor, add, allocate, applyRate, minor, sub } from '../domain/money.ts';
@@ -152,9 +148,6 @@ export class PaymentsService {
    * requests are one refund or two. Both stay inside the guard, both succeed, and both
    * are recorded. The money is not wrong. Whether the merchant meant to pay twice is a
    * question the specification never asked.
-   *
-   * That is the F8 gap. No check decides it, because deciding it means choosing a policy,
-   * and choosing a policy is not a thing a tool may do. Escalate rather than guess.
    */
   refund(paymentId: string, captureId: string, amount?: number): Refund {
     const payment = this.require(paymentId);
