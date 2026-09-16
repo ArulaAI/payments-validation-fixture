@@ -3,3 +3,6 @@ bundles/*.json
 !bundles/.gitkeep
 .validation/
 decisions.json
+
+# SPEED runtime state
+.speed/

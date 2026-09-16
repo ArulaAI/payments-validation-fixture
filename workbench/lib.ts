@@ -17,7 +17,7 @@ export type Result = {
 
 export const ROOT = new URL('..', import.meta.url).pathname.replace(/\/$/, '');
 
-const SKIP = new Set(['node_modules', '.git', 'bundles', 'dist', '.github']);
+const SKIP = new Set(['node_modules', '.git', '.speed', 'bundles', 'dist', '.github']);
 
 export function walk(dir = ROOT, out: string[] = []): string[] {
   for (const name of readdirSync(dir)) {
