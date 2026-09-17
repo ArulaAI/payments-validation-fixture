@@ -4,3 +4,7 @@
 # accepted as evidence.
 test_command = "node --experimental-strip-types --test --test-reporter=junit --test-reporter-destination=\"$SPEED_EVAL_JUNIT_FILE\" {selectors}"
 test_file_patterns = ["test/*.test.ts"]
+
+[diagnose]
+classes_file = ".speed/classes.yaml"
+spec_file = "specs/product/payments.md"

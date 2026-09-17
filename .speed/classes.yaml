@@ -1,0 +1,60 @@
+# Project-owned failure-class rules for `speed diagnose`. Every rule here
+# is a routing hint toward a real downstream check (typecheck, mutation,
+# invariant, differential, etc.) — none of them execute or approximate
+# that check, and an absent signal never means the failure is absent.
+
+classes:
+  - id: F1
+    title: Hallucinated API, config key or dependency
+    rules:
+      - look: added-lines
+        match: '^\s*(import\s|.*\brequire\()'
+        say: "{n} new import/require statement(s) added — a candidate to verify with typecheck/dep-provenance, not proof of a hallucinated dependency"
+      - look: added-lines
+        match: '\bprocess\.env\.[A-Z0-9_]+'
+        say: "{n} added line(s) referencing a new environment variable — a candidate to verify with typecheck/dep-provenance, not proof it is missing"
+
+  - id: F2
+    title: Cardholder data leakage
+    rules:
+      - look: added-lines
+        match: '\b(log|logger|webhook|telemetry)\s*\.'
+        say: "{n} file(s) with an observability sink call in the added lines"
+      - look: added-lines
+        match: '(?<!\d)\d{13,19}(?!\d)'
+        say: "{n} added line(s) containing a 13 to 19 digit sequence"
+
+  - id: F3
+    title: Weak test that passes and proves nothing
+    rules:
+      - look: changed-source-with-test-change
+        say: "{n} changed source file(s) with an accompanying test change — a routing candidate for mutation testing; a test existing (or asserting) proves nothing about whether it discriminates correct from broken"
+
+  - id: F4
+    title: Broken invariant under generated sequences or retry
+    rules:
+      - look: added-lines
+        match: '\b(retry|attempt|maxAttempts)\b.*\b(refund|charge|capture|authoris|authoriz|payment)\b|\b(refund|charge|capture|authoris|authoriz|payment)\b.*\b(retry|attempt|maxAttempts)\b'
+        say: "{n} added line(s) combining a retry/repeat construct with a payment-affecting call — a routing candidate for invariant/property testing, not a confirmed broken invariant"
+
+  - id: F5
+    title: Sycophantic self-approval
+    rules: []
+
+  - id: F6
+    title: Wrong problem, scope creep, over-engineering
+    rules:
+      - look: changed-files-outside-declared
+        say: "{n} file(s) changed outside the declared file list — a scope-guard signal only, not a judgment that the extra work is unjustified: {list}"
+
+  - id: F7
+    title: Silent regression in untouched behaviour
+    rules:
+      - look: changed-source-without-test-change
+        say: "{n} changed source file(s) with no matching test change — a coverage-gap proxy; only differential testing establishes whether behaviour actually regressed"
+
+  - id: F8
+    title: Specification gap
+    rules:
+      - look: new-names-absent-from-spec
+        say: "{n} name(s) this change introduces that the product spec never uses: {list}"

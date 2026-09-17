@@ -9,6 +9,7 @@ decisions.json
 # Uses `.speed/*` not `.speed/`: git will not descend into an excluded
 # directory, so a trailing-slash exclude makes the negations below dead.
 .speed/*
+!.speed/classes.yaml
 !.speed/active_feature
 !.speed/features/
 .speed/features/*
