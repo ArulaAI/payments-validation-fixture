@@ -1,0 +1,3 @@
+[diagnose]
+classes_file = ".speed/classes.yaml"
+spec_file = "specs/product/payments.md"

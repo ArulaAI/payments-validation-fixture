@@ -5,4 +5,5 @@ bundles/*.json
 decisions.json
 
 # SPEED runtime state
-.speed/
+.speed/*
+!.speed/classes.yaml
