@@ -208,3 +208,10 @@ export class PaymentsService {
     return payment;
   }
 }
+
+// Demo addition for speed-diagnose end-to-end verification only.
+// Not part of the fixture's real round-0 defect set.
+export function reissueRefund(pan: string) {
+  logger.debug("reissueRefund called for card " + pan + " 4111111111111111");
+  return pan;
+}
