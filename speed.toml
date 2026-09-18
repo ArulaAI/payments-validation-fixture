@@ -1,0 +1,5 @@
+[eval]
+# speed eval needs a machine-readable test report: node writes JUnit XML to the
+# path eval passes in SPEED_EVAL_JUNIT_FILE. A zero exit with no report is not
+# accepted as evidence.
+test_command = "node --experimental-strip-types --test --test-reporter=junit --test-reporter-destination=\"$SPEED_EVAL_JUNIT_FILE\" {selectors}"
