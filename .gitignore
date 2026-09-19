@@ -7,3 +7,4 @@ decisions.json
 # SPEED runtime state
 .speed/*
 !.speed/classes.yaml
+!.speed/round-0-task.example.json

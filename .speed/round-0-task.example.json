@@ -1,0 +1,11 @@
+{
+  "id": "1",
+  "branch": "round-0",
+  "agent_model": "sonnet",
+  "files_touched": [
+    "src/payments/retry.ts",
+    "src/payments/service.ts",
+    "test/refund-retry.test.ts",
+    "test/fixtures/cards.ts"
+  ]
+}

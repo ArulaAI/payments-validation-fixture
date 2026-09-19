@@ -143,6 +143,33 @@ mutant that no test can ever kill.
 
 Do not read `corpus/round-N/manifest.json` before working the round. It is the answer key.
 
+## SPEED Diagnose
+
+`speed diagnose` — the Workbench (`ArulaAI/workbench`) tool, not the `workbench` binary
+above — reads `speed.toml` and `.speed/classes.yaml` from this repo to count F1–F8
+signals on a diff. It needs a task record naming which branch to diagnose; that record is
+per-machine runtime state under `.speed/features/`, which is gitignored the same way
+`decisions.json` is, so a fresh clone doesn't have one yet:
+
+```sh
+# round-0 and main only need to be resolvable refs, not checked out — this
+# repo stays on feat/301-config throughout. If you cloned with `git clone -b
+# feat/301-config ...` directly, main has no local branch yet either — only
+# origin/main — so create both explicitly:
+git branch round-0 origin/round-0   # if you don't already have a local round-0
+git branch main origin/main         # if you don't already have a local main
+
+mkdir -p .speed/features/payments/tasks
+cp .speed/round-0-task.example.json .speed/features/payments/tasks/1.json
+
+/path/to/workbench/speed diagnose -f payments --task 1
+```
+
+`.speed/round-0-task.example.json` is the tracked source of truth for diagnosing round-0
+(`branch`, `agent_model`, `files_touched`) — copy it in once per clone, the same way
+`corpus/decisions.example.json` above becomes your working `decisions.json`. This diffs
+`main...round-0` and writes `.speed/features/payments/risk-surface.yaml`.
+
 ## Card data
 
 Every card number here is a published scheme test BIN, and they are Luhn-valid on
