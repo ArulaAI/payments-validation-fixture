@@ -9,7 +9,6 @@ The test specification precedes task planning, so ownership now lives in existin
 ## Inputs and ownership
 
 - [Test specification](../specs/tests/payments.md): 22 scenarios, outcomes, traceability and explicit deferrals. It is read-only during eval.
-- [Task fixture](../specs/tests/speed-eval-tasks.json): existing task fields with `[SCENARIO-ID]` criteria and `verify_by: test`. Criteria are stored as a readable array of objects with `criterion` and `verify_by`. No new mapping fields are needed; legacy string criteria remain readable in SPEED.
 - [Service tests](../test/service.test.ts), [money tests](../test/money.test.ts), [ledger tests](../test/ledger.test.ts), [refund retry test](../test/refund-retry.test.ts): individual titles carry matching IDs.
 - [Runner configuration](../speed.toml): Node JUnit command and allowed test file pattern.
 - [Setup script](../bin/setup-speed-eval.py): seeds the two done fixture tasks and idle feature state. This reproducible fixture is not an actual LLM-generated plan or completed SPEED integration.
