@@ -1,0 +1,122 @@
+{
+  "tasks": [
+    {
+      "id": "1",
+      "title": "Authorisation and money input evaluation fixture",
+      "status": "done",
+      "files_touched": [
+        "src/payments/service.ts",
+        "src/domain/money.ts",
+        "test/service.test.ts",
+        "test/money.test.ts"
+      ],
+      "acceptance_criteria": [
+        {
+          "criterion": "[AC-01] Given a valid card, when 2500 is authorised, then the amount is reserved and a balanced pair is posted",
+          "verify_by": "test"
+        },
+        {
+          "criterion": "[AC-02] Given an authorised payment, when its stored record is inspected, then it carries only a token and the last four digits",
+          "verify_by": "test"
+        },
+        {
+          "criterion": "[VAL-01] When a fractional minor unit is constructed, then it is rejected",
+          "verify_by": "test"
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "title": "Remaining payment behavior and coverage gap evaluation fixture",
+      "status": "done",
+      "files_touched": [
+        "src/payments/service.ts",
+        "src/payments/retry.ts",
+        "src/domain/money.ts",
+        "src/domain/ledger.ts",
+        "test/service.test.ts",
+        "test/money.test.ts",
+        "test/ledger.test.ts",
+        "test/refund-retry.test.ts"
+      ],
+      "acceptance_criteria": [
+        {
+          "criterion": "[AC-03] Given an authorise carrying idempotency key k1, when the same request is repeated with k1, then the original payment is returned and no second record exists",
+          "verify_by": "test"
+        },
+        {
+          "criterion": "[AC-04] Given an authorisation of 10000, when it is captured in full, then fee and net both post and sum to the capture",
+          "verify_by": "test"
+        },
+        {
+          "criterion": "[AC-05] Given an authorisation of 10000, when 6000 and then 4000 are captured, then both succeed and a third capture is rejected",
+          "verify_by": "test"
+        },
+        {
+          "criterion": "[AC-06] Given an authorisation of 1000, when 1001 is captured, then the capture is rejected rather than truncated",
+          "verify_by": "test"
+        },
+        {
+          "criterion": "[AC-07] Given a capture of 5000 with 3000 already refunded, when 2001 more is refunded, then it is rejected and the ledger stays balanced",
+          "verify_by": "test"
+        },
+        {
+          "criterion": "[AC-08] Given an uncaptured authorisation, when it is voided, then the reservation is released",
+          "verify_by": "test"
+        },
+        {
+          "criterion": "[AC-09] Given a captured payment, when it is voided, then the request is rejected",
+          "verify_by": "test"
+        },
+        {
+          "criterion": "[AC-10] Given a capture of 10000, when schedules of 1, 2, 3 and 7 instalments are produced, then each sums exactly to 10000",
+          "verify_by": "test"
+        },
+        {
+          "criterion": "[AC-11] Given two captures and a refund on one payment, when the four invariants are checked, then none is violated",
+          "verify_by": "test"
+        },
+        {
+          "criterion": "[VAL-02] Given amounts from 1 to 123457 and part counts from 1 to 11, when allocate splits them, then the parts sum to the amount",
+          "verify_by": "test"
+        },
+        {
+          "criterion": "[VAL-03] Given 1000 in 3 parts, when allocated, then the remainder is front-loaded",
+          "verify_by": "test"
+        },
+        {
+          "criterion": "[VAL-04] Given 1000 and -1000 at 1.49%, when applyRate runs, then both round half up symmetrically",
+          "verify_by": "test"
+        },
+        {
+          "criterion": "[LEDGER-01] When one movement is posted, then exactly two entries of opposite sign are written",
+          "verify_by": "test"
+        },
+        {
+          "criterion": "[LEDGER-02] When 50 movements are posted, then the ledger nets to zero",
+          "verify_by": "test"
+        },
+        {
+          "criterion": "[RETRY-01] Given the existing round-0 refund retry test, when it issues two refunds of 2500 against a capture of 10000, then both records exist",
+          "verify_by": "test"
+        },
+        {
+          "criterion": "[RISK-01] Given an authorise request that fails, when the failure is serialised to the application log, then no field holds a full card number",
+          "verify_by": "test"
+        },
+        {
+          "criterion": "[RISK-02] Given captures of 200 and 9999, when the scheme fee is taken at the capture boundary, then it is rounded half up",
+          "verify_by": "test"
+        },
+        {
+          "criterion": "[AC-12] Given a capture carrying idempotency key c1, when the same request is repeated with c1, then the original capture is returned and no second capture is recorded",
+          "verify_by": "test"
+        },
+        {
+          "criterion": "[EDGE-01] Given a capture of 5000, when exactly 5000 is refunded against it, then the refund is accepted and a further refund of 1 is rejected",
+          "verify_by": "test"
+        }
+      ]
+    }
+  ]
+}
