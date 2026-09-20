@@ -54,21 +54,44 @@ specs/tests/payments.md + tasks/*.json + speed.toml
 |---|---|---|---|
 | Task 1 | `.speed/features/payments/eval/task-1/` | `.speed/features/payments/evaluation-task-1.yaml` | 3 passed, accepted, strict exit 0 |
 | Task 2 | `.speed/features/payments/eval/task-2/` | `.speed/features/payments/evaluation-task-2.yaml` | 15 passed, 4 unverified, strict exit 2 |
-| Feature | `.speed/features/payments/eval/` | `.speed/features/payments/evaluation.yaml` | 18 passed, 5 unverified, strict exit 2 |
+| Feature | `.speed/features/payments/eval/` | `.speed/features/payments/evaluation.yaml` | 18 passed, 6 unverified, strict exit 2 |
 
-The four missing scenarios are RISK-01, RISK-02, AC-12, and EDGE-01. The feature report also includes COVERAGE-01 for TR12. Its 23 rows contain 22 scenarios and one requirement coverage result, not 23 executed tests. OOS-01 remains an unresolved product decision even when RETRY-01 passes.
+The four missing scenarios are RISK-01, RISK-02, AC-12, and EDGE-01. The feature report also includes COVERAGE-01 for TR12 and BUILD-INTEGRATED because this fresh feature has not completed `speed integrate`. Its 24 rows contain 22 scenarios and two gate results. Exactly 18 tests execute. OOS-01 remains an unresolved product decision even when RETRY-01 passes.
 
 Each output directory contains `test-plan.json`, `scenario-results.json`, `report.json`, `summary.md`, `residue.json`, and `latest-attempt.json`. The `runs/<run-id>/` directory keeps input snapshots and raw evidence under `commands/<command-id>/`: JUnit XML, output log, and structured result JSON. Task runs publish their own outputs and do not replace the feature report. Generated files stay local and Git-ignored; the tracked inputs and setup script reproduce them.
 
 ## Validation checklist
 
-- [ ] Confirm the branch descends from round-0 and application code/tests have no diff from it.
-- [ ] Run all 18 existing round-0 tests as the baseline.
-- [ ] Generate fresh runtime state from the tracked task fixture.
-- [ ] Run task 1 and confirm exactly three individual selections across two files.
-- [ ] Run the feature and confirm all 18 individual tests plus visible missing coverage.
-- [ ] Run task 2 and confirm task 1 scenarios are excluded while missing scenarios remain visible.
-- [ ] Confirm task evaluation does not overwrite the feature report.
-- [ ] Verify report/YAML consistency, local evidence paths, and unchanged task JSON.
+- [x] Confirm the branch descends from round-0 and application code/tests have no diff from it.
+- [x] Run all 18 existing round-0 tests as the baseline.
+- [x] Generate fresh runtime state from the tracked task fixture.
+- [x] Run task 1 and confirm exactly three individual selections across two files.
+- [x] Run the feature and confirm all 18 individual tests plus visible missing coverage.
+- [x] Run task 2 and confirm task 1 scenarios are excluded while missing scenarios remain visible.
+- [x] Confirm task evaluation does not overwrite the feature report.
+- [x] Verify report/YAML consistency, local evidence paths, and unchanged task JSON.
 
-Observed results will be recorded after the live evaluations complete.
+## Observed live results
+
+Validated on 2026-09-20 using Node 24.4.1 and the updated SPEED checkout at `da7670d` (`feat/eval-test-spec-template`). The three evaluations ran against clean fixture commit `3f2f2bb`; this later documentation update does not change the tested setup, code, or mappings. The raw evidence paths now point to this repository rather than a temporary copy.
+
+| Scope | Strict exit | Tests passed | Unverified results | Run ID |
+|---|---|---|---|---|
+| task-1 | 0 | 3 | 0 | `10b41d50276f40e49710f3963595f4f3` |
+| feature | 2 | 18 | 6 | `c253bd1e281645dfa5be293741889500` |
+| task-2 | 2 | 15 | 4 | `c36371820bed4edbbe6647be6928e4e1` |
+
+All 18 tests also passed with `npm test`. Every eval command produced exactly one selected testcase in its JUnit report. Task 1 ran three test bodies across two files; task 2 ran 15 across four files. The task inputs stayed byte-for-byte unchanged, and task 2 left the full feature report unchanged. The JSON and YAML results agree.
+
+`npm run verify` reports one existing failure: "the course teaches F1, F4, F5, F6 but no round seeds a defect for them." Running the same verifier on an unmodified archive of `round-0` produced the same failure. No corpus repair is included in this eval setup.
+
+The feature result remains unaccepted because four automated scenarios have no tests, TR12 has no scenario coverage, and SPEED integration has not been performed. No semantic judge or defect-generation run was needed for these checks.
+
+### Open the live outputs
+
+- [Task 1 plan](../.speed/features/payments/eval/task-1/test-plan.json), [report](../.speed/features/payments/eval/task-1/report.json), [summary](../.speed/features/payments/eval/task-1/summary.md), and [YAML](../.speed/features/payments/evaluation-task-1.yaml).
+- [Task 2 plan](../.speed/features/payments/eval/task-2/test-plan.json), [report](../.speed/features/payments/eval/task-2/report.json), [summary](../.speed/features/payments/eval/task-2/summary.md), and [YAML](../.speed/features/payments/evaluation-task-2.yaml).
+- [Feature plan](../.speed/features/payments/eval/test-plan.json), [report](../.speed/features/payments/eval/report.json), [summary](../.speed/features/payments/eval/summary.md), and [YAML](../.speed/features/payments/evaluation.yaml).
+- [Validation metadata](../.speed/features/payments/logs/validation.json), command stdout JSON, and stderr logs are in `.speed/features/payments/logs/`.
+
+These links require the generated local `.speed` directory. To regenerate it in another checkout, follow the setup and CLI commands above.
