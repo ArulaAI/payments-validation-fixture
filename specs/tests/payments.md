@@ -146,41 +146,15 @@ Evaluates the payments service (authorise, capture, refund, void, settlement sch
 
 ## Execution and Evidence
 
-- **Branch under evaluation:** `test/speed-eval`, based on `round-0` at `965029f`. The seeded payment code and tests remain unchanged.
-- **Task mapping:** Task 1 owns AC-01, AC-02, and VAL-01. Task 2 owns all other rows, including the missing tests. Both tasks share service and money test files.
-- **Individual selection:** Selector identifies the file; Test name is the exact existing Node test title. Eval adds an anchored name filter, then reads the matching test result from JUnit evidence.
-- **Missing tests:** RISK-01, RISK-02, AC-12, and EDGE-01 retain empty selectors and stay unverified. A passing test in the same file cannot cover them.
-- **Runner configuration:** `speed.toml`, section `[eval]`. Eval supplies `SPEED_EVAL_JUNIT_FILE`, substitutes `{selectors}`, and applies the test-name filter.
-- **Setup:** `python3 bin/setup-speed-eval.py` creates the local task state from `specs/tests/speed-eval-tasks.json`. See `docs/speed-eval.md` for the exact commands and output paths.
-- **Feature output:** `.speed/features/payments/eval/report.json`, `summary.md`, and `.speed/features/payments/evaluation.yaml`.
-- **Task output:** `.speed/features/payments/eval/task-<id>/` and `.speed/features/payments/evaluation-task-<id>.yaml`.
+This specification is the scenario catalog, authored before task planning. Task IDs and runnable test mappings do not belong here.
 
-| Scenario | Task | Selector | Test name | Runner |
-|---|---|---|---|---|
-| AC-01 | 1 | test/service.test.ts | authorise records the amount and posts a balanced pair | node |
-| AC-02 | 1 | test/service.test.ts | authorise never stores a full PAN | node |
-| AC-03 | 2 | test/service.test.ts | idempotent authorise returns the original payment | node |
-| AC-04 | 2 | test/service.test.ts | capture splits into net and fee, and both post | node |
-| AC-05 | 2 | test/service.test.ts | partial captures accumulate exactly and never exceed the authorisation | node |
-| AC-06 | 2 | test/service.test.ts | capture beyond the authorisation is rejected | node |
-| AC-07 | 2 | test/service.test.ts | refund reduces nothing below zero and cannot exceed the capture | node |
-| AC-08 | 2 | test/service.test.ts | void reverses an uncaptured authorisation | node |
-| AC-09 | 2 | test/service.test.ts | a captured payment cannot be voided | node |
-| AC-10 | 2 | test/service.test.ts | settlement schedule conserves the captured total | node |
-| AC-11 | 2 | test/service.test.ts | all four invariants hold after a mixed sequence | node |
-| VAL-01 | 1 | test/money.test.ts | money rejects fractional minor units | node |
-| VAL-02 | 2 | test/money.test.ts | allocate never creates or destroys money | node |
-| VAL-03 | 2 | test/money.test.ts | allocate front-loads the remainder | node |
-| VAL-04 | 2 | test/money.test.ts | applyRate rounds symmetrically about zero | node |
-| LEDGER-01 | 2 | test/ledger.test.ts | every post writes a balanced pair | node |
-| LEDGER-02 | 2 | test/ledger.test.ts | ledger nets to zero across many postings | node |
-| RETRY-01 | 2 | test/refund-retry.test.ts | a retried refund is accepted | node |
-| RISK-01 | 2 | | | node |
-| RISK-02 | 2 | | | node |
-| AC-12 | 2 | | | node |
-| EDGE-01 | 2 | | | node |
+`speed plan` reads this catalog. Task acceptance criteria retain `[SCENARIO-ID]` with `verify_by: test`, and `files_touched` lists the intended test files. Implemented Node tests carry the same ID in their literal title, for example `test('[AC-01] authorise records the amount and posts a balanced pair', ...)`.
 
-An automated scenario passes only when its named test is discovered, executes, and its assertions pass. Without a task filter, all declared scenarios are evaluated. With a task filter, only that task's scenarios and tests are selected. Missing automated evidence remains unverified in either scope.
+At evaluation time, SPEED filters the task's `files_touched` by `speed.toml`, discovers tagged test declarations, and generates `test-plan.json` with exact file and full test-name selectors. The catalog and task JSON are read-only during eval. A task run selects only its scenarios; a feature run evaluates the entire catalog, including scenarios omitted from tasks or missing tests.
+
+RISK-01, RISK-02, AC-12, and EDGE-01 intentionally have no tests. They remain unverified. Passing other tests cannot supply their evidence.
+
+See `docs/speed-eval.md` for the reproducible round-0 fixture, task setup, commands and local output paths. The setup script seeds done fixture tasks; it is not an LLM-generated plan or a completed SPEED integration.
 
 ## Exit Criteria
 

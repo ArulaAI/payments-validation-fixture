@@ -6,7 +6,7 @@ import { TEST_CARDS, EXPIRY } from './fixtures/cards.ts';
 /*
  * Added with the refund retry work. Confirms a retried refund is accepted.
  */
-test('a retried refund is accepted', () => {
+test('[RETRY-01] a retried refund is accepted', () => {
   const s = new PaymentsService();
   const p = s.authorise({ pan: TEST_CARDS.visa, expiry: EXPIRY, amount: 10_000 });
   const c = s.capture(p.id, 10_000);
