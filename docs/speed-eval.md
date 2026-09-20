@@ -9,7 +9,7 @@ The test specification precedes task planning, so ownership now lives in existin
 ## Inputs and ownership
 
 - [Test specification](../specs/tests/payments.md): 22 scenarios, outcomes, traceability and explicit deferrals. It is read-only during eval.
-- [Task fixture](../specs/tests/speed-eval-tasks.json): existing task fields with `[SCENARIO-ID]` criteria and `verify_by: test`. Criteria are stored as bullet text, matching the existing task writer. No schema fields were added.
+- [Task fixture](../specs/tests/speed-eval-tasks.json): existing task fields with `[SCENARIO-ID]` criteria and `verify_by: test`. Criteria are stored as a readable array of objects with `criterion` and `verify_by`. No new mapping fields are needed; legacy string criteria remain readable in SPEED.
 - [Service tests](../test/service.test.ts), [money tests](../test/money.test.ts), [ledger tests](../test/ledger.test.ts), [refund retry test](../test/refund-retry.test.ts): individual titles carry matching IDs.
 - [Runner configuration](../speed.toml): Node JUnit command and allowed test file pattern.
 - [Setup script](../bin/setup-speed-eval.py): seeds the two done fixture tasks and idle feature state. This reproducible fixture is not an actual LLM-generated plan or completed SPEED integration.
@@ -72,7 +72,7 @@ AC-01's ledger net zero means two accounting entries balance, not that a custome
 
 Each output root retains `runs/<id>/` input snapshots and `commands/<id>/` raw reports/logs. `residue.json` is for unresolved semantic criteria; missing automated tests stay in the deterministic report. The current runtime does not generate `gaps.json`. Task runs do not overwrite feature results. `.speed` stays Git-ignored and must be regenerated in another checkout.
 
-## Observed fresh results
+## Previous task-derived baseline results
 
 Validated 2026-09-20 against clean fixture input commit `924a28e`, using Workbench implementation `ee22459` and Node 24.4.1. This documentation update does not change the tested source or inputs.
 
@@ -100,3 +100,11 @@ Verified:
 `npm run verify` still reports the existing course-corpus failure: "the course teaches F1, F4, F5, F6 but no round seeds a defect for them." The same failure was previously reproduced on an untouched round-0 archive; it is outside this mapping change. Its output is retained in `.speed/features/payments/logs/npm-verify.log`.
 
 Workbench also passed 233 distinct Python cases plus three subtests across two installed runtimes, and 132 shell checks. The five-tests/shared-file regression proves that tests 3 and 4 pass their task even when unrelated test 2 fails; the feature run catches test 2. Mixed pytest backend and Vitest/Jest frontend selection is tested separately from this Node-only payments repository.
+
+## Structured criteria and review table
+
+New task files store `acceptance_criteria` as an actual JSON array of objects, not an escaped string. Eval still reads older string-based tasks. The planner schemas and task writer now agree on this representation.
+
+The generated `summary.md` begins with a three-column Scenario results table: scenario ID; individual test/file results and scenario verdict; expected behavior from the spec beside runner evidence and output-log links. Missing tests retain a row. Task tables include only their selected scenarios; feature tables include the entire catalog.
+
+The expected behavior and execution evidence are displayed separately. SPEED does not independently prove that a test's assertions implement the spec, and does not invent actual application values that were not recorded by the runner.
