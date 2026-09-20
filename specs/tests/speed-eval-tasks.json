@@ -1,0 +1,32 @@
+{
+  "tasks": [
+    {
+      "id": "1",
+      "title": "Authorisation and money input evaluation fixture",
+      "status": "done",
+      "files_touched": [
+        "src/payments/service.ts",
+        "src/domain/money.ts",
+        "test/service.test.ts",
+        "test/money.test.ts"
+      ],
+      "acceptance_criteria": []
+    },
+    {
+      "id": "2",
+      "title": "Remaining payment behavior and coverage gap evaluation fixture",
+      "status": "done",
+      "files_touched": [
+        "src/payments/service.ts",
+        "src/payments/retry.ts",
+        "src/domain/money.ts",
+        "src/domain/ledger.ts",
+        "test/service.test.ts",
+        "test/money.test.ts",
+        "test/ledger.test.ts",
+        "test/refund-retry.test.ts"
+      ],
+      "acceptance_criteria": []
+    }
+  ]
+}
