@@ -4,5 +4,18 @@ bundles/*.json
 .validation/
 decisions.json
 
-# SPEED runtime state
-.speed/
+# SPEED runtime state. Ignored by default, but the payments eval fixture inputs
+# are tracked so `speed eval --feature payments` runs on a fresh checkout.
+# Uses `.speed/*` not `.speed/`: git will not descend into an excluded
+# directory, so a trailing-slash exclude makes the negations below dead.
+.speed/*
+!.speed/active_feature
+!.speed/features/
+.speed/features/*
+!.speed/features/payments/
+.speed/features/payments/*
+!.speed/features/payments/state.json
+!.speed/features/payments/test_spec_path
+!.speed/features/payments/tasks/
+.speed/features/payments/tasks/*
+!.speed/features/payments/tasks/*.json
