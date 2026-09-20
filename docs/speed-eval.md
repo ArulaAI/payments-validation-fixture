@@ -71,3 +71,32 @@ AC-01's ledger net zero means two accounting entries balance, not that a custome
 - [Validation metadata](../.speed/features/payments/logs/validation.json) and stdout/stderr logs are under `.speed/features/payments/logs/`.
 
 Each output root retains `runs/<id>/` input snapshots and `commands/<id>/` raw reports/logs. `residue.json` is for unresolved semantic criteria; missing automated tests stay in the deterministic report. The current runtime does not generate `gaps.json`. Task runs do not overwrite feature results. `.speed` stays Git-ignored and must be regenerated in another checkout.
+
+## Observed fresh results
+
+Validated 2026-09-20 against clean fixture input commit `924a28e`, using Workbench implementation `ee22459` and Node 24.4.1. This documentation update does not change the tested source or inputs.
+
+| Scope | Actual tests passed | Full report: pass / unverified | Accepted | Strict exit | Run ID |
+|---|---|---|---|---|---|
+| Task 1 | 3 | 6 / 0 | Yes | 0 | `9b8818c518cf4fb3b4a426f395f0773d` |
+| Feature | 18 | 36 / 10 | No | 2 | `db577c75b0f843a68997b896c047806d` |
+| Task 2 | 15 | 30 / 8 | No | 2 | `61607ceb2f0d4d21a3b59442a3ddf9dd` |
+
+The four missing scenarios each also have an unverified owning criterion, accounting for eight unverified rows. Feature evaluation adds the two coverage/integration gate rows. No assertion failed among the selected implemented tests.
+
+Verified:
+
+- [x] Source and assertions match round-0 after removing only test-title ID prefixes.
+- [x] Task 1 runs exactly its three tests across two files; task 2 runs its 15 across four files.
+- [x] Every execution produces exactly one passing JUnit testcase with an exact test-name filter.
+- [x] All generated plans identify `selection.source` as `task_criteria`.
+- [x] Missing tests remain visible at task and feature levels.
+- [x] Task JSON and test specification are unchanged by eval.
+- [x] Task 2 leaves the completed feature plan/report/YAML unchanged.
+- [x] Published JSON and YAML fields agree; JSON also carries the existing `applicable` summary count.
+- [x] Evidence paths point into this actual repository, with clean tested build provenance.
+- [x] `npm test` passes all 18 tests.
+
+`npm run verify` still reports the existing course-corpus failure: "the course teaches F1, F4, F5, F6 but no round seeds a defect for them." The same failure was previously reproduced on an untouched round-0 archive; it is outside this mapping change. Its output is retained in `.speed/features/payments/logs/npm-verify.log`.
+
+Workbench also passed 233 distinct Python cases plus three subtests across two installed runtimes, and 132 shell checks. The five-tests/shared-file regression proves that tests 3 and 4 pass their task even when unrelated test 2 fails; the feature run catches test 2. Mixed pytest backend and Vitest/Jest frontend selection is tested separately from this Node-only payments repository.
