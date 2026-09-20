@@ -108,3 +108,21 @@ New task files store `acceptance_criteria` as an actual JSON array of objects, n
 The generated `summary.md` begins with a three-column Scenario results table: scenario ID; individual test/file results and scenario verdict; expected behavior from the spec beside runner evidence and output-log links. Missing tests retain a row. Task tables include only their selected scenarios; feature tables include the entire catalog.
 
 The expected behavior and execution evidence are displayed separately. SPEED does not independently prove that a test's assertions implement the spec, and does not invent actual application values that were not recorded by the runner.
+
+## Latest verified structured-criteria run
+
+Input commit: `44d1baf`; Workbench implementation: `462767d`. These runs replace the prior generated `.speed` outputs.
+
+| Scope | Tests executed | Scenario table rows | Strict exit | Run ID |
+|---|---:|---:|---:|---|
+| task-1 | 3 | 3 | 0 | `95439694d7d34f1da7fc0259d9b459e5` |
+| feature | 18 | 22 | 2 | `9006a99835824f36b9a357a36cb299b3` |
+| task-2 | 15 | 19 | 2 | `df1089adf46349549c899d79fd77b883` |
+
+Both runtime task JSON files now contain arrays of criterion objects. Every Scenario results table was parsed as Markdown and checked for exactly three columns, one row per selected scenario, and spec expectations/statuses matching report JSON. The full feature table includes all four missing scenarios. The task table excludes other tasks' scenarios. Existing JSON/YAML agreement, input immutability and feature/task isolation checks passed again.
+
+Open [task 1 JSON](../.speed/features/payments/tasks/1.json), [task 1 scenario table](../.speed/features/payments/eval/task-1/summary.md), [task 2 scenario table](../.speed/features/payments/eval/task-2/summary.md), or the [full feature scenario table](../.speed/features/payments/eval/summary.md).
+
+Task 1 remains accepted; task 2 remains unaccepted because four tests are missing; the feature additionally retains coverage/integration gates. All 18 existing tests pass with `npm test`; the prior course-corpus `npm run verify` failure remains unchanged.
+
+Workbench validation for this follow-up passed 237 eval/parser cases plus 3 subtests, 126 dashboard cases and 92 shell checks. Dashboard readers were also updated to handle structured criteria through their existing text API fields.
