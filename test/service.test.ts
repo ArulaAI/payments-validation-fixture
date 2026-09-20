@@ -98,3 +98,18 @@ test('[AC-11] all four invariants hold after a mixed sequence', () => {
   s.refund(p.id, c1.id, 2_500);
   assert.deepEqual(checkAll(s.ledger, s.payments), []);
 });
+
+const sumAccount = (s: PaymentsService, paymentId: string, account: string) =>
+  -s.ledger.entries
+    .filter(e => e.paymentId === paymentId && e.account === account)
+    .reduce((sum, e) => sum + e.amount, 0);
+
+test('[RISK-02] the scheme fee rounds half up at the capture boundary', () => {
+  for (const [amount, fee, net] of [[200, 3, 197], [9_999, 149, 9_850]]) {
+    const s = svc();
+    const p = auth(s, amount);
+    s.capture(p.id, amount);
+    assert.equal(sumAccount(s, p.id, 'scheme_fees'), fee);
+    assert.equal(sumAccount(s, p.id, 'merchant_settled'), net);
+  }
+});
