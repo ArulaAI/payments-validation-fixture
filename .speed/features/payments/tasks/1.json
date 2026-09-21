@@ -1,25 +1,12 @@
 {
   "id": "1",
-  "title": "Authorisation and money input evaluation fixture",
-  "status": "done",
+  "title": "F1 diagnose regression: import/require detection",
+  "branch": "round-0",
+  "agent_model": "sonnet",
   "files_touched": [
+    "src/payments/retry.ts",
     "src/payments/service.ts",
-    "src/domain/money.ts",
-    "test/service.test.ts",
-    "test/money.test.ts"
-  ],
-  "acceptance_criteria": [
-    {
-      "criterion": "[AC-01] Given a valid card, when 2500 is authorised, then the amount is reserved and a balanced pair is posted",
-      "verify_by": "test"
-    },
-    {
-      "criterion": "[AC-02] Given an authorised payment, when its stored record is inspected, then it carries only a token and the last four digits",
-      "verify_by": "test"
-    },
-    {
-      "criterion": "[VAL-01] When a fractional minor unit is constructed, then it is rejected",
-      "verify_by": "test"
-    }
+    "test/refund-retry.test.ts",
+    "test/fixtures/cards.ts"
   ]
 }
