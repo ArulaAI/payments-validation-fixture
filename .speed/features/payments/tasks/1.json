@@ -45,5 +45,12 @@
       "lib/grounding.sh was modified (undeclared) to fix a gate evidence check that was blocking all tasks — changed from hard failure to warning"
     ],
     "concerns": []
-  }
+  },
+  "status": "done",
+  "acceptance_criteria": [
+    {
+      "criterion": "[RETRY-01] a retried refund against a capture records both refunds",
+      "verify_by": "test"
+    }
+  ]
 }
