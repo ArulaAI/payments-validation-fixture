@@ -12,6 +12,11 @@ Nothing here specifies the payments service. A change to the service is judged a
 | [`02-requirements.md`](02-requirements.md) | FR, CR and NFR ids the build plan cites |
 | [`03-manifest-schema.md`](03-manifest-schema.md) | Round manifest, evidence bundle and score report schemas |
 | [`04-plan.md`](04-plan.md) | Build plan, every task citing a requirement id, and what is deliberately not done |
+| [`course-301-1-define-execute-framework.md`](course-301-1-define-execute-framework.md) | Draft framework for 301.1: Define through Specify and Design, then Plan and Execute; SPEED controls and the handoff to 301.2 |
+| [`course-301-1e-define-audit-plan.md`](course-301-1e-define-audit-plan.md) | 301.1E: Define, Audit, Plan on the adaptive authorisation feature. Replaces the Define and Plan half of 301.1 |
+| [`Arula-301.1E-Define-Audit-Plan-Overview.pdf`](Arula-301.1E-Define-Audit-Plan-Overview.pdf) | Seven-page client overview of 301.1E, rendered from [`course-301-1e-overview.html`](course-301-1e-overview.html) with headless Chrome |
+| [`course-301-1e-facilitator-gap-map.md`](course-301-1e-facilitator-gap-map.md) | Facilitator reference: where the provided adaptive authorisation documents fall short, who owns each gap, and what surfaces it |
+| [`course-301-1e-speed-requirements.md`](course-301-1e-speed-requirements.md) | SPEED behaviour 301.1E is written against, what SPEED does today, and which course moment depends on each |
 
 ## The two requirement documents
 
