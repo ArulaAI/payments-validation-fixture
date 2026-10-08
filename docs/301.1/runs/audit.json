@@ -1,0 +1,39 @@
+{
+  "status": "warn",
+  "spec_type": "rfc",
+  "spec_file": "specs/tech/authorisation-risk.md",
+  "linked_specs": {
+    "prd": "specs/product/authorisation-risk.md",
+    "design": null,
+    "parent_rfc": null,
+    "child_rfcs": []
+  },
+  "issues": [
+    {
+      "level": 4,
+      "severity": "warning",
+      "section": "Sizing",
+      "message": "Estimated 13 developer-days of work: 7 user stories, 6 API functions, 11 new/extended types, 8 bounded in-memory stores with distinct eviction strategies, 3 new invariants, updates to 3 workbench commands, and a new 18-AC test file. Exceeds the 10-task threshold. Natural split boundary: Phase 1 = type definitions, vault cardReference(), RP1/RP2/RP3 window stores, policy management, verification matching, and invariants (the logic foundation); Phase 2 = service.ts integration, workbench command updates, full AC test suite (18 criteria), and property/invariant command sequence updates."
+    }
+  ],
+  "sizing": {
+    "estimated_tasks": 13,
+    "recommendation": "split",
+    "rationale": "Seven user stories map to three rule modules (RP1 merchant window, RP2 card window, RP3 high-value cross-border), each with a distinct bounded store requiring careful eviction logic. Beyond the rules: a PendingChallenge lifecycle, a PolicyValues/PolicyChange audit trail, a DecisionRecord store, a vault HMAC function, and a refactored authorise() pipeline. Integration work spans 10 files, including three workbench commands and a 18-criterion acceptance test file. The logic foundation (types, rules, stores) is independently testable before the service integration layer is touched, making a two-phase split low-risk.",
+    "phase_sections": {
+      "phase_1": [
+        1,
+        2,
+        4
+      ],
+      "phase_2": [
+        3,
+        5,
+        9,
+        10,
+        11
+      ]
+    },
+    "suggested_children": null
+  }
+}

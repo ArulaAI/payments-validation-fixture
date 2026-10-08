@@ -1,0 +1,26 @@
+
+Spec Audit
+────────────────────────────────────────────────────────────
+[23:35:02] →     Spec type: rfc
+[23:35:02] →     Spec file: specs/tech/authorisation-risk.md
+[23:35:02] →     Template:  <workbench>/templates/rfc.md
+[23:35:02] →     Linked spec: specs/tech/../product/authorisation-risk.md
+[23:35:02] →     Vision:    specs/product/overview.md
+[23:35:02] →     Sending to Audit agent...
+
+[23:35:02] ◉ Audit: started
+[23:35:02] ◉ Audit: connected (claude-sonnet-4-6)
+  ✓ Audit  2m11s ● 1 turns
+
+
+Audit Report
+────────────────────────────────────────────────────────────
+  ⚠ [L4] Sizing — Estimated 13 developer-days of work: 7 user stories, 6 API functions, 11 new/extended types, 8 bounded in-memory stores with distinct eviction strategies, 3 new invariants, updates to 3 workbench commands, and a new 18-AC test file. Exceeds the 10-task threshold. Natural split boundary: Phase 1 = type definitions, vault cardReference(), RP1/RP2/RP3 window stores, policy management, verification matching, and invariants (the logic foundation); Phase 2 = service.ts integration, workbench command updates, full AC test suite (18 criteria), and property/invariant command sequence updates.
+
+  ⚠ Sizing: Consider phasing this spec (~13 tasks)
+    Seven user stories map to three rule modules (RP1 merchant window, RP2 card window, RP3 high-value cross-border), each with a distinct bounded store requiring careful eviction logic. Beyond the rules: a PendingChallenge lifecycle, a PolicyValues/PolicyChange audit trail, a DecisionRecord store, a vault HMAC function, and a refactored authorise() pipeline. Integration work spans 10 files, including three workbench commands and a 18-criterion acceptance test file. The logic foundation (types, rules, stores) is independently testable before the service integration layer is touched, making a two-phase split low-risk.
+
+[23:37:14] →     Report saved to .speed/logs/audit-1791434234.json
+
+[23:37:14] ⚠ warn  Audit: WARN (1 warning(s))
+exit=0 seconds=140

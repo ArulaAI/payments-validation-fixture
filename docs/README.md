@@ -12,6 +12,7 @@ Nothing here specifies the payments service. A change to the service is judged a
 | [`02-requirements.md`](02-requirements.md) | FR, CR and NFR ids the build plan cites |
 | [`03-manifest-schema.md`](03-manifest-schema.md) | Round manifest, evidence bundle and score report schemas |
 | [`04-plan.md`](04-plan.md) | Build plan, every task citing a requirement id, and what is deliberately not done |
+| [`301.1/`](301.1/HANDOFF.md) | Course 301.1: review handoff, facilitator notes, the `speed define` contract and dry-run outputs |
 
 ## The two requirement documents
 
