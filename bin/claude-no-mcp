@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Starts the claude CLI with no MCP servers, for SPEED's agents.
+# Without this, every agent loads the MCP servers configured on the machine, and one
+# server with an invalid tool schema is enough to make the Architect's requests fail.
+exec claude --strict-mcp-config --mcp-config '{"mcpServers":{}}' "$@"
