@@ -9,7 +9,7 @@ related:
 > See [specs/product/authorisation-risk.md](../product/authorisation-risk.md) for product context.
 > Depends on: [architecture](../architecture/authorisation-risk.md), [threat model](../architecture/authorisation-risk-threat-model.md), [compliance](../compliance/authorisation-risk.md).
 
-Owner: payments-engineering. Version 0.2, draft produced from the upstream specs.
+Owner: payments-engineering. Version 0.3, corrected after audit.
 
 ## Basic Example
 
@@ -48,15 +48,18 @@ const second = svc.authorise(
 | `PolicyChange` | `before`, `after`, `actor`, `at` | Appended on every accepted change. Frozen once written |
 | `AuthoriseResult` | `{ outcome: 'approve', payment: Payment }` or `{ outcome: 'challenge' \| 'decline', reason, attemptId }` | Replaces the bare `Payment` return |
 
-`ReasonCategory` is the design spec's set: `verify_cardholder`, `card_attempts_exceeded`,
-`merchant_attempts_exceeded`, `not_approved`.
+`ReasonCategory` is `verify_cardholder` or `not_approved`. The design spec also proposes
+`card_attempts_exceeded` and `merchant_attempts_exceeded`, but those reveal which limit was
+reached, which threat T5 forbids. They are not used while PRD OQ3 is open.
 
 ## State Machine
 
 `Payment.status` is unchanged: `authorised`, `captured`, `voided`. A challenged or declined
 attempt creates no `Payment`. It exists only as a decision record, plus a pending challenge
 when challenged. A challenge does not wait for verification. After 3DS the merchant sends a
-new authorisation carrying the verification result, which is a new attempt.
+new authorisation carrying the verification result, which is a new attempt. This follows
+the product flow. The design spec proposes holding the original open instead. That
+disagreement is PRD OQ4, and this design changes if OQ4 is decided the other way.
 
 A pending challenge moves from open to used when a matching verification result is
 accepted, or expires after `verificationWindowMs`.
@@ -85,9 +88,9 @@ Evaluated in this order. The first rule that fires decides.
 
 1. **RP1.** Count distinct `cardRef` values seen for the merchant within
    `merchantWindowMs`, including this attempt. More than `merchantDistinctCards` gives
-   decline, `merchant_attempts_exceeded`.
+   decline, `not_approved`.
 2. **RP2.** Count attempts for `cardRef` within `cardWindowMs`, including this one. More
-   than `cardAttempts` gives decline, `card_attempts_exceeded`.
+   than `cardAttempts` gives decline, `not_approved`.
 3. **RP3.** Not `verified`, and `amount >= highValueMinor`, and `cardCountry !==
    merchantCountry`, and no approved attempt for `cardRef` within `lookBackMs` gives
    challenge, `verify_cardholder`.
@@ -136,6 +139,7 @@ engineering choices and can be tuned.
 | AC-F2-16 | A request body naming another merchant has no effect on which merchant is counted | T1 |
 | AC-F2-17 | An authorisation in a currency other than GBP is rejected | PRD scope |
 | AC-F2-18 | Every store stays within its limit during 10,000 distinct cards inside one window, and over simulated days | T6, architecture bounded memory |
+| AC-F2-19 | If assessment throws, the attempt is declined with `not_approved`, recorded with rule `FALLBACK`, and reserves nothing | Compliance, when the check cannot decide |
 
 ### Risks and Coverage
 
@@ -202,7 +206,7 @@ other than GBP.
 | How identity reaches the service | A trusted context argument on `authorise` and `setPolicy` | Fields in the request body | The architecture spec requires identity from the caller context (T1) |
 | How non-approval is returned | `authorise` returns `AuthoriseResult` | Throw an error for challenge and decline | They are expected outcomes, not failures. Callers change from the payment to `result.payment` |
 | How verification is proven | The new request names the challenged attempt, and the gateway checks it against its own pending challenge | Trust a flag in the request | A flag could be set by anyone. Matching against the gateway's own record satisfies the compliance rules and T8 |
-| What happens if assessment throws | Approve, and record rule `FALLBACK` | Decline | Payments must keep flowing if the new code fails, and approving matches today's behaviour |
+| What happens if assessment throws | Decline with `not_approved`, and record rule `FALLBACK` | Approve | Required by the compliance spec, "When the check cannot decide" |
 | How time reaches the rules | A clock passed to `PaymentsService`, default `Date.now` | Read `Date.now` inside the rules | Windows become testable and decisions reproducible. The ledger keeps `Date.now` because nothing here depends on its timestamps |
 
 ## Drawbacks
@@ -236,7 +240,7 @@ no stored data to change.
 | `workbench/commands/property.ts` | Use `AuthoriseResult` and a merchant context. Generate challenges, declines, verified and idempotent retries, and time movement. Pass risk state to `checkAll` |
 | `workbench/commands/differential.ts` | Use `AuthoriseResult` and a merchant context |
 | `workbench/commands/invariant.ts` | Use `AuthoriseResult` and a merchant context. Pass risk state to `checkAll` |
-| `test/risk.test.ts` | New. AC-F2-01 to AC-F2-18 |
+| `test/risk.test.ts` | New. AC-F2-01 to AC-F2-19 |
 | `test/service.test.ts` | Adapt to `AuthoriseResult` and a merchant context |
 
 ## Dependencies
@@ -247,6 +251,10 @@ None new. HMAC uses `node:crypto`, which ships with Node.
 
 - **PRD OQ1**, merchant exemption for genuine high-volume sales: not built. Owner:
   payments-product with payments-risk.
+- **PRD OQ3**, how much the reason category tells the merchant: until decided, every
+  decline returns `not_approved`. Owner: legal-compliance with payments-risk.
+- **PRD OQ4**, whether a challenge holds the original authorisation open: this design
+  follows the product flow. Owner: payments-product with payments-design.
 - **HMAC key management**: generated per process in this version, so card references do not
   survive a restart. Owner: legal-compliance with payments-architecture.
 - **Retention of decision records**: the most recent 100,000 are kept in memory. Owner:
