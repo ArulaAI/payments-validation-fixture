@@ -64,7 +64,7 @@ stays engineer, and their in-flight save completes as engineer.
 
 - [ ] One browser switches among four personas without restart (AC8)
 - [ ] A second browser and in-flight mutations are unaffected (AC9)
-- [ ] Switching creates no eligible ratifiers or independent approvals (AC15)
+- [ ] Switching creates no eligible ratifiers or independent approvals (AC15b)
 
 ## Scope
 

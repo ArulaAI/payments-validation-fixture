@@ -74,8 +74,8 @@ that it is genuine, and releases the block.
 
 | User Story IDs | Child RFC | Depends On | Testable Output |
 |----------------|-----------|------------|-----------------|
-| ST6, ST7 | `specs/tech/adaptive-auth/2.md` | 1 | Attack detector flags the 3 October replay |
-| ST8, ST9 | `specs/tech/adaptive-auth/2.md` | 1 | Notification and release work against a flagged attack |
+| ST6, ST7 | `specs/tech/adaptive-auth/2-card-testing.md` | `specs/tech/adaptive-auth/1-high-value-traveller.md` | Attack detector flags the 3 October replay |
+| ST8, ST9 | `specs/tech/adaptive-auth/2-card-testing.md` | `specs/tech/adaptive-auth/1-high-value-traveller.md` | Notification and release work against a flagged attack |
 
 ## Dependencies
 

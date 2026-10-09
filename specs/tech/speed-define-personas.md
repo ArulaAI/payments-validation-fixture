@@ -81,7 +81,7 @@ role = "PM"          # engineer | PM | designer | architect
 |----|---------------------|---------|
 | AC8 | One browser switches among four personas, suggests as engineer, and resolves as claiming owner without restart | S6.1, S6.2 |
 | AC9 | A second browser's identity and concurrent in-flight mutations are unaffected by the first switching | S6.2, S6.3 |
-| AC15 | Persona switching creates no eligible ratifiers or independent approvals | S6.4 |
+| AC15b | Persona switching creates no eligible ratifiers or independent approvals | S6.4 |
 
 ## Testing
 

@@ -80,7 +80,11 @@ is declined without a step-up.
 
 ## RFC Decomposition
 
-TBD with engineering once the tech spec is drafted.
+| User Story IDs | Child RFC | Depends On | Testable Output |
+|----------------|-----------|------------|-----------------|
+| ST1, ST2, ST5 | `specs/tech/adaptive-auth/1-high-value-traveller.md` | None | The traveller is stepped up, not declined; an unavailable provider holds the payment |
+| ST3 | `specs/tech/adaptive-auth/1-high-value-traveller.md` | None | A decline carries an allowlisted reason |
+| ST4 | `specs/tech/adaptive-auth/1-high-value-traveller.md` | None | A held payment is approved or declined from the review queue, audit logged |
 
 ## Dependencies
 

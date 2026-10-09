@@ -74,7 +74,7 @@ refuses, shows both versions, and blocks saving until the PM resolves the confli
 
 - [ ] Every document has a tab; suggestions stay on the right file (AC7)
 - [ ] No Define save or suggestion overwrites an external edit (AC12)
-- [ ] Commit with no eligible ratifier auto-ratifies (AC15)
+- [ ] Commit with no eligible ratifier auto-ratifies (AC15a)
 
 ## Scope
 

@@ -13,7 +13,7 @@ a change is correct, these are the documents you judge it against.
 | [`product/adaptive-auth/`](product/adaptive-auth/) | F2 adaptive authorisation, from the two product managers | Writing the adaptive authorisation tech spec |
 | [`architecture/`](architecture/) | The platform architecture, and the architecture for adaptive authorisation | Deciding how a feature fits the system as built |
 | [`design/adaptive-auth/`](design/adaptive-auth/) | The checkout step-up and the risk review queue | Writing anything a cardholder or analyst sees |
-| [`tech/adaptive-auth/`](tech/adaptive-auth/) | Empty. Engineering writes the tech spec here | You are engineering |
+| [`tech/adaptive-auth/`](tech/adaptive-auth/) | F2 tech specs: [`1-high-value-traveller.md`](tech/adaptive-auth/1-high-value-traveller.md) scored decisions and step-up (F2.1), [`2-card-testing.md`](tech/adaptive-auth/2-card-testing.md) card-testing detection (F2.2), which depends on F2.1. Each shares its filename with its product spec | Planning or building adaptive authorisation |
 | [`defects/`](defects/) | Defect reports. File what you find here | You have confirmed a finding and want it recorded |
 
 ## SPEED feature spec bundles

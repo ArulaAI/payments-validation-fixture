@@ -308,6 +308,6 @@ Tech: [S7.3](../tech/speed-spec-migration.md#s73-delivery-order-and-rollback)
 | S2.1 to S2.5 | speed-feature-audit S2.1 to S2.5 | speed-feature-audit S2.1 to S2.5 | AC3, AC4, AC5 |
 | S3.1 to S3.5 | speed-feature-planning S3.1 to S3.5 | speed-feature-planning S3.1 to S3.5 | AC6, AC11 |
 | S4.1 to S4.5 | speed-plan-versioning S4.1 to S4.5 | speed-plan-versioning S4.1 to S4.5 | AC10, AC13 |
-| S5.1 to S5.5 | speed-define-documents S5.1 to S5.5 | speed-define-documents S5.1 to S5.5 | AC7, AC12, AC15 |
-| S6.1 to S6.4 | speed-define-personas S6.1 to S6.4 | speed-define-personas S6.1 to S6.4 | AC8, AC9, AC15 |
+| S5.1 to S5.5 | speed-define-documents S5.1 to S5.5 | speed-define-documents S5.1 to S5.5 | AC7, AC12, AC15a |
+| S6.1 to S6.4 | speed-define-personas S6.1 to S6.4 | speed-define-personas S6.1 to S6.4 | AC8, AC9, AC15b |
 | S7.1 to S7.3 | speed-spec-migration S7.1 to S7.3 | speed-spec-migration S7.1 to S7.3 | AC14 |

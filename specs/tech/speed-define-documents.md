@@ -111,7 +111,7 @@ IDs; editing and commitment belong to the document records.
 |----|---------------------|---------|
 | AC7 | Every document has a Define tab, including architecture and overviews; suggestions stay on the right file | S5.1, S5.2 |
 | AC12 | An old Define save or suggestion cannot overwrite an external edit; the UI names the conflicting document | S5.3 |
-| AC15 | Commit with no eligible ratifier records automatic ratification | S5.4 |
+| AC15a | Commit with no eligible ratifier records automatic ratification | S5.4 |
 
 Retained: contributor cannot resolve; claimant can accept or dismiss; blank reasons
 rejected; codebase dimension checks still run.
