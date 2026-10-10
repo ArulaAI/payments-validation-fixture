@@ -39,8 +39,11 @@ export type AuthoriseRequest = {
 const SCHEME_FEE_RATE = 0.0149;
 
 export class CaptureBlockedError extends Error {
-  constructor(readonly paymentId: string) {
+  readonly paymentId: string;
+
+  constructor(paymentId: string) {
     super(`capture is blocked on ${paymentId}`);
+    this.paymentId = paymentId;
     this.name = 'CaptureBlockedError';
   }
 }
