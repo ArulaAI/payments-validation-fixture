@@ -241,6 +241,11 @@ export class AuthorisationGateway {
     const request = completed.request as GatewayRequest;
 
     let result: GatewayResult;
+    if (challenge.source === 'block_match' && outcome !== 'authenticated') {
+      result = this.declineBlockMatch(challenge, request);
+      this.storeStepUpResult(challengeId, result);
+      return result;
+    }
     switch (outcome) {
       case 'authenticated':
         result = { status: 'approved', payment: this.payments.authorise(toAuthorise(request)) };
@@ -277,15 +282,27 @@ export class AuthorisationGateway {
     }
   }
 
-  /** The provider did not answer. F2.2 will make block_match unavailability a decline. */
+  /** The provider did not answer. A block_match challenge is declined; a policy challenge is held. */
   private onChallengeUnavailable(challenge: StepUpChallenge<AuthoriseRequest>, request: AuthoriseRequest): void {
     if (this.stepUpResults.has(challenge.id)) return;
-    this.storeStepUpResult(challenge.id, this.holdForUnavailable(challenge, request as GatewayRequest));
+    const gatewayRequest = request as GatewayRequest;
+    const result = challenge.source === 'block_match'
+      ? this.declineBlockMatch(challenge, gatewayRequest)
+      : this.holdForUnavailable(challenge, gatewayRequest);
+    this.storeStepUpResult(challenge.id, result);
   }
 
   private holdForUnavailable(challenge: StepUpChallenge<AuthoriseRequest>, request: GatewayRequest): GatewayResult {
-    if (challenge.source === 'block_match') return this.hold(request, challenge.decision);
     return this.hold(request, challenge.decision);
+  }
+
+  /** A block-match challenge that was not passed: no review item, no authorisation. */
+  private declineBlockMatch(challenge: StepUpChallenge<AuthoriseRequest>, request: GatewayRequest): GatewayResult {
+    const digits = request.pan.replace(/\D/g, '');
+    const card = masked(digits.slice(0, 6), digits.slice(-4));
+    log.info(`card_testing.challenge_declined ${card}: attack ${challenge.attackId}`);
+    span('card_testing.challenge_declined', { card, attackId: challenge.attackId });
+    return { status: 'declined', code: 'do_not_honour', reason: cardholderReason('card_testing_pattern') };
   }
 
   private storeStepUpResult(id: string, result: GatewayResult): void {
