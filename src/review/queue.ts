@@ -6,6 +6,8 @@
 import type { ReasonCode } from '../risk/reasons.ts';
 import { analystReason } from '../risk/reasons.ts';
 import type { AuditLog } from './audit.ts';
+import type { PaymentsService } from '../payments/service.ts';
+import { log } from '../obs/index.ts';
 
 export type ReviewStatus = 'held' | 'approved' | 'declined' | 'expired';
 
@@ -44,11 +46,37 @@ export type HoldArgs = {
   ipCountry: string;
 };
 
+export type ReviewErrorCode =
+  | 'REVIEW_NOT_FOUND'
+  | 'ANALYST_REQUIRED'
+  | 'NOTE_REQUIRED'
+  | 'NOTE_TOO_LONG'
+  | 'ALREADY_DECIDED'
+  | 'REVIEW_EXPIRED';
+
+export class ReviewError extends Error {
+  readonly code: ReviewErrorCode;
+
+  constructor(code: ReviewErrorCode, message: string = code) {
+    super(message);
+    this.name = 'ReviewError';
+    this.code = code;
+  }
+}
+
+const REVIEW_TTL_MS = 72 * 60 * 60 * 1000;
+const MAX_NOTE_LENGTH = 1000;
+
 export interface ReviewQueue {
   hold(args: HoldArgs): ReviewItem;
   get(id: string): ReviewItem | undefined;
   /** Held items, oldest first. */
   listHeld(): ReviewItem[];
+  approve(id: string, analyst: string, note: string, now?: number): ReviewItem;
+  decline(id: string, analyst: string, note: string, now?: number): ReviewItem;
+  /** Subscribe to newly held items. Returns an unsubscribe function. */
+  onHeld(listener: (item: ReviewItem) => void): () => void;
+  setNarrative(id: string, narrative: string): void;
 }
 
 const MASKED_CARD = /^\d{6}\*+\d{4}$/;
@@ -60,10 +88,61 @@ export class InMemoryReviewQueue implements ReviewQueue {
 
   readonly #audit: AuditLog;
   readonly #clock: () => number;
+  readonly #payments: PaymentsService;
+  readonly #listeners = new Set<(item: ReviewItem) => void>();
 
-  constructor(audit: AuditLog, clock: () => number = Date.now) {
+  constructor(audit: AuditLog, clock: () => number = Date.now, payments: PaymentsService) {
     this.#audit = audit;
     this.#clock = clock;
+    this.#payments = payments;
+  }
+
+  onHeld(listener: (item: ReviewItem) => void): () => void {
+    this.#listeners.add(listener);
+    return () => {
+      this.#listeners.delete(listener);
+    };
+  }
+
+  setNarrative(id: string, narrative: string): void {
+    const item = this.#items.get(id);
+    if (!item) throw new ReviewError('REVIEW_NOT_FOUND', `no review item ${id}`);
+    item.narrative = narrative;
+  }
+
+  approve(id: string, analyst: string, note: string, now?: number): ReviewItem {
+    return this.#decide('approve', id, analyst, note, now);
+  }
+
+  decline(id: string, analyst: string, note: string, now?: number): ReviewItem {
+    return this.#decide('decline', id, analyst, note, now);
+  }
+
+  #decide(action: 'approve' | 'decline', id: string, analyst: string, note: string, now?: number): ReviewItem {
+    const item = this.#items.get(id);
+    if (!item) throw new ReviewError('REVIEW_NOT_FOUND', `no review item ${id}`);
+    if (typeof analyst !== 'string' || analyst.trim() === '') {
+      throw new ReviewError('ANALYST_REQUIRED', 'analyst identity is required');
+    }
+    if (typeof note !== 'string' || note.trim() === '') {
+      throw new ReviewError('NOTE_REQUIRED', 'a decision note is required');
+    }
+    if (note.length > MAX_NOTE_LENGTH) {
+      throw new ReviewError('NOTE_TOO_LONG', `note exceeds ${MAX_NOTE_LENGTH} characters`);
+    }
+    if (item.status !== 'held') throw new ReviewError('ALREADY_DECIDED', `${id} is already ${item.status}`);
+    const at = now ?? this.#clock();
+    if (at >= item.heldAt + REVIEW_TTL_MS) throw new ReviewError('REVIEW_EXPIRED', `${id} hold has expired`);
+
+    if (action === 'approve') this.#payments.unblockCapture(item.paymentId);
+    else this.#payments.void(item.paymentId);
+
+    item.status = action === 'approve' ? 'approved' : 'declined';
+    item.decidedBy = analyst;
+    item.decidedAt = at;
+    item.note = note;
+    this.#audit.record({ action, subjectId: item.id, actor: analyst, reason: note, at });
+    return item;
   }
 
   hold(args: HoldArgs): ReviewItem {
@@ -99,6 +178,13 @@ export class InMemoryReviewQueue implements ReviewQueue {
       reason: item.analystReason,
       at: heldAt,
     });
+    for (const listener of [...this.#listeners]) {
+      try {
+        listener(item);
+      } catch (error) {
+        log.error(`onHeld listener failed for ${item.id}: ${error instanceof Error ? error.message : String(error)}`);
+      }
+    }
     return item;
   }
 
