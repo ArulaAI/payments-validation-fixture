@@ -2,8 +2,8 @@
  * Characterisation tests for the gateway and risk rules v1, and the scored decision behind
  * the rollout flag.
  *
- * GW-01 to GW-06 pin what the gateway does in the default shadow mode, where v1 still
- * decides. GW-10 onwards cover v1, shadow and enforce modes. A test that starts failing
+ * GW-01 to GW-04 pin what the gateway does in the default shadow mode, where v1 still
+ * decides. GW-05 and GW-06 cover the F2.2 card-testing block. GW-10 onwards cover v1, shadow and enforce modes. A test that starts failing
  * because of the adaptive authorisation work is expected to be rewritten, deliberately,
  * alongside the spec that changed it.
  */
