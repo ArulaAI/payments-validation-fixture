@@ -23,8 +23,16 @@ import { InMemoryReviewQueue } from '../src/review/queue.ts';
 import { InMemoryAuditLog } from '../src/review/audit.ts';
 import { sinks, resetSinks } from '../src/obs/index.ts';
 import { TEST_CARDS, EXPIRY } from './fixtures/cards.ts';
+import { CardTestingRuntime, InMemoryDetectorLease } from '../src/risk/card-testing-runtime.ts';
+import { AttemptRecorder, InMemoryAttemptStore } from '../src/risk/attempts.ts';
+import { AttackDetector, InMemoryAttackStore } from '../src/risk/attacks.ts';
+import { BlockList, InMemoryBlockStore } from '../src/risk/blocks.ts';
+import { loadDetectorConfig } from '../src/risk/detector-config.ts';
+import { InMemoryNotificationSink, MerchantNotifier } from '../src/notify/merchant.ts';
+import { readFileSync } from 'node:fs';
 import { cardTestingBurst, domesticGroceries, travellerTelevision } from './fixtures/traffic.ts';
 
+const detectorBase = JSON.parse(readFileSync(new URL('../config/detector.json', import.meta.url), 'utf8'));
 const MODEL_PATH = fileURLToPath(new URL('./fixtures/model.json', import.meta.url));
 
 /** A scorer that always returns the same score, and counts its calls. */
@@ -112,23 +120,91 @@ test('[GW-04] a sixth attempt on one card inside ten minutes is declined', () =>
   assert.equal(attempt(5).status, 'declined');
 });
 
-test('[GW-05] a card-testing burst across merchants is approved in full', () => {
-  const g = gw();
-  const burst = cardTestingBurst();
-  const approved = burst.filter(({ request }) => g.authorise(request).status === 'approved');
-  assert.equal(approved.length, burst.length);
+/** One gateway replica with its own recorder and BlockList, and the F2.2 runtime that feeds them. */
+const buildCardTesting = (shared: {
+  attemptStore: InMemoryAttemptStore; blockStore: InMemoryBlockStore;
+  attackStore: InMemoryAttackStore; lease: InMemoryDetectorLease; clock: () => number;
+}) => {
+  const config = loadDetectorConfig({ ...detectorBase, mode: 'block' });
+  const { clock } = shared;
+  const payments = new PaymentsService();
+  const audit = new InMemoryAuditLog();
+  const queue = new InMemoryReviewQueue(audit, clock, payments);
+  const stepUp = new StepUpAdapter<AuthoriseRequest>(fakeProvider, { setTimer: () => 0, clearTimer: () => {} });
+  const recorder = new AttemptRecorder(shared.attemptStore, config, clock);
+  const blocks = new BlockList(shared.blockStore, shared.attackStore, audit, config, clock);
+  const detector = new AttackDetector(shared.attemptStore, shared.attackStore, config, clock);
+  const notifier = new MerchantNotifier(new InMemoryNotificationSink(), shared.attackStore, detector, config, clock);
+  const runtime = new CardTestingRuntime({
+    recorder, detector, blocks, notifier, lease: shared.lease, config, clock,
+    logger: { info: () => {}, alert: () => {} },
+  });
+  const merchants = Array.from({ length: 20 }, (_, i) => `m_${String(i).padStart(2, '0')}`);
+  const gateway = new AuthorisationGateway(payments, {
+    scorer: fixedScorer(100),
+    policy: new DecisionPolicy(DEFAULT_THRESHOLDS),
+    stepUp, queue, audit, blocks, attempts: recorder, detectorConfig: config,
+    rollout: enforce(...merchants),
+  });
+  return { gateway, runtime };
+};
+
+const sharedStores = () => {
+  const clock = { now: 0 };
+  const config = loadDetectorConfig(detectorBase);
+  return {
+    attemptStore: new InMemoryAttemptStore(), blockStore: new InMemoryBlockStore(),
+    attackStore: new InMemoryAttackStore(), lease: new InMemoryDetectorLease(config.refreshIntervalMs),
+    clock: () => clock.now, time: clock,
+  };
+};
+
+/** Replay a burst through the replicas in turn, advancing the clock to each attempt and ticking every second. */
+const replay = (
+  burst: ReturnType<typeof cardTestingBurst>,
+  replicas: ReturnType<typeof buildCardTesting>[],
+  time: { now: number },
+) => {
+  time.now = burst[0].request.at - 1_000;
+  return burst.map(({ request }, i) => {
+    for (let t = time.now + 1_000; t <= request.at; t += 1_000) {
+      time.now = t;
+      for (const r of replicas) r.runtime.tick(t);
+    }
+    time.now = request.at;
+    const replica = replicas[i % replicas.length];
+    return { replica, result: replica.gateway.authorise(request) };
+  });
+};
+
+test('[GW-05] F2.2 AC2: a card-testing burst is challenged after the tenth attempt and never approved without authentication', () => {
+  const shared = sharedStores();
+  const replica = buildCardTesting(shared);
+  const outcomes = replay(cardTestingBurst(40), [replica], shared.time);
+  const later = outcomes.slice(10);
+  const challenged = later.filter(o => o.result.status === 'step_up');
+  assert.ok(challenged.length / later.length >= 0.95, `${challenged.length} of ${later.length} challenged`);
+  let approved = 0;
+  for (const { result } of challenged) {
+    if (result.status !== 'step_up') continue;
+    const final = replica.gateway.completeStepUp(result.challengeId, 'not_authenticated');
+    assert.equal(final.status, 'declined');
+  }
+  for (const { result } of later) if (result.status === 'approved') approved += 1;
+  assert.equal(approved, 0);
 });
 
-test('[GW-06] velocity is per gateway instance, so a second replica starts from zero', () => {
-  const at = Date.UTC(2026, 9, 3, 9, 0, 0);
-  const req = (i: number) => ({
-    pan: TEST_CARDS.mastercard, expiry: EXPIRY, amount: 1_000,
-    merchantId: 'm_cafe', ipCountry: 'GB', at: at + i * 1_000,
-  });
-  const a = gw();
-  const b = gw();
-  for (let i = 0; i < 5; i += 1) a.authorise(req(i));
-  assert.equal(b.authorise(req(5)).status, 'approved');
+test('[GW-06] F2.2 AC3: two replicas sharing the attempt, block and attack stores flag one attack and both challenge', () => {
+  const shared = sharedStores();
+  const a = buildCardTesting(shared);
+  const b = buildCardTesting(shared);
+  const outcomes = replay(cardTestingBurst(40), [a, b], shared.time);
+  assert.equal(shared.attackStore.listByStatus('blocked').length, 1);
+  for (const replica of [a, b]) {
+    const later = outcomes.slice(10).filter(o => o.replica === replica);
+    assert.ok(later.some(o => o.result.status === 'step_up'));
+    assert.ok(later.every(o => o.result.status === 'step_up'));
+  }
 });
 
 test('[GW-10] an enforced merchant steps up the traveller instead of declining', () => {
