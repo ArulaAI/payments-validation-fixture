@@ -16,7 +16,7 @@ import { RiskRules } from '../src/risk/rules.ts';
 import { ModelScorer, type Scorer } from '../src/risk/scoring.ts';
 import { DEFAULT_THRESHOLDS, DecisionPolicy } from '../src/risk/policy.ts';
 import { StepUpAdapter, type StepUpProvider } from '../src/risk/stepup.ts';
-import { CARDHOLDER_REASONS } from '../src/risk/reasons.ts';
+import { CARDHOLDER_REASONS, assertCardholderReasonSafe } from '../src/risk/reasons.ts';
 import type { ScoringInput } from '../src/risk/types.ts';
 import { type RiskRollout, rolloutFromEnv, scoredDecides } from '../src/risk/rollout.ts';
 import { InMemoryReviewQueue } from '../src/review/queue.ts';
@@ -80,7 +80,21 @@ test('[GW-02] a high-value purchase from abroad is declined', () => {
   assert.deepEqual(result, { status: 'declined', code: 'do_not_honour' });
 });
 
-test('[GW-03] a decline tells the merchant nothing about why', () => {
+test('[GW-03] a scored decline carries an allowlisted reason that tells the cardholder nothing about why', () => {
+  resetSinks();
+  const { gateway } = build({ scorer: fixedScorer(850), rollout: enforce('m_electricals') });
+  const result = gateway.authorise(travellerTelevision.request);
+  assert.equal(result.status, 'declined');
+  if (result.status !== 'declined') return;
+  assert.equal(result.code, 'do_not_honour');
+  const reason = result.reason ?? '';
+  assert.ok(Object.values(CARDHOLDER_REASONS).includes(reason));
+  assert.ok(reason.length > 0 && reason.length <= 140);
+  assert.doesNotThrow(() => assertCardholderReasonSafe(reason));
+  assert.doesNotMatch(reason, /850|score|threshold|amount_unusual|country_mismatch|HIGH_VALUE/i);
+});
+
+test('[GW-03b] a v1 decline in shadow mode still tells the merchant nothing about why', () => {
   resetSinks();
   const result = gw().authorise(travellerTelevision.request);
   assert.deepEqual(Object.keys(result).sort(), ['code', 'status']);
@@ -291,6 +305,15 @@ test('[SU-02] not_authenticated declines with the bank reason and creates no pay
     status: 'declined', code: 'do_not_honour', reason: "Your bank couldn't confirm this payment.",
   });
   assert.equal(payments.payments.size, 0);
+});
+
+test('[SU-02b] not_authenticated carries the allowlisted bank-could-not-confirm reason', () => {
+  const { gateway, id } = begun();
+  const result = gateway.completeStepUp(id, 'not_authenticated');
+  assert.equal(result.status, 'declined');
+  if (result.status !== 'declined') return;
+  assert.equal(result.reason, CARDHOLDER_REASONS.step_up_not_confirmed);
+  assert.doesNotThrow(() => assertCardholderReasonSafe(result.reason ?? ''));
 });
 
 test('[SU-03] unavailable holds, blocks capture and audits a hold', () => {
