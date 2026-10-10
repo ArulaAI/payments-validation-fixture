@@ -1,6 +1,6 @@
 # F2.2: Stop card testing across merchants
 
-Owner: Marcus O., product manager, risk platform. Version 1.0 (handed to engineering).
+Owner: Marcus O., product manager, risk platform. Version 1.1 (handed to engineering).
 Related: [overview](../overview.md), [high-value purchases](1-high-value-traveller.md),
 [architecture](../../architecture/adaptive-auth.md),
 [design](../../design/adaptive-auth/2-risk-review-queue.md)
@@ -31,15 +31,17 @@ eleven of the numbers were used for large fraudulent purchases within the hour.
 | ID | Story | Acceptance Criteria | Priority |
 |----|-------|---------------------|----------|
 | ST6 | As a fraud analyst, I want card testing detected across all merchants, so that attacks spread thin are still visible | Given a batch of small authorisations on different cards from one source across many merchants, When the pattern emerges, Then it is flagged as card testing | Must |
-| ST7 | As a merchant, I want card-testing attempts declined, so that I do not pay fees on them or confirm stolen cards | Given an attack has been flagged, When further attempts arrive from the same source, Then they are declined | Must |
+| ST7 | As a merchant, I want card-testing attempts stopped before they reach the scheme, so that I do not pay fees on them or confirm stolen cards | Given an attack has been flagged, When further attempts arrive from the same source, Then each is asked to confirm through the cardholder's bank, and those the bank cannot confirm are declined | Must |
 | ST8 | As a merchant, I want to be told when my checkout was used for card testing, so that I can tighten my own controls | Given attempts at my checkout were part of a flagged attack, When the attack is flagged, Then I am notified with the time window and number of attempts | Should |
 | ST9 | As a fraud analyst, I want to see active attacks and release a block, so that I can correct a false alarm | Given a flagged attack, When I open the review queue, Then I see the attack, its source, the merchants affected, and I can release the block | Must |
 
 ## User Flows
 
 **Attack detected and blocked.** A script starts testing cards across our merchants. After
-enough attempts the pattern is recognised. Further attempts from that source are declined
-at every merchant. The analyst sees the attack in the review queue.
+enough attempts the pattern is recognised. Further attempts from that source are asked to
+confirm through the cardholder's bank at every merchant. The script cannot, so they are
+declined; a genuine shopper caught by the block confirms and pays. The analyst sees the
+attack in the review queue.
 
 **Merchant notified.** Once an attack is flagged, each affected merchant receives a
 notification listing the time window and the number of attempts at their checkout.
@@ -50,7 +52,7 @@ that it is genuine, and releases the block.
 
 ## Success Criteria
 
-- [ ] 95% of card-testing attempts after the tenth in an attack are declined
+- [ ] 95% of card-testing attempts after the tenth in an attack are challenged and none is approved without bank confirmation
 - [ ] An attack is flagged within 60 seconds of its first attempt
 - [ ] Fewer than 1 in 1,000 genuine payments are declined as card testing
 - [ ] Affected merchants are notified within 15 minutes of an attack being flagged
@@ -94,9 +96,9 @@ that it is genuine, and releases the block.
 
 | Risk | Severity | Mitigation |
 |------|----------|------------|
-| A flash sale looks like card testing | High | Analyst release, and a false-positive success criterion |
+| A flash sale looks like card testing | High | Genuine shoppers can confirm through their bank and pay; analyst release; a false-positive success criterion |
 | Attackers adapt to whatever pattern we detect | High | Detection is assessed on traffic, not a fixed rule |
-| Blocking a source blocks genuine shoppers behind the same network | Medium | Blocks expire |
+| Blocking a source blocks genuine shoppers behind the same network | Medium | Blocked shoppers are asked to confirm, not refused; blocks expire |
 
 ## Open Questions
 

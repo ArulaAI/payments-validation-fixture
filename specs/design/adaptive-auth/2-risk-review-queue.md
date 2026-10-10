@@ -84,7 +84,16 @@ Flat. The detail pane is separated by a `--border-subtle` rule, not elevation.
 
 #### Empty State
 
-<!-- TODO: confirm with fraud ops what they want to see on a quiet day -->
+On a quiet day each list says so plainly and points to where work will appear, so an
+analyst can tell "nothing to do" from "nothing loaded".
+
+- Held payments (`/ops/review`): "No payments are waiting for review." with a secondary
+  line "Held payments appear here as soon as they are held." and no detail pane.
+- Attacks (`/ops/attacks`): "No active card-testing attacks." with a secondary line
+  "Flagged attacks and their blocks appear here." and a link to recently released or
+  expired attacks.
+
+Neither state shows a call to action; there is nothing for the analyst to do.
 
 #### Loading State
 

@@ -6,10 +6,15 @@
 > See [architecture](../../architecture/adaptive-auth.md) and [platform architecture](../../architecture/overview.md).
 > See [review queue design](../../design/adaptive-auth/2-risk-review-queue.md).
 
-Owner: payments-engineering. Version 0.1 (draft, 9 October 2026).
+Owner: payments-engineering. Version 0.2 (draft, 10 October 2026).
 
-Detects card testing spread across merchants, declines further attempts that match a
-flagged attack, notifies affected merchants, and lets analysts see and release blocks.
+Detects card testing spread across merchants, sends further attempts that match a flagged
+attack to a 3-D Secure step-up challenge and declines those the bank cannot confirm,
+notifies affected merchants, and lets analysts see and release blocks.
+
+A block match is challenged rather than declined outright, as the product's "ask before
+refusing" principle requires. A testing script cannot pass a bank challenge, so attacks
+are still stopped, while a genuine shopper caught by a block can confirm and pay.
 
 The architecture says the scoring service is stateless, and the platform has no shared
 cache. Card testing can only be seen across requests, merchants and replicas, so this RFC
@@ -24,7 +29,10 @@ It needs no new infrastructure and no change to the scoring service.
 const results = cardTestingBurst(40).map(r => gateway.authorise(r.request));
 
 results.slice(0, 10).every(r => r.status === 'approved');   // before the attack is flagged
-results.slice(11).every(r => r.status === 'declined');      // at most one attempt slips through
+results.slice(11).every(r => r.status === 'step_up');       // challenged, not approved
+// The script cannot authenticate, so each challenge ends in a decline:
+gateway.completeStepUp(results[11].challengeId, 'not_authenticated');
+// → { status: 'declined', code: 'do_not_honour', reason: <card-testing reason> }
 
 detector.activeAttacks();
 // → [{ id: 'atk_000001', bin: '411111', amount: 100, cards: 10, merchants: 10, status: 'blocked', ... }]
@@ -38,7 +46,10 @@ attacks.release('atk_000001', 'analyst@ops', 'Marketplace promotion, genuine tra
 
 From [1-high-value-traveller.md](1-high-value-traveller.md):
 
-- `GatewayResult`, including `{ status: 'declined'; code: 'do_not_honour'; reason?: string }`.
+- `GatewayResult`, including `{ status: 'step_up'; challengeId: string }` and
+  `{ status: 'declined'; code: 'do_not_honour'; reason?: string }`.
+- `StepUpAdapter` and `AuthorisationGateway.completeStepUp(challengeId, outcome)`, so a
+  block match uses the same challenge flow as F2.1.
 - `ReasonCode` value `card_testing_pattern` and `cardholderReason(code)`.
 - `AuditLog.record(entry: AuditEntry)` with `action: 'release' | 'expire'`.
 - The review queue console session, which supplies analyst identity.
@@ -124,15 +135,27 @@ extending a block in place (a renewed attack is a new record).
 
 | Condition | Result |
 |---|---|
-| `BlockList.matches({ bin, amount })` | `declined`, `do_not_honour`, reason code `card_testing_pattern`, cardholder reason from the allowlist |
+| `BlockList.matches({ bin, amount })` | `step_up`: a 3-D Secure challenge is created with reason code `card_testing_pattern`. Nothing is sent to the scheme until the challenge completes |
 | otherwise, amount ≤ `smallAmountCeiling` | Attempt recorded asynchronously; continue to scoring |
 | otherwise | Continue to scoring |
+
+**Challenge outcome for a block match** (through `completeStepUp`)
+
+| Outcome | Result |
+|---|---|
+| `authenticated` | Continues as an approval, as for an F2.1 challenge |
+| `not_authenticated`, cancelled or expired | `declined`, `do_not_honour`, reason code `card_testing_pattern`, cardholder reason from the allowlist |
+| provider `unavailable` or no answer within 10 seconds | `declined` as above. Unlike an F2.1 challenge it is not held: holding would authorise with the scheme, which confirms the card and incurs the fee the block exists to prevent |
 
 ## API Surface
 
 **`AuthorisationGateway.authorise`** (changed again): checks `BlockList.matches` before
-scoring. A block lookup is an in-memory read on the replica, refreshed every
+scoring. A match returns `{ status: 'step_up', challengeId }` through F2.1's
+`StepUpAdapter`. A block lookup is an in-memory read on the replica, refreshed every
 `refreshInterval`, so it adds no network call to the authorisation path.
+
+**`AuthorisationGateway.completeStepUp`** (from F2.1): for a challenge raised by a block
+match, applies the outcomes in the State Machine above.
 
 **`AttemptRecorder.record(attempt: AttemptRecord): void`**: buffers in memory and
 flushes to the shared store every second. A flush failure is logged and retried; it never
@@ -178,20 +201,23 @@ No card data in the payload, not even masked or the BIN.
 | ID | Observable behaviour | Product story or criterion |
 |---|---|---|
 | AC1 | Replaying `cardTestingBurst(40)` flags one attack within 60 seconds of its first attempt | ST6, 60-second criterion |
-| AC2 | At least 95% of the burst's attempts after the tenth are declined. GW-05 changes to assert this | ST7, 95% criterion |
+| AC2 | At least 95% of the burst's attempts after the tenth return `step_up`, and each ends `declined` when the challenge is `not_authenticated`. None is approved without authentication. GW-05 changes to assert this | ST7, 95% criterion |
 | AC3 | Detection works when the burst is spread across two gateway instances sharing one attempt store. GW-06's per-replica problem does not apply | ST6, platform runtime |
 | AC4 | While the block is active, `travellerTelevision` and `domesticGroceries` are not declined by it | ST7 vs F2.1 |
 | AC5 | Each affected merchant receives one notification with window and count, and no card data, within 15 minutes | ST8, 15-minute criterion |
 | AC6 | An analyst can list attacks, open one with its merchants and timeline, and release it with a reason; the release is audit logged with identity and reason | ST9, Security |
 | AC7 | Release without a reason is rejected | Security |
-| AC8 | An unreleased block expires after `blockTtl` and stops declining | Security, blocks must expire |
+| AC8 | An unreleased block expires after `blockTtl` and stops challenging | Security, blocks must expire |
 | AC9 | The block check adds under 1 ms p99 to the authorisation path | Platform latency budget |
+| AC10 | During an active block, a genuine flash-sale payment that matches it returns `step_up`, and `completeStepUp` with `authenticated` returns `approved` | ST7, fewer than 1 in 1,000 genuine payments declined |
+| AC11 | A block-match challenge that returns `unavailable`, or no answer within 10 seconds, is `declined` with the card-testing reason and creates no review item | ST7 |
 
 ### Risks and Coverage
 
 | Risk | Severity | Test Approach |
 |------|----------|---------------|
-| A flash sale looks like card testing | High | Genuine-traffic fixture with many small payments on one BIN at many merchants; measure false declines; release path (AC6) |
+| A flash sale looks like card testing | High | Genuine-traffic fixture with many small payments on one BIN at many merchants; genuine shoppers complete through step-up (AC10); release path (AC6) |
+| A testing script passes the bank challenge | High | Stub provider: block-match challenges without authentication end declined (AC2, AC11) |
 | Block catches genuine travellers (F2.1's problem) | High | High-value and domestic fixtures during an active block (AC4) |
 | Detection lag lets the burst through | High | Replay with real timings; count declines after the tenth attempt (AC2) |
 | Attackers rotate BIN or amount | Medium | Variant bursts with two BINs and varying amounts; record what is and is not caught |
@@ -242,6 +268,8 @@ Changing `CARD_VELOCITY`; it stays as it is.
 - Release is an analyst action from an authenticated console session, audit logged with
   identity and reason. Expiry is audit logged as `system`.
 - Blocks expire. No block outlives `blockTtl` without a new attack being flagged.
+- A block match never reaches the scheme before the bank confirms the cardholder, so a
+  challenged attempt neither confirms a stolen card nor incurs a scheme fee.
 
 ## Key Decisions
 
@@ -252,10 +280,15 @@ Changing `CARD_VELOCITY`; it stays as it is.
 | Detection placement | Asynchronous detector; in-memory block check on the path | Synchronous cross-replica query per authorisation | Keeps the risk decision inside 40 ms |
 | Block scope | All merchants, small amounts on the flagged BIN only | Only merchants already hit | The attack moves between merchants by design; limiting to amounts below the ceiling keeps travellers out (C5) |
 | Stateless scorer | Unchanged | Give the scorer cross-request features | Keeps 1-high-value-traveller.md's model contract; detection is a separate component the gateway consults |
+| Action on a block match | 3-D Secure step-up; decline only when the bank cannot confirm | Decline outright (version 0.1) | The product vision asks before refusing. A script cannot pass a bank challenge, so attacks are still stopped, while genuine shoppers caught by a block can pay |
+| Provider unavailable on a block match | Decline | Hold for review, as F2.1 does | Holding authorises with the scheme, which confirms the card and incurs the fee the block exists to prevent |
 
 ## Drawbacks
 
-- Genuine small payments on a flagged BIN are declined for up to `blockTtl`.
+- Genuine small payments on a flagged BIN face a bank challenge for up to `blockTtl`; those
+  whose bank cannot confirm them, or whose bank is unreachable, are declined.
+- Every challenged attempt calls the step-up provider, which adds provider cost during an
+  attack.
 - An attacker who varies amount or spreads across BINs can stay under the threshold.
 - The first ten or so attempts in every attack are approved by design.
 - Adds write load to the primary Postgres cluster, which also holds the ledger.
