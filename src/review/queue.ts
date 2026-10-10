@@ -77,6 +77,8 @@ export interface ReviewQueue {
   /** Subscribe to newly held items. Returns an unsubscribe function. */
   onHeld(listener: (item: ReviewItem) => void): () => void;
   setNarrative(id: string, narrative: string): void;
+  /** Mark a held item expired. Idempotent: returns false, changing nothing, if it is not held. */
+  markExpired(id: string, now: number): boolean;
 }
 
 const MASKED_CARD = /^\d{6}\*+\d{4}$/;
@@ -108,6 +110,15 @@ export class InMemoryReviewQueue implements ReviewQueue {
     const item = this.#items.get(id);
     if (!item) throw new ReviewError('REVIEW_NOT_FOUND', `no review item ${id}`);
     item.narrative = narrative;
+  }
+
+  markExpired(id: string, now: number): boolean {
+    const item = this.#items.get(id);
+    if (!item) throw new ReviewError('REVIEW_NOT_FOUND', `no review item ${id}`);
+    if (item.status !== 'held') return false;
+    item.status = 'expired';
+    item.decidedAt = now;
+    return true;
   }
 
   approve(id: string, analyst: string, note: string, now?: number): ReviewItem {
