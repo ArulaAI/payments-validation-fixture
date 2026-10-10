@@ -14,6 +14,8 @@ export type ChallengeOutcome = Exclude<ChallengeStatus, 'pending'>;
 export type StepUpChallenge<R> = {
   id: string;
   source: ChallengeSource;
+  /** The attack whose block caused this challenge. Set only for 'block_match'. */
+  attackId?: string;
   request: R;
   decision: Decision;
   token: string;
@@ -129,6 +131,7 @@ export class StepUpAdapter<R> {
     token: string,
     meta: StepUpMeta,
     source: ChallengeSource = 'policy',
+    attackId?: string,
   ): StepUpChallenge<R> {
     const createdAt = this.clock();
     const id = `chl_${String(++this.counter).padStart(6, '0')}`;
@@ -136,6 +139,7 @@ export class StepUpAdapter<R> {
       id, source, request, decision, token, status: 'pending',
       createdAt, expiresAt: createdAt + CHALLENGE_TTL_MS,
     };
+    if (attackId !== undefined) challenge.attackId = attackId;
     this.challenges.set(id, challenge);
     this.requests.set(id, request);
 
