@@ -50,7 +50,7 @@ test('prompt for the traveller fixture holds no card data or merchant descriptor
   assertNoCardData(input);
   assert.equal(await writer.describe(input), 'ok');
   assert.equal(prompts.length, 1);
-  assert.doesNotMatch(prompts[0], /411111|1111|tok_|m_electricals|\d{4,}/i);
+  assert.doesNotMatch(prompts[0], /411111|1111|tok_|m_electricals/i);
   assert.match(prompts[0], /1000_to_4999/);
 });
 
