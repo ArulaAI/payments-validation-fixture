@@ -246,3 +246,129 @@ test('[RO-02] the rollout is read from configuration and defaults to shadow with
   assert.deepEqual([...configured.enforcedMerchants], ['m_a', 'm_b']);
   assert.throws(() => rolloutFromEnv({ RISK_MODE: 'enforced' }), /RISK_MODE/);
 });
+
+/** A gateway whose step-up provider, clock and answer timer the test controls. */
+const buildStepUp = (provider: StepUpProvider = fakeProvider, score = 500) => {
+  const payments = new PaymentsService();
+  const audit = new InMemoryAuditLog();
+  const queue = new InMemoryReviewQueue(audit, Date.now, payments);
+  const clock = { now: Date.UTC(2026, 9, 3, 14, 0, 0) };
+  const timers: Array<() => void> = [];
+  const stepUp = new StepUpAdapter<AuthoriseRequest>(provider, {
+    clock: () => clock.now,
+    setTimer: fn => timers.push(fn),
+    clearTimer: () => {},
+  });
+  const gateway = new AuthorisationGateway(payments, {
+    scorer: fixedScorer(score),
+    policy: new DecisionPolicy(DEFAULT_THRESHOLDS),
+    stepUp, queue, audit,
+    rollout: enforce('m_electricals'),
+  });
+  return { gateway, payments, audit, queue, stepUp, clock, timers };
+};
+
+const begun = (ctx = buildStepUp()) => {
+  const result = ctx.gateway.authorise(travellerTelevision.request);
+  assert.equal(result.status, 'step_up');
+  return { ...ctx, id: result.status === 'step_up' ? result.challengeId : '' };
+};
+
+test('[SU-01] authenticated approves with one payment matching the request', () => {
+  const { gateway, payments, id } = begun();
+  assert.equal(id, 'chl_000001');
+  const result = gateway.completeStepUp(id, 'authenticated');
+  assert.equal(result.status, 'approved');
+  if (result.status !== 'approved') return;
+  assert.equal(result.payment.status, 'authorised');
+  assert.equal(result.payment.authorised, travellerTelevision.request.amount);
+  assert.equal(payments.payments.size, 1);
+});
+
+test('[SU-02] not_authenticated declines with the bank reason and creates no payment', () => {
+  const { gateway, payments, id } = begun();
+  assert.deepEqual(gateway.completeStepUp(id, 'not_authenticated'), {
+    status: 'declined', code: 'do_not_honour', reason: "Your bank couldn't confirm this payment.",
+  });
+  assert.equal(payments.payments.size, 0);
+});
+
+test('[SU-03] unavailable holds, blocks capture and audits a hold', () => {
+  const { gateway, payments, queue, audit, id } = begun();
+  const result = gateway.completeStepUp(id, 'unavailable');
+  assert.equal(result.status, 'held');
+  if (result.status !== 'held') return;
+  assert.equal(payments.isCaptureBlocked(result.payment.id), true);
+  assert.equal(result.payment.authorised, travellerTelevision.request.amount);
+  assert.equal(queue.listHeld()[0].merchantId, travellerTelevision.request.merchantId);
+  assert.equal(audit.forSubject(result.reviewId)[0].action, 'hold');
+});
+
+test('[SU-04] cancelled declines with no payment and no ledger entries', () => {
+  resetSinks();
+  const { gateway, payments, id } = begun();
+  assert.deepEqual(gateway.completeStepUp(id, 'cancelled'), { status: 'declined', code: 'do_not_honour' });
+  assert.equal(payments.payments.size, 0);
+  assert.equal(payments.ledger.entries.length, 0);
+  assert.ok(sinks.logs.some(l => l.message.includes('stepup.cancelled')));
+});
+
+test('[SU-05] a second completeStepUp returns the first result and creates nothing', () => {
+  const { gateway, payments, id } = begun();
+  const first = gateway.completeStepUp(id, 'authenticated');
+  assert.equal(gateway.completeStepUp(id, 'cancelled'), first);
+  assert.equal(gateway.completeStepUp(id, 'authenticated'), first);
+  assert.equal(payments.payments.size, 1);
+});
+
+test('[SU-06] an unknown challenge declines and logs stepup.unknown_challenge', () => {
+  resetSinks();
+  const { gateway } = buildStepUp();
+  assert.deepEqual(gateway.completeStepUp('chl_999999', 'authenticated'), { status: 'declined', code: 'do_not_honour' });
+  assert.ok(sinks.logs.some(l => l.message.includes('stepup.unknown_challenge') && l.message.includes('chl_999999')));
+});
+
+test('[SU-07] a provider that resolves unavailable holds, and completeStepUp returns that result', async () => {
+  const { gateway, payments, queue, id } = begun(buildStepUp({ start: async () => 'unavailable' }));
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(queue.listHeld().length, 1);
+  const result = gateway.completeStepUp(id, 'authenticated');
+  assert.equal(result.status, 'held');
+  assert.equal(payments.payments.size, 1);
+  assert.equal(queue.listHeld().length, 1);
+  if (result.status !== 'held') return;
+  assert.equal(result.payment.authorised, travellerTelevision.request.amount);
+  assert.equal(payments.isCaptureBlocked(result.payment.id), true);
+});
+
+test('[SU-08] no provider answer within 10 seconds holds with capture blocked and a review item', () => {
+  const { gateway, payments, queue, timers, id } = begun(buildStepUp({ start: () => new Promise(() => {}) }));
+  assert.equal(timers.length, 1);
+  timers[0]();
+  assert.equal(queue.listHeld().length, 1);
+  const result = gateway.completeStepUp(id, 'authenticated');
+  assert.equal(result.status, 'held');
+  if (result.status !== 'held') return;
+  assert.equal(payments.isCaptureBlocked(result.payment.id), true);
+  assert.equal(result.reviewId, queue.listHeld()[0].id);
+});
+
+test('[SU-09] no result from authorise or completeStepUp has a code other than do_not_honour', () => {
+  for (const outcome of ['authenticated', 'not_authenticated', 'unavailable', 'cancelled'] as const) {
+    const { gateway, id } = begun();
+    const result = gateway.completeStepUp(id, outcome);
+    if (result.status === 'declined') assert.equal(result.code, 'do_not_honour');
+  }
+  const unknown = buildStepUp().gateway.completeStepUp('nope', 'cancelled');
+  assert.equal(unknown.status === 'declined' && unknown.code, 'do_not_honour');
+});
+
+test('[SU-10] after 10 minutes expireChallenges cancels the pending challenge', () => {
+  const { gateway, stepUp, payments, clock, id } = begun();
+  clock.now += 10 * 60 * 1000 + 1;
+  gateway.expireChallenges();
+  assert.equal(stepUp.get(id)?.status, 'cancelled');
+  assert.equal(payments.payments.size, 0);
+  assert.deepEqual(gateway.completeStepUp(id, 'authenticated'), { status: 'declined', code: 'do_not_honour' });
+  assert.equal(payments.payments.size, 0);
+});
