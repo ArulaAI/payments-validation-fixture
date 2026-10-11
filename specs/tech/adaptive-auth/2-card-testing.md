@@ -116,6 +116,8 @@ Retention: one hour, then deleted.
 | minMerchants | 5 | Distinct merchants sharing the attack key |
 | blockTtl | 60 min | Block lifetime before expiry |
 | refreshInterval | 1 s | How often replicas reload blocks and the detector runs. Attempts flush on the same interval, so a flag reaches every replica within about 3 s, inside the 4 s gap between burst attempts |
+| mode | `shadow` | Rollout flag: `shadow` detects and logs only; `block` adds the block-match step-up; `block_and_notify` also notifies merchants (Migration Strategy) |
+| version | none (required) | Identifies this configuration; recorded as `thresholdsVersion` on a block-match decision |
 
 ## State Machine
 
@@ -194,7 +196,7 @@ No card data in the payload, not even masked or the BIN.
 
 | Field | Constraints |
 |-------|-------------|
-| `DetectorConfig` | Positive integers; `minCards` ≥ 2; `minMerchants` ≥ 2; `blockTtl` between 5 minutes and 24 hours. Invalid configuration fails start-up |
+| `DetectorConfig` | Positive integers; `minCards` ≥ 2; `minMerchants` ≥ 2; `blockTtl` between 5 minutes and 24 hours; `mode` one of `shadow`, `block`, `block_and_notify`; `version` a non-empty string. Invalid configuration fails start-up |
 | `AttemptRecord.cardKey` | Exactly `${bin}:${last4}`; a PAN-shaped value is rejected before storage |
 | Release reason | Non-empty after trimming, at most 1,000 characters |
 | Analyst identity | From the console session, never the request body |

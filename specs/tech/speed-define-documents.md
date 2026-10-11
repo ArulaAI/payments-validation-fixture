@@ -105,7 +105,7 @@ IDs; editing and commitment belong to the document records.
 | ID | Requirement |
 |----|-------------|
 | S5.5-TR1 | Existing type-oriented fields remain as adapters over the document APIs |
-| S5.5-TR2 | `specType` resolves through the inventory: `prd` → product, `rfc` → tech, child RFC aliases via persisted paths |
+| S5.5-TR2 | `specType` resolves through the inventory: `prd` → product, `design` → design, `rfc` → tech, child RFC aliases via persisted paths. These three are the only legacy selectors |
 | S5.5-TR3 | Zero matches return `DOCUMENT_NOT_FOUND`; several return `AMBIGUOUS_DOCUMENT` with candidate paths. Never pick the first |
 
 ## Acceptance Criteria

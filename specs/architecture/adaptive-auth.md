@@ -51,8 +51,9 @@ gateway budget, and card data never leaves our network.
   A challenge lost to a restart or redeploy is answered as unknown and declined; the
   cardholder can pay again.
 - Merchant name and category come from the existing merchant directory service. The
-  gateway keeps an in-memory copy of each merchant's category, refreshed in the background
-  every 5 minutes, so the authorisation path never calls the directory.
+  gateway reads category through an injected synchronous lookup that answers from the
+  directory client's in-memory copy (owned by platform engineering), so the authorisation
+  path never calls the directory. An unknown merchant scores with category `unknown`.
 
 ## Components and Dependencies
 
@@ -71,8 +72,8 @@ gateway budget, and card data never leaves our network.
 
 | Component | Depends on |
 |---|---|
-| Authorisation gateway | Block list, scoring service, decision policy, step-up adapter, review queue, token vault, in-memory merchant category copy |
-| Merchant category copy | Merchant directory service, read in the background every 5 minutes |
+| Authorisation gateway | Block list, scoring service, decision policy, step-up adapter, review queue, token vault, merchant category lookup |
+| Merchant category lookup | The merchant directory client's in-memory copy, owned by platform engineering |
 | Scoring service | Model file loaded at start-up; nothing at request time |
 | Decision policy | Threshold configuration owned by Risk |
 | Step-up adapter | Our 3-D Secure provider's REST API |
@@ -85,8 +86,8 @@ is gradient-boosted, trained offline by data science on twelve months of labelle
 authorisations, delivered as a serialised model file and run in process with the gateway,
 as the v1 rules are. Every feature it uses is derived from the authorisation request:
 amount, currency, BIN, issuer country, IP country, merchant category and time of day.
-Merchant category is the one feature not in the request itself: it is read from the
-gateway's in-memory copy of the merchant directory, using the request's `merchantId`.
+Merchant category is the one feature not in the request itself: it comes from the merchant
+category lookup, using the request's `merchantId`.
 
 ## Data and Trust Boundaries
 
@@ -108,7 +109,7 @@ gateway's in-memory copy of the merchant directory, using the request's `merchan
 | Scorer throws or returns an out-of-range score | The decision falls back to hold, never to approve |
 | Step-up provider unavailable or slow (F2.1 challenge) | The payment is held for review |
 | A gateway replica restarts while challenges are pending | Those challenges are lost; completion calls get the unknown-challenge decline and the cardholder can pay again |
-| Merchant directory unavailable | The gateway keeps using its last copy of merchant categories; an unknown merchant scores with category `unknown` |
+| Merchant category not known | The lookup answers `unknown` and the payment is scored with that category |
 | Step-up on a card-testing block match not completed by the bank | The attempt is declined as card testing |
 | Risk narrative unavailable | The held payment is shown without a narrative; analysts decide from the reasons |
 | Shared attempt store unavailable | Authorisations continue, detection pauses, an alert is logged |
