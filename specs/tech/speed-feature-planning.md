@@ -49,7 +49,7 @@ Bundle -> Audit gate -> Guardian -> Architect (phased?) -> Coverage -> Decomposi
 | ID | Requirement |
 |----|-------------|
 | S3.3-TR1 | Sizing above `ARCHITECT_PHASE_TASK_THRESHOLD` (10 developer-day units) phases unless `--single-pass`. Estimate 10 stays single-pass |
-| S3.3-TR2 | Phase sections are `(document_id, H2 index)`. Split validation keeps every required section and puts shared sections in both phases |
+| S3.3-TR2 | Phase sections are `(document_id, section_id)` for H2 sections, with `section_id` from the S1 resolver (S1.3-TR7). Split validation keeps every required section and puts shared sections in both phases |
 | S3.3-TR3 | Phase outputs merge into one DAG, contract and cross-cutting concern set with unique task IDs |
 | S3.3-TR4 | Replanning replaces the feature's plan under the feature lock. Planning a single numbered RFC cannot create a separate task namespace |
 

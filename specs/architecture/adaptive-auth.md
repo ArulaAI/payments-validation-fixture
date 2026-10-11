@@ -39,7 +39,20 @@ gateway budget, and card data never leaves our network.
   payment is held and its output never feeds an automated decision.
 - The step-up provider is the only external party the authorisation path calls. As the
   platform requires of every third party, it receives the vault token, never the card
-  number.
+  number. The gateway tokenises the card in the vault when it starts a challenge
+  (`tokenise` needs no payment), and the step-up adapter sends the provider that token
+  with the challenge id.
+- A pending step-up challenge, including the original request with the card number, is
+  held in the memory of the gateway replica that created it, for at most 10 minutes. It is
+  never persisted, logged or sent to a third party. This extends the platform's
+  parser-to-vault card boundary to that replica for the life of the challenge.
+- Completion calls reach that replica through sticky routing on the challenge id at the
+  load balancer, agreed with platform engineering as the platform architecture requires.
+  A challenge lost to a restart or redeploy is answered as unknown and declined; the
+  cardholder can pay again.
+- Merchant name and category come from the existing merchant directory service. The
+  gateway keeps an in-memory copy of each merchant's category, refreshed in the background
+  every 5 minutes, so the authorisation path never calls the directory.
 
 ## Components and Dependencies
 
@@ -58,7 +71,8 @@ gateway budget, and card data never leaves our network.
 
 | Component | Depends on |
 |---|---|
-| Authorisation gateway | Block list, scoring service, decision policy, step-up adapter, review queue |
+| Authorisation gateway | Block list, scoring service, decision policy, step-up adapter, review queue, token vault, in-memory merchant category copy |
+| Merchant category copy | Merchant directory service, read in the background every 5 minutes |
 | Scoring service | Model file loaded at start-up; nothing at request time |
 | Decision policy | Threshold configuration owned by Risk |
 | Step-up adapter | Our 3-D Secure provider's REST API |
@@ -71,6 +85,8 @@ is gradient-boosted, trained offline by data science on twelve months of labelle
 authorisations, delivered as a serialised model file and run in process with the gateway,
 as the v1 rules are. Every feature it uses is derived from the authorisation request:
 amount, currency, BIN, issuer country, IP country, merchant category and time of day.
+Merchant category is the one feature not in the request itself: it is read from the
+gateway's in-memory copy of the merchant directory, using the request's `merchantId`.
 
 ## Data and Trust Boundaries
 
@@ -91,6 +107,8 @@ amount, currency, BIN, issuer country, IP country, merchant category and time of
 |---|---|
 | Scorer throws or returns an out-of-range score | The decision falls back to hold, never to approve |
 | Step-up provider unavailable or slow (F2.1 challenge) | The payment is held for review |
+| A gateway replica restarts while challenges are pending | Those challenges are lost; completion calls get the unknown-challenge decline and the cardholder can pay again |
+| Merchant directory unavailable | The gateway keeps using its last copy of merchant categories; an unknown merchant scores with category `unknown` |
 | Step-up on a card-testing block match not completed by the bank | The attempt is declined as card testing |
 | Risk narrative unavailable | The held payment is shown without a narrative; analysts decide from the reasons |
 | Shared attempt store unavailable | Authorisations continue, detection pauses, an alert is logged |
@@ -103,7 +121,9 @@ amount, currency, BIN, issuer country, IP country, merchant category and time of
 - Nothing slower than an in-memory read or an in-process model call runs on the
   authorisation path.
 - Card blocks expire; no block outlives its configured lifetime without a new attack.
-- Every automated decline carries a reason the merchant can show the cardholder.
+- Every automated decline carries a reason the merchant can show the cardholder. Analyst
+  declines and 72-hour expiries are not automated; how they reach the merchant and the
+  cardholder is open (F2.1 RFC, Unresolved Question 6).
 - Attempt records are retained for one hour.
 
 ## Decisions

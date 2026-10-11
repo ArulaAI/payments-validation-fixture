@@ -25,6 +25,7 @@ hosted checkout library. It has no route of its own.
 | `/checkout/confirm` (overlay) | Traveller confirms and pays | Explains the step, then hosts the bank challenge frame |
 | `/checkout/confirm` (overlay, result) | Traveller fails to confirm | Shows that the bank could not confirm, with the reason |
 | `/checkout/confirm` (overlay, result) | Clearly fraudulent payment | Shows the decline with its reason |
+| `/checkout/confirm` (overlay, result) | Borderline payment held | Shows that the payment is being checked; opened directly by a `held` result from the initial authorisation, with no challenge |
 
 ## Layout Structure
 
@@ -57,7 +58,7 @@ merchant's page with `--scrim`. On small screens the sheet fills the viewport.
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| outcome | "confirmed" \| "not_confirmed" \| "declined" | required | Which result to show |
+| outcome | "confirmed" \| "not_confirmed" \| "declined" \| "held" | required | Which result to show |
 | reason | string | undefined | Plain-language reason, shown in DeclineReason |
 | merchantName | string | required | Used in the copy |
 
@@ -105,6 +106,14 @@ The bank did not confirm the payment. StepUpResult with outcome `not_confirmed` 
 copy "Your bank couldn't confirm this payment. You haven't been charged." with a
 secondary action to choose another way to pay.
 
+#### Held State
+
+The payment is held for review. This happens in two ways: the initial authorisation
+returns `held` for a borderline payment, with no challenge, or the bank could not be
+reached during a challenge. Both show the same result: StepUpResult with outcome `held`
+and the copy "We're checking this payment. The shop will confirm your order." The copy
+does not say why the payment is held. No retry action; the merchant is told the outcome.
+
 ### Interactive Element States
 
 ContinueButton uses the existing checkout button states. The DeclineReason disclosure
@@ -114,8 +123,8 @@ has closed, open and focus states from the disclosure component.
 
 | Element | Source |
 |---|---|
-| StepUpResult.outcome | Authorisation response `status` |
-| StepUpResult.reason | Authorisation response `reason` |
+| StepUpResult.outcome | The `GatewayResult` returned by `completeStepUp` for this challenge: `approved` → `confirmed`, `declined` → `not_confirmed` (a decline after a challenge always means the bank did not confirm), `held` → `held`. From the initial authorisation, with no challenge: `declined` → `declined` and `held` → `held` |
+| StepUpResult.reason | `GatewayResult.reason` |
 | merchantName | Hosted checkout session |
 
 ## Interactions & Motion

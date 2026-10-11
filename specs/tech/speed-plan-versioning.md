@@ -41,7 +41,7 @@ Every consumer of a versioned plan calls `validate_plan_inputs` before it reads 
 | ID | Requirement |
 |----|-------------|
 | S4.2-TR1 | Tasks keep `spec_references`; `spec` holds the exact document path |
-| S4.2-TR2 | Add `section_id`, derived from heading hierarchy and occurrence within the document, and optional `requirement_id`. Keep `section` and `requirement` strings |
+| S4.2-TR2 | Add `section_id`, as defined by the S1 resolver (S1.3-TR7: heading hierarchy and occurrence within the document), and optional `requirement_id`. Keep `section` and `requirement` strings |
 | S4.2-TR3 | Validation: the document ID and section must resolve; a requirement ID must exist in that section |
 
 ### S4.3 Traceability in Verify

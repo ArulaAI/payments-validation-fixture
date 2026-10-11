@@ -136,7 +136,7 @@ operation throws.
 |-----------|-------|---------|--------|
 | `authorise(request)` | card number, expiry, amount (integer minor units), optional currency, optional idempotency key | `Payment` with status authorised | Fractional amount: "money must be integer minor units, got X". A tokenisation failure is logged through `serialiseFailure(error, redact(request))` and rethrown |
 | `capture(paymentId, amount?, idempotencyKey?)` | Payment ID, amount defaulting to the remaining authorised amount, optional idempotency key | `Capture` | Unknown payment: "unknown payment P". Amount above remaining: "capture X exceeds remaining Y". Fractional amount as for authorise |
-| `refund(paymentId, captureId, amount?)` | Payment ID, capture ID, amount defaulting to that capture's amount | `Refund` | Unknown payment. Unknown capture: "no capture C on P". Total refunds above total captured: "refund X exceeds refundable Y" |
+| `refund(paymentId, captureId, amount?)` | Payment ID, capture ID, amount defaulting to that capture's amount | `Refund` | Unknown payment. Unknown capture: "no capture C on P". Refunds against this capture above its amount: "refund X exceeds refundable Y", where Y is what remains of that capture |
 | `void(paymentId)` | Payment ID | `Payment` with status voided | Unknown payment. Payment with any capture: "cannot void a captured payment" |
 | `settlementSchedule(paymentId, instalments)` | Payment ID, number of instalments | List of Minor values | Unknown payment. Fewer than one instalment: "parts must be at least 1" |
 
@@ -163,7 +163,7 @@ one test in Testing.
 | TR5 | Every state change writes a balanced double-entry pair. No module writes a single entry |
 | TR6 | `LEDGER_BALANCED`: every ledger pair nets to zero |
 | TR7 | `CAPTURE_WITHIN_AUTH`: the sum of captures never exceeds the authorised amount |
-| TR8 | `REFUND_TRACES_CAPTURE`: every refund references a capture that exists, and refunds never exceed it |
+| TR8 | `REFUND_TRACES_CAPTURE`: every refund references a capture that exists, and the refunds against a capture never exceed that capture's amount |
 | TR9 | `NO_PAN_AT_REST`: no stored record holds a Luhn-valid card number outside the vault. Length alone is insufficient, because a millisecond timestamp is thirteen digits |
 | TR10 | Authorise and capture accept an idempotency key and return the original result for a repeated key |
 | TR11 | Any value reaching one of the five observability surfaces is tokenised or redacted first. `redact` is the sanitiser at the serialised exception boundary |
@@ -177,7 +177,7 @@ Each criterion traces to a product success criterion or story and gates the feat
 
 - Captures against one authorisation never sum to more than the authorised amount, and a capture beyond it is rejected rather than truncated (ST2, TR7).
 - For every captured amount, the scheme fee and the merchant net sum exactly to the capture (ST3, TR3).
-- Every refund references a capture that exists, and total refunds never exceed total captures (ST4, TR8).
+- Every refund references a capture that exists, and the refunds against a capture never exceed that capture (ST4, TR8).
 - An uncaptured authorisation can be voided and its reservation released. A captured payment cannot be voided (ST5).
 - A repeated authorise or capture carrying a seen idempotency key returns the original result and creates no second record (ST6, TR10).
 - Instalments sum exactly to the captured amount for any number of instalments, including 99.99 in 7 instalments (ST7, TR2).
@@ -235,6 +235,7 @@ The feature has no user interface, so no visual tests are needed.
 - Persistence. State lives in memory for the lifetime of the process.
 - Concurrency control. Operations are sequential, so contention is out of scope for this version.
 - Settlement file generation. The schedule is produced; the file format is not.
+- Merchant attribution. The payments service does not record which merchant a payment belongs to. The authorisation gateway owns the `merchantId` from the request, and a feature that needs the link stores it with the payment id (for example the F2 review item). Per-merchant settlement is not produced by this version.
 - Performance and load testing, because the service runs in memory and a full exercise completes in seconds.
 
 ## Security & Controls

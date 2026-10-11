@@ -68,7 +68,7 @@ in `src/risk/rules.ts`, and `AuthorisationGateway.authorise` in `src/payments/ga
 As in 1-high-value-traveller.md, every store is an interface with an in-memory implementation in this
 repository and a Postgres implementation in production.
 
-**AttemptRecord** (`src/risk/attempts.ts`), recorded for small-amount authorisations only
+**AttemptRecord** (`src/risk/attempts.ts`), recorded for small-amount authorisations that do not match an active block
 
 | Field | Type | Notes |
 |---|---|---|
@@ -91,7 +91,7 @@ Retention: one hour, then deleted.
 | firstSeenAt | epoch ms | First attempt in the window that triggered the flag |
 | flaggedAt | epoch ms | |
 | cards | integer | Distinct `cardKey` count |
-| merchants | `{ merchantId, attempts, firstAt, lastAt }[]` | Merchants hit |
+| merchants | `{ merchantId, attempts, firstAt, lastAt }[]` | Merchants hit; this is the attack's timeline (see `getAttack`) |
 | status | `'blocked' \| 'released' \| 'expired'` | |
 | releasedBy | string or null | |
 | releaseReason | string or null | |
@@ -135,7 +135,7 @@ extending a block in place (a renewed attack is a new record).
 
 | Condition | Result |
 |---|---|
-| `BlockList.matches({ bin, amount })` | `step_up`: a 3-D Secure challenge is created with reason code `card_testing_pattern`. Nothing is sent to the scheme until the challenge completes |
+| `BlockList.matches({ bin, amount })` | `step_up`: a 3-D Secure challenge is created with `source: 'block_match'`, the attack id and reason code `card_testing_pattern`. The attempt is not recorded. Nothing is sent to the scheme until the challenge completes |
 | otherwise, amount ≤ `smallAmountCeiling` | Attempt recorded asynchronously; continue to scoring |
 | otherwise | Continue to scoring |
 
@@ -169,12 +169,18 @@ elected replica. Returns attacks flagged on this run.
 | Method | Input | Result and errors |
 |---|---|---|
 | `listAttacks()` | none | Blocked attacks, newest first |
-| `getAttack(id)` | attack id | Attack with per-merchant timeline; `ATTACK_NOT_FOUND` |
+| `listRecentlyClosed(limit)` | maximum number to return | Released and expired attacks, most recently flagged first (`flaggedAt` descending, then id); backs the history link in the attacks view's empty state. When an attack was released or expired is not stored on `Attack`; it is the `at` of its `release` or `expire` audit entry |
+| `getAttack(id)` | attack id | Attack with per-merchant timeline; `ATTACK_NOT_FOUND`. The timeline is `Attack.merchants`: per merchant, the attempt count and first and last attempt time. It is recounted from every attempt record with the attack's `(bin, amount)` since `firstSeenAt`. Counts never shrink, so the timeline outlives the one-hour attempt retention |
 | `release(id, analyst, reason)` | id, identity, reason | Released attack; `REASON_REQUIRED` when blank after trimming; `NOT_BLOCKED` when already released or expired |
 
 **Merchant notification**: on flag, one message per affected merchant through the
 existing merchant notification service (the one that sends settlement emails), then a
-follow-up every 5 minutes while the block is active if more attempts were seen.
+follow-up every 5 minutes while the block is active to each merchant whose attempt count in
+the refreshed timeline has grown since its last notice. The notifier keeps, per attack and
+merchant, the last attempt count sent and the time of the last notice, in memory; delivery
+and retries belong to the existing merchant notification service. Attempts that match an
+active block are stepped up and not recorded, so a follow-up reports only attempts recorded
+before every replica loaded the block (Unresolved Question 6).
 
 | Payload field | Content |
 |---|---|
@@ -338,3 +344,10 @@ Rollback is a configuration flag. New tables only; no existing data changes.
    merchant message. Design to add one.
 5. **Review queue design product link** (does not block): the queue design links only
    F2.2 but also serves F2.1's held payments.
+
+6. **Recording attempts that match a block** (does not block build; limits follow-up
+   notifications and the timeline): block-matched attempts are stepped up and not recorded,
+   so after the flag the timeline and follow-ups grow only from attempts seen before the
+   block reached every replica. Proposed path: Risk and PM to decide whether block-matched
+   attempts are recorded with the attack id, once platform engineering confirms the attempt
+   table's write load.

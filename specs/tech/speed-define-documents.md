@@ -9,8 +9,8 @@ Depends on: [S1](speed-spec-bundle-discovery.md).
 ## Overview
 
 Document state lives under `.speed/shared/spec-documents/<storage_key>/` (multiplayer) or
-`.speed/spec-documents/<storage_key>/` (single-player). `storage_key` is the SHA-256 of the
-document ID. Each directory holds `document.json` (with the unhashed ID), `claim.json`,
+`.speed/spec-documents/<storage_key>/` (single-player). `storage_key` is the S1 resolver's
+`SpecDocument.storage_key` (the SHA-256 of the document ID). Each directory holds `document.json` (with the unhashed ID), `claim.json`,
 `draft.json`, `validation.json`, `suggestions.json`, revision-specific commitment and
 ratification records, and history. The feature's ceremony revision references document
 IDs; editing and commitment belong to the document records.
@@ -58,8 +58,9 @@ IDs; editing and commitment belong to the document records.
 |-------|--------|-------------------|
 | `claimSpecDocument` / `releaseSpecDocument` | feature, document ID | Current claim; existing ownership and stale-window rules |
 | `createDocumentSuggestion` | feature, document ID, section ID, expected section hash, text | Suggestion; owner suggestion denied; `SECTION_CHANGED` |
-| `resolveDocumentSuggestion` | suggestion ID, accept/dismiss, expected section hash, optional reason | Resolution and updated document |
+| `resolveDocumentSuggestion` | suggestion ID, accept/dismiss, expected section hash, expected content hash, optional reason | Resolution and updated document; `DOCUMENT_CHANGED` when the file changed on disk since it was loaded, `SECTION_CHANGED` when the target section changed |
 | `validateSpecDocument` | feature, document ID | Six validation dimensions with full-bundle context |
+| `documentSuggestions` | feature, document ID, optional status filter | Suggestions for that document, newest first, each with status (`unresolved`, `outdated`, `accepted`, `dismissed`), `origin_feature`, section ID, section hash at submission, author and any dismissal reason. A suggestion is `outdated` when its section hash no longer matches. On a shared overview every feature's suggestions are returned, filterable by `origin_feature`; `INVALID_FEATURE`, `DOCUMENT_NOT_FOUND` |
 
 | ID | Requirement |
 |----|-------------|
@@ -74,13 +75,14 @@ IDs; editing and commitment belong to the document records.
 | Field | Inputs | Result and errors |
 |-------|--------|-------------------|
 | `updateSpecDocument` | feature, document ID, content, expected content hash | Saved document; `NOT_CLAIMANT`, `DOCUMENT_NOT_FOUND`, `DOCUMENT_CHANGED` |
+| `specDocumentConflict` | feature, document ID | The on-disk content and its hash, and the claimant's unsaved draft, so the UI can show both versions after `DOCUMENT_CHANGED` |
 
 | ID | Requirement |
 |----|-------------|
 | S5.3-TR1 | Files are authoritative. A draft is a projection with `base_content_hash` |
 | S5.3-TR2 | Resolve the canonical document and capture the actor before writing. Validate expected hash under a per-document lock; replace atomically |
 | S5.3-TR3 | If the projection write fails after the source save, invalidate the projection and rebuild it from the file before the next read |
-| S5.3-TR4 | A conflicting external edit shows both versions and blocks saving until the claimant resolves it |
+| S5.3-TR4 | A conflicting external edit shows both versions (from `specDocumentConflict`) and blocks saving and suggestion acceptance until the claimant resolves it by saving against the new content hash |
 | S5.3-TR5 | Lock order: feature lock first, then document locks in canonical path order. Shared overview locks are global to the document |
 
 ### S5.4 Revision-bound commitment and ratification
@@ -89,6 +91,7 @@ IDs; editing and commitment belong to the document records.
 |-------|--------|-------------------|
 | `commitSpecDocument` | feature, document ID, expected content hash | Commitment; automatic ratification when no eligible ratifier |
 | `ratifySpecDocument` | document ID, committed revision, verdict, optional comment | Ratification state; rejects self-ratification and stale revisions |
+| `specDocumentRatifications` | document ID, optional revision | Ratification state per committed revision (pending, ratified, rejected, or automatic with its source), with each verdict's ratifier, comment and time; defaults to the latest revision; `DOCUMENT_NOT_FOUND` |
 
 | ID | Requirement |
 |----|-------------|

@@ -43,7 +43,7 @@ references, `cross_document_findings`, `sizing`, `completion`.
 
 | ID | Requirement |
 |----|-------------|
-| S2.2-TR1 | One report per document at `documents/<storage_key>.json` and one aggregate at `feature.json`. `run_id` is a UUID so same-type documents audited within one second never collide. Multiplayer uses local log locations |
+| S2.2-TR1 | One report per document at `documents/<storage_key>.json`, using the S1 resolver's `SpecDocument.storage_key`, and one aggregate at `feature.json`. `run_id` is a UUID so same-type documents audited within one second never collide. Multiplayer uses local log locations |
 | S2.2-TR2 | A finding has `id`, `level`, `severity`, `blocking`, `document_id`, `section_id`, optional line, `related_locations` (each a document and section) and `message` |
 | S2.2-TR3 | The report distinguishes completed checks from unavailable or unparseable agent results |
 | S2.2-TR4 | Human output groups findings by source document and shows both endpoints of cross-document findings. With `--json`, stdout is one aggregate object; logs go to stderr |
@@ -80,7 +80,7 @@ Each `suggested_files` entry has `path`, `source_sections` keyed by document ID,
 | S2.5-TR1 | Above 15 units, or any tech file over 1,000 lines, recommend multiple numbered RFCs. With no tech files, above 10 recommends a split |
 | S2.5-TR2 | Already split features get suggestions only for oversized members or missing boundaries |
 | S2.5-TR3 | Recommendations use unused numeric filenames and never create, change or overwrite a file. They never trigger Define generation |
-| S2.5-TR4 | Validation: valid source section indices, unused destinations, acyclic proposed dependencies |
+| S2.5-TR4 | Validation: valid source `section_id` values from the S1 resolver (S1.3-TR7), unused destinations, acyclic proposed dependencies |
 
 ## Acceptance Criteria
 

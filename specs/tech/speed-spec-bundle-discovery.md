@@ -16,6 +16,8 @@ def resolve_feature_bundle(project_root: Path, feature: str | None = None,
 def feature_from_spec(project_root: Path, spec_path: Path) -> str: ...
 def resolve_document_selector(bundle: FeatureSpecBundle, document_id: str | None,
                               legacy_spec_type: str | None) -> SpecDocument: ...
+def resolve_document_sections(document: SpecDocument) -> list[SpecSection]: ...
+# SpecSection: section_id, section_hash, heading, requirement_ids (in document order)
 ```
 
 `SpecDocument`:
@@ -28,6 +30,7 @@ def resolve_document_selector(bundle: FeatureSpecBundle, document_id: str | None
 | `feature` | string or null | Owning feature; null for shared overviews |
 | `content` | UTF-8 string | Current content |
 | `content_hash` | string | SHA-256 of exact file bytes |
+| `storage_key` | string | SHA-256 hex of `document_id`. The one file-safe key every command uses for per-document files, such as audit reports (S2) and Define state (S5) |
 | `template_path` | string | Resolved built-in or project template |
 | `template_hash` | string | SHA-256 of exact template bytes |
 | `dependencies` | string array | Canonical local paths from explicit dependency headers |
@@ -75,6 +78,8 @@ def resolve_document_selector(bundle: FeatureSpecBundle, document_id: str | None
 | S1.3-TR4 | `resolve_document_selector` returns exactly one document or raises `DOCUMENT_NOT_FOUND` / `AMBIGUOUS_DOCUMENT` with candidates; it never picks the first match |
 | S1.3-TR5 | Feature names follow the lowercase convention; separators, traversal, `overview` and empty input are rejected. Paths must be UTF-8 `.md` under a spec directory, not symlinks, inside the project. Dependency targets must exist and be acyclic. Violations exit 3 |
 | S1.3-TR6 | Discovery scans only the four spec directories and the vision path, needs no SQLite or server, and resolves 200 files (2 MiB) in under one second |
+| S1.3-TR7 | The resolver defines section identity for every command that cites a section. `section_id` is the heading path from H2 down (lowercase slugs joined by `/`) plus a `~N` occurrence suffix when the same path repeats in one document; `section_hash` is the SHA-256 of the section's text including subsections. S2 findings, S3 phase splits, S4 task references and S5 suggestions all use these values through `resolve_document_sections`, and none derives its own |
+| S1.3-TR8 | `requirement_id` is the identifier in the first column of a requirement table row, or the leading ID of a story or criterion heading or bullet: `ST1`, `S4.2-TR3`, `AC10`. `resolve_document_sections` lists each section's IDs in document order. An ID is unique within its document, and a duplicate is a structural error. Identity is `(document_id, requirement_id)`, so `ST1` in two product files is two requirements |
 
 ### S1.4 Shared overview context
 

@@ -18,7 +18,7 @@ action happen without the reason being visible on screen.
 | Route | User Flow | Description |
 |-------|-----------|-------------|
 | `/ops/review` | Borderline payment held | Queue of held payments, oldest first |
-| `/ops/review/:paymentId` | Borderline payment held | Single held payment with narrative and actions |
+| `/ops/review/:reviewId` | Borderline payment held | Single held payment with narrative and actions, keyed by the review item id that `ReviewQueue.get` takes |
 | `/ops/attacks` | Attack detected and blocked | Active card-testing attacks |
 | `/ops/attacks/:attackId` | False alarm released | One attack, the merchants hit, and the release action |
 
@@ -45,7 +45,7 @@ Operations console shell: left navigation rail, main content area, no right side
 | NarrativeBlock | new | PaymentDetail | The risk narrative for this payment |
 | DecisionBar | new | detail-pane | Approve and decline actions with a required note |
 | AttackRow | new | queue-list | Attack source, attempts, merchants hit, started at |
-| AttackDetail | new | detail-pane | Timeline of attempts and the merchants hit |
+| AttackDetail | new | detail-pane | Timeline of the merchants hit, from `Attack.merchants`: attempts and first and last attempt time per merchant |
 | ReleaseAction | new | AttackDetail | Release the block, with a required reason |
 
 ### Component Props
@@ -117,9 +117,13 @@ note is entered.
 
 | Element | Source |
 |---|---|
-| QueueRow.reason | Model reason for the score |
+| QueueRow.reason | `ReviewItem.analystReason` |
+| QueueRow.merchantName | Merchant directory service, looked up by `ReviewItem.merchantId` |
+| QueueRow.amount | `ReviewItem.amount`, formatted in `ReviewItem.currency` |
+| PaymentDetail request facts | `ReviewItem` merchantCategory, issuerCountry, ipCountry and reasons |
 | NarrativeBlock | Risk narrative |
 | AttackRow, AttackDetail | Card-testing detector |
+| Recently closed attacks link | `listRecentlyClosed(limit)` |
 
 ## Interactions & Motion
 
