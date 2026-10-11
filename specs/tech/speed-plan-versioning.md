@@ -53,6 +53,7 @@ Every consumer of a versioned plan calls `validate_plan_inputs` before it reads 
 | S4.3-TR3 | Keyword overlap is labelled heuristic evidence. Missing files, ambiguous aliases and missing sections are gaps |
 | S4.3-TR4 | Shared constraints appear separately in verifier input and report and do not inflate coverage |
 | S4.3-TR5 | The deterministic pre-check precedes the Plan Verifier; at most three task-record repair cycles |
+| S4.3-TR6 | `speed verify --feature NAME` selects the feature through the global `--feature` option that every command accepts, then verifies that feature's plan against its manifest. Without `--feature`, Verify uses the active feature |
 
 ### S4.4 Downstream freshness checks
 

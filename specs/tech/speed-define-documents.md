@@ -99,6 +99,7 @@ IDs; editing and commitment belong to the document records.
 | S5.4-TR2 | Ratification binds document ID, content hash and revision. Earlier approvals never satisfy a new revision; a rejected revision cannot be ratified by another revision's verdicts |
 | S5.4-TR3 | With no eligible ratifier, commitment records automatic ratification with `source: no-eligible-ratifier`. Multiplayer eligibility comes from the roster |
 | S5.4-TR4 | Legacy events lacking identity or revision remain history and cannot approve a new bundle |
+| S5.4-TR5 | The existing ratification gate on `speed plan` checks each feature document's current content hash and revision against these records. An unratified or stale revision keeps planning blocked and names the document (S5.4-ST1) |
 
 ### S5.5 Legacy selector compatibility
 
