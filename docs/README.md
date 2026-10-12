@@ -14,6 +14,7 @@ Nothing here specifies the payments service. A change to the service is judged a
 | [`04-plan.md`](04-plan.md) | Build plan, every task citing a requirement id, and what is deliberately not done |
 | [`course-301-1-define-execute-framework.md`](course-301-1-define-execute-framework.md) | Draft framework for 301.1: Define through Specify and Design, then Plan and Execute; SPEED controls and the handoff to 301.2 |
 | [`course-301-1e-define-audit-plan.md`](course-301-1e-define-audit-plan.md) | 301.1E: Define, Audit, Plan on the adaptive authorisation feature. Replaces the Define and Plan half of 301.1 |
+| [`course-301-1e-speaker-script.md`](course-301-1e-speaker-script.md) | 301-1E presenter walkthrough: Orient, Validate, guided RFC authoring in Codex or Claude Code, Audit, Plan, Verify and Handoff; executable commands, evidence, recovery and planned feature-wide behavior |
 | [`Arula-301.1E-Define-Audit-Plan-Overview.pdf`](Arula-301.1E-Define-Audit-Plan-Overview.pdf) | Seven-page client overview of 301.1E, rendered from [`course-301-1e-overview.html`](course-301-1e-overview.html) with headless Chrome |
 | [`course-301-1e-facilitator-gap-map.md`](course-301-1e-facilitator-gap-map.md) | Facilitator reference: where the provided adaptive authorisation documents fall short, who owns each gap, and what surfaces it |
 | [`course-301-1e-speed-requirements.md`](course-301-1e-speed-requirements.md) | SPEED behaviour 301.1E is written against, what SPEED does today, and which course moment depends on each |

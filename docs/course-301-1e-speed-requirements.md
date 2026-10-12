@@ -55,6 +55,8 @@ anyone noticing.
 | The decomposition gate auto-patches bridge-symbol failures, stops plan on other failures, and is skipped with a warning when unavailable | `lib/cmd/plan.sh:1399`, `:1477`, `:1490` | Plan |
 | Verify runs deterministic spec traceability before the Plan Verifier, then up to three repair cycles that edit task records | `lib/cmd/verify.sh:307`, `:415` | Verify |
 | The Guardian is given learnings from earlier runs | `lib/shared.sh:62` | Plan: why a second cohort's run can differ from the first |
+| The Architect and coverage verifier run with tools disabled; the Auditor, Guardian and Plan Verifier are read-only; only the verify fix agent can write | `lib/cmd/plan.sh:127`, `:183`, `providers/claude-code.sh:48`, `lib/cmd/verify.sh:472` | Agents section: what each agent can see and change |
+| Agent prompts are readable markdown in `agents/`, and the verify fix prompt is inline | `agents/*.md`, `lib/cmd/verify.sh:420` | Engineers read each prompt at the stage where it runs |
 | The Define codebase dimension checks backticked references against the semantic graph and git | `dashboard/backend/ceremony_validator.py:486` | Define |
 
 ## Open questions for the SPEED work

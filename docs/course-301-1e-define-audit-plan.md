@@ -219,6 +219,56 @@ something other than its author.
 What goes to Execute: the verified plan, the tech files, and the open decisions with
 their owners. What does not: any threshold, policy or reason text nobody has decided.
 
+## Agents
+
+Six agents run between Define and Verify. Every one is a markdown prompt engineers can
+open and read, and the course has them read the prompt at the stage where the agent runs.
+Model tiers come from `speed.toml` (`planning_model`, default Opus; `support_model`,
+default Sonnet). Tool sets come from `lib/config.sh:116`.
+
+| Agent | Prompt | Runs in | Model | Tools | Receives | Produces | Changes the plan? |
+|---|---|---|---|---|---|---|---|
+| Assist engine | `dashboard/backend/assist_engine.py` | Define | Chosen in the dashboard (`resolvers/assist.py`) | n/a | The draft in front of the engineer | Ambiguities, fix suggestions, a draft from a problem statement | Suggests only |
+| Auditor | `agents/audit.md` | `audit`; again as a gate in `plan` | Sonnet | Read, Glob, Grep | Spec, its template, product vision, spec list, linked PRD, parent RFC | Four levels of findings, sizing, phase sections | No |
+| Product Guardian | `agents/product-guardian.md` | `plan`, before the Architect | Sonnet | Read, Glob, Grep | Specs, `specs/product/overview.md`, Guardian learnings from earlier runs | `aligned`, `flagged` or `rejected`, quoting the vision | Can stop it |
+| Architect | `agents/architect.md` | `plan`, once or in two phases; again to fill coverage gaps | Opus | **None** | Specs, assembled codebase context, scored related specs | Task records and a data model contract, as JSON | Writes it |
+| Coverage verifier | `agents/coverage-verifier.md` | `plan`, after the Architect | Sonnet | **None** | Task list and the full specs | Gaps by severity, which go back to the Architect | Indirectly |
+| Plan Verifier | `agents/plan-verifier.md` | `verify` | Opus | Read, Glob, Grep | Specs, task plan and traceability output. Not the Architect's reasoning | Findings, human questions apart from mechanical fixes | No |
+| Plan Fix Agent | inline in `lib/cmd/verify.sh:420` | `verify` repair loop, up to three cycles | Sonnet | **Read, Write, Glob** | Verifier findings and task files | Edited task records | **Yes** |
+
+Call sites: Auditor `lib/cmd/audit.sh:244`, Guardian `lib/shared.sh:99`, Architect
+`lib/cmd/plan.sh:127` and `:254`, coverage verifier `lib/cmd/plan.sh:183`, Plan Verifier
+`lib/cmd/verify.sh:324` and `:539`, fix agent `lib/cmd/verify.sh:472`.
+
+### What the room should notice
+
+- **The Architect never opens a file.** It is called with tools disabled
+  (`--tools ""`, `providers/claude-code.sh:48`). Everything it knows about the codebase is
+  what the code index assembled into its prompt. Thin skeletons or weak spec alignment
+  produce a thin plan with no warning. The Plan Verifier that checks the plan can read
+  the repository; the Architect that wrote it could not.
+- **Planning and checking use Opus; reviewing and repairing use Sonnet.** The model
+  follows the stakes, and both tiers are configuration.
+- **Judging and fixing are separate agents.** An Opus verifier that cannot write decides
+  what is wrong. A Sonnet agent that can write changes the tasks. Read the fix diff, not
+  only the verdict.
+- **Only the Guardian remembers earlier runs.** No other agent in this half reads
+  learnings.
+- **The coverage verifier does not write tasks.** It reports gaps and the Architect is
+  called a second time to fill them, so some tasks in the final plan were written in
+  response to a gap report rather than from the specs.
+
+### Where to read in each prompt
+
+| Agent | Sections that explain its behaviour on this feature |
+|---|---|
+| Auditor | Check Levels (what each level can see), Level 4 sizing rules and the ten- and fifteen-task thresholds |
+| Product Guardian | What You Check (anti-goals, renamed concepts), Status Definitions, Guidelines ("quote the vision document") |
+| Architect | Codebase Context, Decomposition Constraints (the 15 to 30 minute rule), Phased Planning, Common Mistakes |
+| Coverage verifier | What to check, What is NOT a gap, Severity rules |
+| Plan Verifier | The opening paragraph on what it does and does not receive, What You Check |
+| Plan Fix Agent | The inline prompt in `verify.sh`, and which findings it is allowed to fix |
+
 ## Under the hood: what SPEED grounds itself on
 
 Called out in the room, because each one changes what an engineer should believe about
