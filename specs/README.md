@@ -16,20 +16,6 @@ a change is correct, these are the documents you judge it against.
 | [`tech/adaptive-auth/`](tech/adaptive-auth/) | F2 tech specs: [`1-high-value-traveller.md`](tech/adaptive-auth/1-high-value-traveller.md) scored decisions and step-up (F2.1), [`2-card-testing.md`](tech/adaptive-auth/2-card-testing.md) card-testing detection (F2.2), which depends on F2.1. Each shares its filename with its product spec | Planning or building adaptive authorisation |
 | [`defects/`](defects/) | Defect reports. File what you find here | You have confirmed a finding and want it recorded |
 
-## SPEED feature spec bundles
-
-These specs describe SPEED itself, not the payments service. They break the feature spec
-bundles RFC into seven features, S1 to S7.
-
-| Path | Contains |
-| --- | --- |
-| [`product/speed-overview.md`](product/speed-overview.md) | SPEED product vision. One section per feature, one subsection per subfeature |
-| `product/speed-<feature>.md` | Feature spec: user stories grouped by subfeature |
-| `tech/speed-<feature>.md` | Tech spec: technical requirements grouped by subfeature |
-
-Each product spec has a tech spec with the same filename. Subfeature `Sn.m` has the same
-section number in the overview, the product spec and the tech spec.
-
 Product and tech specs that share a filename describe the same feature and are read
 together. A feature with several documents of one kind gets its own folder under each
 kind, as `adaptive-auth/` does.
