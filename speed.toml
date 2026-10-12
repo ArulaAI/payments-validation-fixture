@@ -1,0 +1,13 @@
+# Configuration for Speed business-domain discovery on this repository.
+# Run from the repository root: `speed discover domains` (full run) or
+# `speed discover domains --facts-only` (extraction only; needs no model).
+# A full run makes several large model requests, so the per-request timeout
+# and the build output budget are raised above the defaults.
+
+[agent]
+support_model = "opus"
+timeout = 2400
+
+[business_domains]
+max_build_output_tokens = 2048000
+deadline_seconds = 10800
