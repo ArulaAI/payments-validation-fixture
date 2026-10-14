@@ -6,6 +6,8 @@ Follow this guide while your facilitator leads the session. Each step tells you 
 
 > Your output may differ from the facilitator's screen. The reviewer is an AI model, so wording, order and some findings vary between runs. Compare the evidence, not the formatting.
 
+**See the whole pipeline:** [SPEED Workbench components: overview and one page per component](docs/speed-components/README.md)
+
 ## What you will do
 
 You take one AI-written change to a small payments service and work it through the pipeline:
@@ -108,6 +110,8 @@ git show "$LAB_CHANGE"
 
 **Goal.** Use the project's written rules to point at places worth a closer look. These rules are deterministic: the same change gives the same signals.
 
+**How it works.** [speed diagnose: diagram and explanation](docs/speed-components/diagnose.md)
+
 **Tool / human.** Diagnose applies configured rules; you check each signal against the change.
 
 **Run.**
@@ -143,6 +147,8 @@ A class with zero signals can mean no rules are configured for it. That is not t
 
 **Goal.** Get an independent reader's claims about the change, then test those claims yourself.
 
+**How it works.** [speed review: diagram and explanation](docs/speed-components/review.md)
+
 **Tool / human.** The reviewer proposes claims; you verify or refute them against the code.
 
 **Run.**
@@ -173,6 +179,8 @@ For a logging finding, follow the value from the `log.error(...)` call through t
 ## Step 4. Eval
 
 **Goal.** See exactly what a passing or failing test proves, and what it never looked at.
+
+**How it works.** [speed eval: diagram and explanation](docs/speed-components/eval.md)
 
 **Tool / human.** Eval and the test runner produce results; you judge their coverage and limits.
 
@@ -238,6 +246,8 @@ Fill in your own copy of this table:
 
 **Goal.** Turn one checked problem into a defect record someone else can reproduce.
 
+**How it works.** [Define: diagram and explanation](docs/speed-components/define.md)
+
 **Tool / human.** The dashboard drafts and saves the record; you author verified facts and confirm severity.
 
 **Run.** Start the dashboard and open the findings page.
@@ -287,6 +297,8 @@ cat specs/defects/capture-fee-truncates-instead-of-rounding-half-up.md
 
 **Goal.** Convert the defect into repair work with a clear boundary.
 
+**How it works.** [speed plan: diagram and explanation](docs/speed-components/plan.md)
+
 **Tool / human.** Plan generates repair tasks; you judge scope, acceptance criteria and traceability.
 
 **Run.**
@@ -318,6 +330,8 @@ jq . .speed/features/payments-fee-repair/tasks/1.json
 
 **Goal.** Have a second check challenge whether the plan covers the defect. Independent checking catches errors that share a source.
 
+**How it works.** [speed verify: diagram and explanation](docs/speed-components/verify.md)
+
 **Tool / human.** Verify challenges the plan; you decide whether its evidence supports proceeding.
 
 **Run.**
@@ -346,6 +360,8 @@ speed verify --feature payments-fee-repair
 ## Step 9. Run
 
 **Goal.** Commission the repair. An agent works on its own branch in a separate working copy, so your checkout is not touched.
+
+**How it works.** [speed run: diagram and explanation](docs/speed-components/run.md) · [Which folder the agent edits](docs/speed-components/images/run-worktrees.png)
 
 **Tool / human.** The agent executes the task and configured checks; you retain responsibility for scope and approval.
 
