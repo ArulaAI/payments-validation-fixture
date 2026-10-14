@@ -263,11 +263,17 @@ These values and wording are specific to this exercise, not universal process ru
 | Field | Enter |
 |---|---|
 | **Title** | `Capture fee truncates instead of rounding half up` |
-| **Severity** | `P1`, then tick *I reviewed and confirm this severity* |
+| **Severity** | `P1`. Tick *I reviewed and confirm this severity* after discussing the impact. |
+| **Related Feature** | `payments` |
 | **Reproducibility** | `always` (only `always`, `once` or `intermittent (n/10)` are accepted) |
+| **Last Known Working** | `not tested` |
 | **Observed** | On round-0, the RISK-02 test fails: a capture amount of 200 at scheme rate 0.0149 produces a fee of 2 and a merchant amount of 198. The fee assertion reports actual 2, expected 3. |
 | **Expected** | Half-up rounding must produce a fee of 3 for 200 × 0.0149 = 2.98, leaving a merchant amount of 197. RISK-02 also requires a fee of 149 and a merchant amount of 9850 for a capture of 9999. Fee plus merchant amount must equal the capture. |
-| **Reproduction** | Must start with `1.` on its own line. Steps: 1. From the fixture root on round-0, run the RISK-02 command from Step 4. 2. Observe the fee assertion: actual 2, expected 3. 3. Inspect the `Math.floor` fee calculation in `src/payments/service.ts`. |
+| **Reproduction** | 1.<br>From the fixture root on round-0, run:<br>`node --experimental-strip-types --test --test-name-pattern '^\[RISK-02\]' test/service.test.ts`<br><br>2.<br>Observe the fee assertion: actual 2, expected 3.<br><br>3.<br>Inspect the capture-fee calculation in `src/payments/service.ts` and compare it with the half-up rounding requirement in `specs/tech/payments.md`. |
+| **Environment** | Enter the actual OS, Node version, branch and revision used for the reproduction. |
+| **Error Output** | Paste the actual failing RISK-02 output from the terminal. |
+| **Additional Context** | **Impact:** the fee account receives one unit too little and the merchant one unit too much; the total still equals the capture.<br><br>**Repair scope:** correct the capture-fee calculation using the existing half-up rounding behavior already available in the codebase. Keep the repair bounded to this fee defect; do not weaken RISK-02 or introduce unrelated changes to retry, refund, or authorisation behavior.<br><br>**Unknown:** production exposure, frequency, affected deployed versions, and number of real transactions affected.<br><br>**Decision needed from payments-product:** repair priority and whether previously processed payments require investigation. |
+| **Filing rationale** | The existing rounding requirement and reproduced RISK-02 failure support a bounded fee-regression repair. |
 
 If **File defect** stays disabled, check Reproducibility and the `1.` at the start of Reproduction.
 
