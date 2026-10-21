@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { PaymentsService } from '../src/payments/service.ts';
+import { CaptureBlockedError, PaymentsService } from '../src/payments/service.ts';
 import { checkAll } from '../src/domain/invariants.ts';
 import { TEST_CARDS, EXPIRY } from './fixtures/cards.ts';
 
@@ -96,5 +96,37 @@ test('all four invariants hold after a mixed sequence', () => {
   const c1 = s.capture(p.id, 5_000);
   s.capture(p.id, 7_345);
   s.refund(p.id, c1.id, 2_500);
+  assert.deepEqual(checkAll(s.ledger, s.payments), []);
+});
+
+test('capture on a blocked payment throws and posts nothing', () => {
+  const s = svc();
+  const p = auth(s, 5_000);
+  s.blockCapture(p.id);
+  assert.equal(s.isCaptureBlocked(p.id), true);
+  const before = s.ledger.entries.length;
+  assert.throws(() => s.capture(p.id, 5_000), CaptureBlockedError);
+  assert.equal(s.ledger.entries.length, before);
+  assert.equal(s.payments.get(p.id)!.captures.length, 0);
+  assert.deepEqual(checkAll(s.ledger, s.payments), []);
+});
+
+test('capture succeeds after unblockCapture', () => {
+  const s = svc();
+  const p = auth(s, 5_000);
+  s.blockCapture(p.id);
+  s.unblockCapture(p.id);
+  assert.equal(s.isCaptureBlocked(p.id), false);
+  assert.equal(s.capture(p.id, 5_000).amount, 5_000);
+  assert.deepEqual(checkAll(s.ledger, s.payments), []);
+});
+
+test('void succeeds on a blocked payment and clears the block', () => {
+  const s = svc();
+  const p = auth(s, 5_000);
+  s.blockCapture(p.id);
+  s.void(p.id);
+  assert.equal(s.payments.get(p.id)!.status, 'voided');
+  assert.equal(s.isCaptureBlocked(p.id), false);
   assert.deepEqual(checkAll(s.ledger, s.payments), []);
 });
