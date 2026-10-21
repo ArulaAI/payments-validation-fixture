@@ -24,6 +24,10 @@ import { ChallengeError, type StepUpAdapter, type StepUpChallenge } from '../ris
 import { CARDHOLDER_REASONS, cardholderReason } from '../risk/reasons.ts';
 import { DEFAULT_ROLLOUT, type RiskRollout, scoredDecides } from '../risk/rollout.ts';
 import { issuerCountry } from '../risk/issuers.ts';
+import type { BlockList } from '../risk/blocks.ts';
+import { type AttemptRecorder, cardKeyOf } from '../risk/attempts.ts';
+import type { DetectorConfig } from '../risk/detector-config.ts';
+import type { Decision } from '../risk/types.ts';
 import type { ReviewQueue } from '../review/queue.ts';
 import type { AuditLog } from '../review/audit.ts';
 import { tokenise } from '../vault.ts';
@@ -49,6 +53,11 @@ export type GatewayDeps = {
   /** The request carries no MCC, so the category comes from a lookup. Defaults to 'unknown'. */
   merchantCategory?: (merchantId: string) => string;
   rules?: RiskRules;
+  /** F2.2 card-testing blocks, checked before any scoring. Requires detectorConfig. */
+  blocks?: BlockList;
+  /** F2.2 small-authorisation recording. Requires detectorConfig. */
+  attempts?: AttemptRecorder;
+  detectorConfig?: DetectorConfig;
 };
 
 const masked = (bin: string, last4: string): string => `${bin}******${last4}`;
@@ -69,6 +78,9 @@ export class AuthorisationGateway {
   readonly audit: AuditLog;
   readonly rollout: RiskRollout;
   private readonly merchantCategory: (merchantId: string) => string;
+  private readonly blocks?: BlockList;
+  private readonly attempts?: AttemptRecorder;
+  private readonly detectorConfig?: DetectorConfig;
   /** Final result per challenge id, kept until the challenge expires. */
   private readonly stepUpResults = new Map<string, GatewayResult>();
   /** Challenges begun here that have no stored result yet. */
@@ -84,6 +96,12 @@ export class AuthorisationGateway {
     this.rollout = deps.rollout ?? DEFAULT_ROLLOUT;
     this.merchantCategory = deps.merchantCategory ?? (() => 'unknown');
     this.rules = deps.rules ?? new RiskRules();
+    if ((deps.blocks || deps.attempts) && !deps.detectorConfig) {
+      throw new Error('AuthorisationGateway: blocks and attempts need a detectorConfig');
+    }
+    this.blocks = deps.blocks;
+    this.attempts = deps.attempts;
+    this.detectorConfig = deps.detectorConfig;
     this.stepUp.setOnUnavailable((c, request) => this.onChallengeUnavailable(c, request));
   }
 
@@ -100,6 +118,9 @@ export class AuthorisationGateway {
       merchantId: req.merchantId,
       at: req.at ?? Date.now(),
     };
+
+    const blocked = this.checkBlocks(req, input, card);
+    if (blocked) return blocked;
 
     if (!scoredDecides(this.rollout, req.merchantId)) {
       const v1 = this.rules.evaluate(input);
@@ -140,6 +161,63 @@ export class AuthorisationGateway {
           reason: cardholderReason(decision.reasons[0] ?? 'issuer_unknown'),
         };
     }
+  }
+
+  /**
+   * F2.2, before any scoring. A block match outside shadow mode becomes a step-up and never
+   * reaches the scheme. Otherwise a small authorisation is recorded for the detector, and a
+   * recorder failure never fails the authorisation.
+   */
+  private checkBlocks(
+    req: GatewayRequest,
+    input: { bin: string; last4: string; amount: number; merchantId: string; ipCountry: string; at: number },
+    card: string,
+  ): GatewayResult | undefined {
+    const config = this.detectorConfig;
+    if (!config) return undefined;
+
+    const block = this.blocks?.matches({ bin: input.bin, amount: input.amount });
+    span('risk.block_check', {
+      merchantId: req.merchantId,
+      card,
+      matched: block !== undefined,
+      attackId: block?.attackId,
+      mode: config.mode,
+    });
+
+    if (block) {
+      if (config.mode === 'shadow') {
+        log.info(`card_testing.shadow_match ${card} at ${req.merchantId}: attack ${block.attackId}`);
+        return undefined;
+      }
+      const decision: Decision = {
+        outcome: 'step_up',
+        score: 0,
+        reasons: ['card_testing_pattern'],
+        thresholdsVersion: config.version,
+      };
+      const { token } = tokenise(req.pan, req.expiry);
+      const meta = { amount: req.amount, currency: req.currency ?? 'GBP', merchantId: req.merchantId };
+      const challenge = this.stepUp.begin(req, decision, token, meta, 'block_match', block.attackId);
+      this.openChallenges.add(challenge.id);
+      return { status: 'step_up', challengeId: challenge.id };
+    }
+
+    if (this.attempts && input.amount <= config.smallAmountCeiling) {
+      try {
+        this.attempts.record({
+          cardKey: cardKeyOf(input.bin, input.last4),
+          bin: input.bin,
+          amount: input.amount,
+          merchantId: input.merchantId,
+          ipCountry: input.ipCountry,
+          at: input.at,
+        });
+      } catch {
+        log.error('attempts.record_failed');
+      }
+    }
+    return undefined;
   }
 
   /** Finish a step-up challenge once. A repeat call returns the first result unchanged. */
