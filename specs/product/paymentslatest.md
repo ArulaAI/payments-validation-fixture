@@ -29,7 +29,7 @@ direction.
 
 | ID | Story | Acceptance Criteria | Priority |
 |----|-------|---------------------|----------|
-| ST1 | As a merchant, I want to authorise a payment, so that funds are reserved before I know the final amount | Given a valid card, When I authorise for an amount, Then the amount is reserved and no money moves | Must |
+| ST1 | As a merchant, I want to authorise a payment, so that funds are reserved before I know the final amount | Given a valid card, When I authorise for an amount, Then the amount is reserved by moving it from the cardholder into merchant_receivable, and a void reverses that movement | Must |
 | ST2 | As a merchant, I want to capture part of an authorisation, so that I take only what I am owed | Given an authorisation for 10.00, When I capture 6.00 and then 4.00, Then both succeed and a third capture is rejected | Must |
 | ST3 | As a finance operator, I want the scheme fee deducted at capture, so that settlement matches the statement | Given a capture of 100.00, When the fee rate is 1.49%, Then the merchant receives the captured amount less the fee and the two sum to the capture | Must |
 | ST4 | As a cardholder, I want money returned against the original capture, so that the refund is traceable | Given a capture of 50.00, When a refund of 20.00 is issued against it, Then the refund references that capture and cannot exceed it | Must |
@@ -119,7 +119,10 @@ serialised error.
 
 ## Open Questions
 
-- Does the scheme fee rate vary by card type? Blocks the fee calculation for commercial
-  cards. Answer needed from scheme relations.
-- Who owns the decision to release a void after the authorisation has expired? Blocks the
-  expiry path. Answer needed from payments-operations.
+- ~~Does the scheme fee rate vary by card type?~~ **Answered (scheme relations, recorded by
+  payments-product):** no. The single 1.49% rate applies to every capture, commercial cards
+  included, so commercial-card fee calculation is no longer blocked.
+- ~~Who owns the decision to release a void after the authorisation has expired?~~
+  **Answered (payments-operations):** payments-operations owns the decision to release a void
+  after an authorisation expires. Authorisation expiry is out of scope for this feature, so no
+  expiry path is built; any expiry policy is defined by payments-operations before one is planned.

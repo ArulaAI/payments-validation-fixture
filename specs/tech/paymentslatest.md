@@ -123,7 +123,7 @@ A Payment moves through these states. Refunds do not change the Payment status.
 Impossible transitions:
 
 - captured to voided is not allowed, because money has already moved. `void` is rejected (ST5).
-- voided to captured is not allowed, because the reservation has been released. See Unresolved Questions for the current code's behaviour.
+- voided to captured is not allowed, because the reservation has been released. `capture` is rejected with "cannot capture a voided payment" and nothing is posted (see Key Decisions).
 - A capture that would take the captured total above the authorised amount is rejected, not truncated (TR7).
 
 ## API Surface
@@ -135,7 +135,7 @@ operation throws.
 | Operation | Input | Returns | Errors |
 |-----------|-------|---------|--------|
 | `authorise(request)` | card number, expiry, amount (integer minor units), optional currency, optional idempotency key | `Payment` with status authorised | Fractional amount: "money must be integer minor units, got X". A tokenisation failure is logged through `serialiseFailure(error, redact(request))` and rethrown |
-| `capture(paymentId, amount?, idempotencyKey?)` | Payment ID, amount defaulting to the remaining authorised amount, optional idempotency key | `Capture` | Unknown payment: "unknown payment P". Amount above remaining: "capture X exceeds remaining Y". Fractional amount as for authorise |
+| `capture(paymentId, amount?, idempotencyKey?)` | Payment ID, amount defaulting to the remaining authorised amount, optional idempotency key | `Capture` | Unknown payment: "unknown payment P". Voided payment: "cannot capture a voided payment". Amount above remaining: "capture X exceeds remaining Y". Fractional amount as for authorise |
 | `refund(paymentId, captureId, amount?)` | Payment ID, capture ID, amount defaulting to that capture's amount | `Refund` | Unknown payment. Unknown capture: "no capture C on P". Refunds against this capture above its amount: "refund X exceeds refundable Y", where Y is what remains of that capture |
 | `void(paymentId)` | Payment ID | `Payment` with status voided | Unknown payment. Payment with any capture: "cannot void a captured payment" |
 | `settlementSchedule(paymentId, instalments)` | Payment ID, number of instalments | List of Minor values | Unknown payment. Fewer than one instalment: "parts must be at least 1" |
@@ -236,6 +236,7 @@ The feature has no user interface, so no visual tests are needed.
 - Concurrency control. Operations are sequential, so contention is out of scope for this version.
 - Settlement file generation. The schedule is produced; the file format is not.
 - Merchant attribution. The payments service does not record which merchant a payment belongs to. The authorisation gateway owns the `merchantId` from the request, and a feature that needs the link stores it with the payment id (for example the F2 review item). Per-merchant settlement is not produced by this version.
+- Authorisation expiry. Authorisations do not expire in this version and there is no expiry path to test. payments-operations owns the decision to release a void after expiry and defines the expiry policy before an expiry path is planned (see Key Decisions).
 - Performance and load testing, because the service runs in memory and a full exercise completes in seconds.
 
 ## Security & Controls
@@ -259,13 +260,17 @@ access control belongs to the caller. The controls that matter are about card da
 | Recording money | Double-entry pairs written only by `Ledger.post` | Single-entry balance updates on the payment | Pairs make `LEDGER_BALANCED` assertable after any operation sequence |
 | Card data | Tokenise at the vault boundary and keep BIN and last four only | Encrypt the card number at rest | A card number that is never stored cannot leak from storage |
 | Retries | Idempotency keys on authorise and capture | Deduplicate on request payload | Keys are explicit and match how merchants retry after a timeout |
+| Authorisation posting (owners: payments-engineering and finance) | The authorise pair (cardholder -> merchant_receivable) is a money movement, and a void posts the reversing pair (merchant_receivable -> cardholder). The current postings stay as they are | Treat the authorise pair as a non-monetary reservation record in a memo account; post nothing at authorisation and narrow TR5 | Keeps ST1 and TR5 consistent with no code change: every state change, authorisation included, writes a balanced pair, and ST1 now says authorisation moves the amount into merchant_receivable |
+| Capture after void (owner: payments-product) | `capture` on a voided Payment is rejected with RangeError "cannot capture a voided payment", checked before anything is recorded or posted | Allow a capture after a void and make voided to captured a valid transition | A void releases the reservation, so capturing afterwards would move money that is no longer held; the rejection keeps the State Machine's voided to captured transition impossible |
+| Scheme fee rate by card type (owner: scheme relations; recorded by payments-product) | One scheme fee rate of 1.49% for every capture, commercial cards included; `SCHEME_FEE_RATE` stays a single constant | Per-card-type rates, with a separate commercial-card rate | Scheme relations confirmed the scheme fee rate does not vary by card type, so a single rate matches the scheme statement and commercial-card fee calculation needs no code change |
+| Void after authorisation expiry (owner: payments-operations) | payments-operations owns the decision to release a void after an authorisation expires. Authorisation expiry is out of scope for this feature: authorisations do not expire and no expiry logic is implemented | Define an expiry window now and release or void the reservation automatically when it passes | This is an ownership and governance decision that has to come before any design; payments-operations defines the expiry policy before an expiry path is planned |
 | Storage | In memory for the lifetime of the process | A database | The service exists to be exercised quickly and deterministically |
 
 ## Drawbacks
 
 - State is lost when the process stops, so the service cannot be used for anything that needs durable records.
 - Operations are sequential. The idempotency store and the capture checks are not safe under concurrent requests, which a real deployment with several replicas would need.
-- A single flat scheme fee rate cannot express different rates by card type.
+- A single flat scheme fee rate cannot express different rates by card type. Scheme relations confirmed the rate does not vary by card type (see Key Decisions), so this matters only if the scheme introduces such rates later.
 - The idempotency store keeps every key forever, so memory grows with request volume.
 
 ## Search / Query Strategy
@@ -298,7 +303,4 @@ revision changes the document's structure, not the service's behaviour.
 
 ## Unresolved Questions
 
-- **Does the scheme fee rate vary by card type?** Blocks the fee calculation for commercial cards. Proposed path: scheme relations to answer; until then the single 1.49% rate applies to every capture.
-- **Who owns the decision to release a void after the authorisation has expired?** Blocks the expiry path, and authorisation expiry is not defined anywhere yet. Proposed path: payments-operations to decide before an expiry path is planned.
-- **Should authorisation post to the ledger?** ST1 says no money moves at authorisation, while TR5 asks for a balanced pair on every state change and the current service posts an authorise pair. Blocks any change to the authorise and void ledger postings. Proposed path: payments-engineering and finance to agree whether the authorise pair is a reservation record or a money movement.
-- **Should a voided payment reject further captures?** The State Machine treats voided to captured as impossible, but the current `capture` does not check the status. Blocks the capture status check and its test. Proposed path: confirm the rule with payments-product, then add the check and a test.
+None. Every question raised for this version has an answer recorded under Key Decisions.
