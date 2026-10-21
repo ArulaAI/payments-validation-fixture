@@ -9,6 +9,7 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { PaymentsService } from '../../src/payments/service.ts';
+import { add, minor } from '../../src/domain/money.ts';
 import { TEST_CARDS, EXPIRY } from '../../test/fixtures/cards.ts';
 import { type Finding, type Result, ROOT } from '../lib.ts';
 
@@ -26,7 +27,7 @@ const CORPUS: Row[] = [
   { amount: 2_500, captures: [1_250, 1_250], refund: 1_250, instalments: 4 },
 ];
 
-const replay = () =>
+export const replay = () =>
   CORPUS.map(row => {
     const s = new PaymentsService();
     const p = s.authorise({ pan: TEST_CARDS.visa, expiry: EXPIRY, amount: row.amount });
@@ -35,8 +36,8 @@ const replay = () =>
     return {
       amount: row.amount,
       schedule: s.settlementSchedule(p.id, row.instalments),
-      fees: s.ledger.entries.filter(e => e.account === 'scheme_fees').reduce((t, e) => t + e.amount, 0),
-      settled: s.ledger.entries.filter(e => e.account === 'merchant_settled').reduce((t, e) => t + e.amount, 0),
+      fees: s.ledger.entries.filter(e => e.account === 'scheme_fees').reduce((t, e) => add(t, e.amount), minor(0)),
+      settled: s.ledger.entries.filter(e => e.account === 'merchant_settled').reduce((t, e) => add(t, e.amount), minor(0)),
       net: s.ledger.net(),
     };
   });

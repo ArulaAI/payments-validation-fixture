@@ -27,6 +27,51 @@ const MUTATORS: Mutator[] = [
   { name: 'return-true', find: /return sum % 10 === 0;/g, replace: 'return true;' },
 ];
 
+/*
+ * Targeted mutants. Each one reintroduces a defect this service has had or is built to
+ * prevent, so a survivor here is a regression in the suite's strength, not a curiosity.
+ * They run on every invocation, whatever the diff touches. A pattern that no longer
+ * matches is reported, because a mutant that silently stops applying proves nothing.
+ */
+export type Mutant = { name: string; file: string; find: RegExp; replace: string };
+
+export const TARGETED: Mutant[] = [
+  {
+    name: 'applyRate-truncation',
+    file: 'src/domain/money.ts',
+    find: /const rounded = magnitude \/ den \+ \(.*\);/,
+    replace: 'const rounded = magnitude / den;',
+  },
+  {
+    name: 'allocate-remainder-dropped',
+    file: 'src/domain/money.ts',
+    find: /minor\(base \+ \(i < Math\.abs\(remainder\) \? step : 0\)\)/,
+    replace: 'minor(base)',
+  },
+  {
+    name: 'refund-bound-ignores-earlier-refunds',
+    file: 'src/payments/service.ts',
+    find: /const refundable = sub\(capture\.amount, refunded\);/,
+    replace: 'const refundable = capture.amount;',
+  },
+  {
+    name: 'capture-ignores-void-state',
+    file: 'src/payments/service.ts',
+    find: /if \(payment\.status === 'voided'\) throw new RangeError\('cannot capture a voided payment'\);/,
+    replace: '',
+  },
+];
+
+/** The mutated source and the 1-based line it changed, or null when the pattern no longer matches. */
+export const applyMutant = (source: string, mutant: Mutant): { source: string; line: number } | null => {
+  const match = mutant.find.exec(source);
+  if (!match) return null;
+  return {
+    source: source.slice(0, match.index) + mutant.replace + source.slice(match.index + match[0].length),
+    line: source.slice(0, match.index).split('\n').length,
+  };
+};
+
 const DEFAULT_TARGETS = ['src/domain/money.ts', 'src/domain/ledger.ts', 'src/payments/service.ts'];
 
 const changedFiles = (base: string): string[] => {
@@ -39,10 +84,17 @@ const changedFiles = (base: string): string[] => {
   }
 };
 
-const suitePasses = (): boolean => {
+/*
+ * WORKBENCH_MUTANT tells the suite it is judging a mutant, so the test that itself runs
+ * mutants skips rather than recursing. NODE_TEST_CONTEXT is dropped because, inherited from
+ * a parent test run, it makes the nested runner report to that parent instead of exiting
+ * with its own status.
+ */
+export const suitePasses = (cwd = ROOT): boolean => {
+  const { NODE_TEST_CONTEXT: _, ...env } = process.env;
   try {
     execFileSync(process.execPath, ['--test', 'test/**/*.test.ts'], {
-      cwd: ROOT, stdio: 'ignore',
+      cwd, stdio: 'ignore', env: { ...env, WORKBENCH_MUTANT: '1' },
     });
     return true;
   } catch {
@@ -96,6 +148,36 @@ export function run(opts: { base?: string } = {}): Result {
           });
         }
       }
+    }
+  }
+
+  for (const mutant of TARGETED) {
+    const full = join(ROOT, mutant.file);
+    const original = readFileSync(full, 'utf8');
+    const mutated = applyMutant(original, mutant);
+    if (!mutated) {
+      findings.push({
+        file: mutant.file,
+        line: 1,
+        summary: `targeted mutant (${mutant.name}) no longer matches the source, so it was not applied`,
+        severity: 'medium',
+      });
+      continue;
+    }
+    writeFileSync(full, mutated.source);
+    let survived: boolean;
+    try {
+      survived = suitePasses();
+    } finally {
+      writeFileSync(full, original);
+    }
+    if (survived) {
+      findings.push({
+        file: mutant.file,
+        line: mutated.line,
+        summary: `surviving mutant (${mutant.name}): the suite passes with this defect injected`,
+        severity: 'high',
+      });
     }
   }
   return { findings };
