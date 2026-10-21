@@ -86,12 +86,15 @@ const changedFiles = (base: string): string[] => {
 
 /*
  * WORKBENCH_MUTANT tells the suite it is judging a mutant, so the test that itself runs
- * mutants skips rather than recursing.
+ * mutants skips rather than recursing. NODE_TEST_CONTEXT is dropped because, inherited from
+ * a parent test run, it makes the nested runner report to that parent instead of exiting
+ * with its own status.
  */
 export const suitePasses = (cwd = ROOT): boolean => {
+  const { NODE_TEST_CONTEXT: _, ...env } = process.env;
   try {
     execFileSync(process.execPath, ['--test', 'test/**/*.test.ts'], {
-      cwd, stdio: 'ignore', env: { ...process.env, WORKBENCH_MUTANT: '1' },
+      cwd, stdio: 'ignore', env: { ...env, WORKBENCH_MUTANT: '1' },
     });
     return true;
   } catch {
