@@ -20,7 +20,7 @@ import type { GatewayResult } from './result.ts';
 import { RiskRules, type RiskDecision, type RuleId } from '../risk/rules.ts';
 import { type Scorer, toScoringInput } from '../risk/scoring.ts';
 import type { DecisionPolicy, PolicyDecision } from '../risk/policy.ts';
-import type { StepUpAdapter } from '../risk/stepup.ts';
+import { ChallengeError, type StepUpAdapter, type StepUpChallenge } from '../risk/stepup.ts';
 import { CARDHOLDER_REASONS, cardholderReason } from '../risk/reasons.ts';
 import { DEFAULT_ROLLOUT, type RiskRollout, scoredDecides } from '../risk/rollout.ts';
 import { issuerCountry } from '../risk/issuers.ts';
@@ -69,6 +69,10 @@ export class AuthorisationGateway {
   readonly audit: AuditLog;
   readonly rollout: RiskRollout;
   private readonly merchantCategory: (merchantId: string) => string;
+  /** Final result per challenge id, kept until the challenge expires. */
+  private readonly stepUpResults = new Map<string, GatewayResult>();
+  /** Challenges begun here that have no stored result yet. */
+  private readonly openChallenges = new Set<string>();
 
   constructor(payments: PaymentsService, deps: GatewayDeps) {
     this.payments = payments;
@@ -80,6 +84,7 @@ export class AuthorisationGateway {
     this.rollout = deps.rollout ?? DEFAULT_ROLLOUT;
     this.merchantCategory = deps.merchantCategory ?? (() => 'unknown');
     this.rules = deps.rules ?? new RiskRules();
+    this.stepUp.setOnUnavailable((c, request) => this.onChallengeUnavailable(c, request));
   }
 
   authorise(req: GatewayRequest): GatewayResult {
@@ -123,6 +128,7 @@ export class AuthorisationGateway {
         const meta = { amount: req.amount, currency: req.currency ?? 'GBP', merchantId: req.merchantId };
         // The whole request is held so a later hold (task 8) still has merchant and IP country.
         const challenge = this.stepUp.begin(req, decision, token, meta, 'policy');
+        this.openChallenges.add(challenge.id);
         return { status: 'step_up', challengeId: challenge.id };
       }
       case 'hold':
@@ -134,6 +140,80 @@ export class AuthorisationGateway {
           reason: cardholderReason(decision.reasons[0] ?? 'issuer_unknown'),
         };
     }
+  }
+
+  /** Finish a step-up challenge once. A repeat call returns the first result unchanged. */
+  completeStepUp(
+    challengeId: string,
+    outcome: 'authenticated' | 'not_authenticated' | 'unavailable' | 'cancelled',
+  ): GatewayResult {
+    const stored = this.stepUpResults.get(challengeId);
+    if (stored) return stored;
+
+    let completed: ReturnType<StepUpAdapter<AuthoriseRequest>['complete']>;
+    try {
+      completed = this.stepUp.complete(challengeId, outcome);
+    } catch (error) {
+      if (!(error instanceof ChallengeError)) throw error;
+      log.info(`stepup.unknown_challenge ${challengeId}`);
+      return { status: 'declined', code: 'do_not_honour' };
+    }
+    const { challenge } = completed;
+    if (completed.repeat) return { status: 'declined', code: 'do_not_honour' };
+    const request = completed.request as GatewayRequest;
+
+    let result: GatewayResult;
+    switch (outcome) {
+      case 'authenticated':
+        result = { status: 'approved', payment: this.payments.authorise(toAuthorise(request)) };
+        break;
+      case 'not_authenticated':
+        result = {
+          status: 'declined',
+          code: 'do_not_honour',
+          reason: cardholderReason('step_up_not_confirmed'),
+        };
+        break;
+      case 'unavailable':
+        result = this.holdForUnavailable(challenge, request);
+        break;
+      case 'cancelled':
+        log.info(`stepup.cancelled ${challengeId}`);
+        result = { status: 'declined', code: 'do_not_honour' };
+        break;
+    }
+    this.storeStepUpResult(challengeId, result);
+    return result;
+  }
+
+  /** Cancel challenges past their 10-minute expiry and forget results of expired ones. */
+  expireChallenges(): void {
+    this.stepUp.expire();
+    for (const id of this.openChallenges) {
+      if (this.stepUp.get(id)?.status !== 'cancelled') continue;
+      log.info(`stepup.cancelled ${id}`);
+      this.storeStepUpResult(id, { status: 'declined', code: 'do_not_honour' });
+    }
+    for (const id of [...this.stepUpResults.keys()]) {
+      if (!this.stepUp.get(id)) this.stepUpResults.delete(id);
+    }
+  }
+
+  /** The provider did not answer. F2.2 will make block_match unavailability a decline. */
+  private onChallengeUnavailable(challenge: StepUpChallenge<AuthoriseRequest>, request: AuthoriseRequest): void {
+    if (this.stepUpResults.has(challenge.id)) return;
+    this.storeStepUpResult(challenge.id, this.holdForUnavailable(challenge, request as GatewayRequest));
+  }
+
+  private holdForUnavailable(challenge: StepUpChallenge<AuthoriseRequest>, request: GatewayRequest): GatewayResult {
+    if (challenge.source === 'block_match') return this.hold(request, challenge.decision);
+    return this.hold(request, challenge.decision);
+  }
+
+  private storeStepUpResult(id: string, result: GatewayResult): void {
+    this.stepUpResults.set(id, result);
+    this.openChallenges.delete(id);
+    this.stepUp.release(id);
   }
 
   /** Score and apply the policy. A scorer that throws or returns garbage becomes a hold. */
