@@ -11,3 +11,7 @@ timeout = 2400
 [business_domains]
 max_build_output_tokens = 2048000
 deadline_seconds = 10800
+
+[plan]
+# Keep the paymentslatest demo plan to at most 8 tasks.
+max_tasks = 8
