@@ -9,7 +9,7 @@
 import { type Finding, type Result, luhn, readLines, rel, sourceFiles } from '../lib.ts';
 
 /** Published scheme test BINs. Suppressed, and documented as suppressed. */
-export const ALLOWLIST_BINS = ['411111', '400005', '555555', '378282', '601111'];
+export const ALLOWLIST_BINS = ['411111', '400005', '555555', '510510', '378282', '601111'];
 
 const CANDIDATE = /\b(?:\d[ -]?){12,18}\d\b/g;
 
