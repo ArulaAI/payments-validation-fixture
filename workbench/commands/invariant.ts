@@ -10,11 +10,18 @@ import type { Result } from '../lib.ts';
 export function run(): Result {
   const svc = new PaymentsService();
   const p = svc.authorise({ pan: TEST_CARDS.visa, expiry: EXPIRY, amount: 10_000 });
-  const c1 = svc.capture(p.id, 6_000);
-  svc.capture(p.id, 4_000);
+  const c1 = svc.capture(p.id, 6_000, 'inv-capture-1');
+  svc.capture(p.id, 6_000, 'inv-capture-1'); // an idempotent replay of the first capture
+  const c2 = svc.capture(p.id);
   svc.refund(p.id, c1.id, 2_500);
+  svc.refund(p.id, c1.id);
+  svc.refund(p.id, c2.id, 1_000);
 
-  const violations = checkAll(svc.ledger, svc.payments);
+  const q = svc.authorise({ pan: TEST_CARDS.mastercard, expiry: EXPIRY, amount: 7_500 });
+  svc.void(q.id);
+
+  // The idempotency records are private, so reach them by name to include them in the PAN walk.
+  const violations = checkAll(svc.ledger, svc.payments, svc['idempotent']);
   return {
     findings: violations.map(v => ({
       file: 'src/domain/invariants.ts',

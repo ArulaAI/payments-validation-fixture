@@ -44,7 +44,7 @@ exception path.
 | TR5 | Every state change writes a balanced double-entry pair. No module writes a single entry |
 | TR6 | `LEDGER_BALANCED`: every ledger pair nets to zero |
 | TR7 | `CAPTURE_WITHIN_AUTH`: the sum of captures never exceeds the authorised amount |
-| TR8 | `REFUND_TRACES_CAPTURE`: every refund references a capture that exists, and refunds never exceed it |
+| TR8 | `REFUND_TRACES_CAPTURE`: every refund references a capture that exists, and the refunds against a capture never exceed that capture's amount |
 | TR9 | `NO_PAN_AT_REST`: no stored record holds a Luhn-valid card number outside the vault. Length alone is insufficient, because a millisecond timestamp is thirteen digits |
 | TR10 | Authorise and capture accept an idempotency key and return the original result for a repeated key |
 | TR11 | Any value reaching one of the five observability surfaces is tokenised or redacted first. `redact` is the sanitiser at the serialised exception boundary |

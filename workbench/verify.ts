@@ -108,7 +108,7 @@ for (const dir of rounds) {
   // The manifest claimed 212 lines against a 54-line diff. Measure it.
   if (typeof manifest.diffLines === 'number') {
     try {
-      const stat = execFileSync('git', ['diff', '--numstat', `${manifest.base}...${dir.replace('round-', 'round-')}`], {
+      const stat = execFileSync('git', ['diff', '--numstat', `${manifest.base}...${dir}`], {
         cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'],
       });
       const actual = stat.trim().split('\n').filter(Boolean)
