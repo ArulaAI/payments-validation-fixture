@@ -5,7 +5,6 @@ import { dirname, join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { allClassIds, contract, failureClasses } from '../corpus/classes.ts';
-import { checks } from '../workbench/checks.ts';
 import { collect } from '../workbench/signals.ts';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');

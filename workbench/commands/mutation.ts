@@ -15,7 +15,7 @@
 import { execFileSync } from 'node:child_process';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { type Finding, type Result, ROOT, rel } from '../lib.ts';
+import { type Finding, type Result, ROOT } from '../lib.ts';
 
 type Mutator = { name: string; find: RegExp; replace: string };
 

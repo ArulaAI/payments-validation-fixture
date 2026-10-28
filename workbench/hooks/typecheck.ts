@@ -10,7 +10,7 @@
  * the workflow gains a deeper check. If not, the shallow one still runs.
  */
 import { existsSync } from 'node:fs';
-import { dirname, join, resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
 import { type Finding, type Result, readLines, rel, sourceFiles } from '../lib.ts';
 
 const IMPORT = /^\s*import\s+(type\s+)?\{([^}]+)\}\s+from\s+'([^']+)'/;
