@@ -168,7 +168,8 @@ export class PaymentsService {
 
     const requested = minor(amount ?? capture.amount);
     const captured = payment.captures.reduce((s, c) => s + c.amount, 0);
-    const refunded = payment.refunds.reduce((s, r) => s + r.amount, 0);
+    // A retried refund on one capture must not block refunds on the others.
+    const refunded = payment.refunds.filter(r => r.captureId === captureId).reduce((s, r) => s + r.amount, 0);
     if (refunded + requested > captured) {
       throw new RangeError(`refund ${requested} exceeds refundable ${captured - refunded}`);
     }

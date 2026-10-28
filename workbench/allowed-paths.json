@@ -1,0 +1,9 @@
+{
+  "change": "Add capture retry for acquirer timeouts",
+  "allowed": [
+    "src/payments/capture-retry.ts",
+    "src/payments/service.ts",
+    "test/capture-retry.test.ts",
+    "workbench/allowed-paths.json"
+  ]
+}

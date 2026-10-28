@@ -10,6 +10,9 @@ manifest before they meet it.
 
 ## Run it
 
+Captures that time out at the acquirer are now retried automatically; see
+`src/payments/capture-retry.ts`.
+
 No install. No accounts. No network.
 
 ```sh
