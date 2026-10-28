@@ -15,3 +15,29 @@ deadline_seconds = 10800
 [plan]
 # Keep the paymentslatest demo plan to at most 8 tasks.
 max_tasks = 8
+
+# speed ci: every check runs a real tool. See `speed ci --list`.
+[security]
+sast_cmd = "semgrep scan --config p/typescript --json --quiet --metrics=off ."
+sca_cmd = "npm audit --json"
+severity_threshold = "high"
+
+[ci]
+security_mode = "strict"
+
+[ci.tools.trivy]
+format = "trivy"
+
+[ci.tools.gitleaks]
+format = "gitleaks"
+
+[ci.tools.codeql]
+format = "sarif"
+cmd = "sh ci/codeql.sh"
+
+# SonarQube Community Build on the developer's machine (skipped in CI, which cannot reach it).
+[ci.sonarqube]
+host_url = "http://localhost:9000"
+project_key = "payments-validation-fixture"
+scanner_cmd = "$HOME/sonarqube-local/sonar-scanner-6.2.1.4610-macosx-aarch64/bin/sonar-scanner"
+token_file = "~/sonarqube-local/speed-ci-token.txt"
