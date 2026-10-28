@@ -28,6 +28,8 @@ severity_threshold = "high"
 
 [ci]
 security_mode = "strict"
+# On this branch, a full speed ci also pushes it and opens or updates its PR into main.
+pull_request = "branch"
 
 [ci.tools.trivy]
 format = "trivy"
