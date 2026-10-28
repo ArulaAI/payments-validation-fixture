@@ -69,9 +69,9 @@ const fromDecimal = (rate: number): Rate => {
   const [, sign, whole, fraction = '', exponent = '0'] = match;
   const shift = fraction.length - Number(exponent);
   const digits = BigInt(`${sign}${whole}${fraction}`);
-  return shift >= 0
-    ? { numerator: Number(digits), denominator: Number(10n ** BigInt(shift)) }
-    : { numerator: Number(digits * 10n ** BigInt(-shift)), denominator: 1 };
+  return shift < 0
+    ? { numerator: Number(digits * 10n ** BigInt(-shift)), denominator: 1 }
+    : { numerator: Number(digits), denominator: Number(10n ** BigInt(shift)) };
 };
 
 /*

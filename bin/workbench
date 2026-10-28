@@ -40,7 +40,7 @@ if (command === 'diagnose') {
   mkdirSync(dirname(out), { recursive: true });
 
   const facts = collect(base);
-  const quote = value => `"${String(value).replace(/"/g, '\\"')}"`;
+  const quote = value => `"${String(value).replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
 
   const rows = allClassIds.map(id => {
     const failure = failureClasses.find(item => item.id === id);

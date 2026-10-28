@@ -5,7 +5,7 @@
  * entry, which is what makes LEDGER_BALANCED assertable after any operation sequence.
  */
 
-import { type Minor, minor } from './money.ts';
+import { type Minor, add, minor } from './money.ts';
 
 export type Account =
   | 'cardholder'
@@ -77,7 +77,7 @@ export class Ledger {
   net(pairId?: string): number {
     return this.#entries
       .filter(e => pairId === undefined || e.pairId === pairId)
-      .reduce((sum, e) => sum + e.amount, 0);
+      .reduce((sum, e) => add(sum, e.amount), minor(0));
   }
 
   forPayment(paymentId: string): Entry[] {

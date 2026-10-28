@@ -62,15 +62,15 @@ const luhnValid = (digits: string): boolean => {
 };
 
 /*
- * A chain is a run of digit groups joined by single spaces or dashes, so "4111 1111 1111
+ * A digit run is a sequence of digit groups joined by single spaces or dashes, so "4111 1111 1111
  * 1111" is caught as well as the bare form. Any window of consecutive groups holding
  * 12 to 19 digits that passes Luhn is replaced. Luhn, not length, is the test: a
  * 13-digit millisecond timestamp is a digit run of card length and must survive.
  */
-const DIGIT_CHAIN = /\d+(?:[ -]\d+)*/g;
+const DIGIT_RUN = /\d+(?:[ -]\d+)*/g;
 
-const redactChain = (chain: string): string => {
-  const parts = chain.split(/([ -])/);
+const redactDigitRun = (run: string): string => {
+  const parts = run.split(/([ -])/);
   const groups = parts.filter((_, i) => i % 2 === 0);
   const hidden = groups.map(() => false);
   for (let i = 0; i < groups.length; i += 1) {
@@ -90,7 +90,7 @@ const redactChain = (chain: string): string => {
   return out;
 };
 
-const redactText = (text: string): string => text.replace(DIGIT_CHAIN, redactChain);
+const redactText = (text: string): string => text.replace(DIGIT_RUN, redactDigitRun);
 
 const redactWalk = (value: unknown, seen: WeakSet<object>): unknown => {
   if (typeof value === 'string') return redactText(value);

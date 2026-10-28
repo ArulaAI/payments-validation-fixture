@@ -103,3 +103,7 @@ test('applyRate rejects a rate that is not an integer ratio', () => {
   assert.throws(() => applyRate(minor(100), { numerator: 1, denominator: 0 }), RangeError);
   assert.throws(() => applyRate(minor(100), NaN), RangeError);
 });
+
+test('a rate with a zero denominator is refused before any arithmetic', () => {
+  assert.throws(() => applyRate(minor(100), { numerator: 1, denominator: 0 }), /positive denominator/);
+});

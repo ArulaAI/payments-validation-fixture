@@ -6,7 +6,7 @@
  * corpus contains. The corpus is the boundary of the claim, and corpus drift is the
  * standing risk. Say that on the profile card.
  */
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { PaymentsService } from '../../src/payments/service.ts';
 import { add, minor } from '../../src/domain/money.ts';
@@ -44,9 +44,11 @@ export const replay = () =>
 
 export function run(): Result {
   const actual = replay();
-  if (!existsSync(GOLDEN)) {
-    writeFileSync(GOLDEN, `${JSON.stringify(actual, null, 2)}\n`);
+  try {
+    writeFileSync(GOLDEN, `${JSON.stringify(actual, null, 2)}\n`, { flag: 'wx' });
     return { findings: [], skipped: 'no golden file, recorded one from this run' };
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== 'EEXIST') throw error;
   }
   const golden = JSON.parse(readFileSync(GOLDEN, 'utf8'));
   const findings: Finding[] = [];
