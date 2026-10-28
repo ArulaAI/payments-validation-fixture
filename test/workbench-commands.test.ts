@@ -7,6 +7,8 @@ import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:f
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { ROOT } from '../workbench/lib.ts';
+import { execFileSync } from 'node:child_process';
+import { PaymentsService } from '../src/payments/service.ts';
 import { run as invariant } from '../workbench/commands/invariant.ts';
 import { OPS, run as property, runSeed } from '../workbench/commands/property.ts';
 import { TARGETED, applyMutant, suitePasses } from '../workbench/commands/mutation.ts';
@@ -78,4 +80,28 @@ test('[WB-07] every targeted mutant is killed by the suite', { skip: process.env
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
+});
+
+test('[WB-09] the invariant command drives capture, refund and void before checkAll', () => {
+  const calls = { capture: 0, refund: 0, void: 0 };
+  const proto = PaymentsService.prototype as unknown as Record<string, (...a: unknown[]) => unknown>;
+  const originals = { capture: proto.capture, refund: proto.refund, void: proto.void };
+  for (const name of ['capture', 'refund', 'void'] as const) {
+    proto[name] = function (this: unknown, ...a: unknown[]) { calls[name] += 1; return originals[name].apply(this, a); };
+  }
+  try {
+    assert.deepEqual(invariant(), { findings: [] });
+  } finally {
+    Object.assign(proto, originals);
+  }
+  assert.ok(calls.capture > 0 && calls.refund > 0 && calls.void > 0, JSON.stringify(calls));
+});
+
+test('[WB-10] bin/workbench validate passes, typecheck hook included', { skip: process.env.WORKBENCH_MUTANT === '1' }, () => {
+  const { NODE_TEST_CONTEXT: _, ...env } = process.env;
+  const out = execFileSync(process.execPath, [join(ROOT, 'bin', 'workbench'), 'validate'], {
+    cwd: ROOT, encoding: 'utf8', env: { ...env, WORKBENCH_MUTANT: '1' },
+  });
+  assert.match(out, /hook\s+typecheck\s+clean/);
+  assert.doesNotMatch(out, /\d+ findings?\s/);
 });

@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { Ledger } from '../src/domain/ledger.ts';
 import { minor } from '../src/domain/money.ts';
 
@@ -101,4 +102,22 @@ test('the ledger exposes no way to write a single entry', () => {
   assert.equal(ledger.entries.length, 2);
   assert.equal(ledger.entries[0].amount, 500);
   assert.equal(ledger.net(), 0);
+});
+
+test('the Account union and the accounts the ledger accepts are exactly the five ledger accounts', () => {
+  const expected = ['cardholder', 'merchant_receivable', 'merchant_settled', 'scheme_fees', 'refunds_payable'];
+  // The union is a type, erased at run time, so read it from the source.
+  const source = readFileSync(new URL('../src/domain/ledger.ts', import.meta.url), 'utf8');
+  const union = /export type Account =([^;]+);/.exec(source)?.[1] ?? '';
+  assert.deepEqual([...union.matchAll(/'([a-z_]+)'/g)].map(m => m[1]), expected);
+  // And the ledger accepts each of them and nothing else.
+  const ledger = new Ledger();
+  for (const account of expected) {
+    const other = account === 'cardholder' ? 'merchant_receivable' : 'cardholder';
+    ledger.post({ debit: account as never, credit: other as never, amount: minor(1), paymentId: 'p', kind: 'authorise' });
+  }
+  for (const unknown of ['cash', 'Cardholder', '']) {
+    assert.throws(() => ledger.post({ debit: unknown as never, credit: 'cardholder', amount: minor(1), paymentId: 'p', kind: 'authorise' }),
+      /unknown debit account/);
+  }
 });

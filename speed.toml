@@ -17,6 +17,10 @@ deadline_seconds = 10800
 max_tasks = 8
 
 # speed ci: every check runs a real tool. See `speed ci --list`.
+# speed eval runs one named test at a time with Node's runner; the test gate stays npm test.
+[eval]
+test_command = "node --test"
+
 [security]
 sast_cmd = "semgrep scan --config p/typescript --json --quiet --metrics=off ."
 sca_cmd = "npm audit --json"

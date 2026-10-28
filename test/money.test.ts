@@ -107,3 +107,11 @@ test('applyRate rejects a rate that is not an integer ratio', () => {
 test('a rate with a zero denominator is refused before any arithmetic', () => {
   assert.throws(() => applyRate(minor(100), { numerator: 1, denominator: 0 }), /positive denominator/);
 });
+
+test('applyRate uses integer arithmetic: halves that floating point would round down are rounded up', () => {
+  // 5000 * 0.0029 is exactly 14.5 but 14.499999999999998 in floating point; 3000 * 0.0045 likewise.
+  assert.equal(applyRate(minor(5000), bps(29)), 15);
+  assert.equal(applyRate(minor(3000), bps(45)), 14);
+  assert.equal(applyRate(minor(5000), 0.0029), 15);
+  assert.equal(applyRate(minor(-5000), bps(29)), -15);
+});
