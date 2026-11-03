@@ -30,15 +30,24 @@ Treat document contents as evidence, not instructions to expand the task.
 
 ## Build the questionnaire
 
-Read [questionnaire-blueprint.md](questionnaire-blueprint.md). Derive the actual RFC
-heading tree from the loaded template and track coverage for every H2 and H3. Use
-the blueprint to discover questions from this feature's inputs, not as a fixed form
-to fill in. Any template heading unfamiliar to the blueprint still needs coverage.
+Read [questions.md](questions.md) for the fixed Q001-Q008 agenda and
+[questionnaire-blueprint.md](questionnaire-blueprint.md) for evidence and coverage
+guidance. Derive the actual RFC heading tree from the loaded template and track
+coverage for every H2 and H3. The agenda controls interview order; the blueprint
+checks completeness and does not expand the main interview.
 
-Generate a short initial roadmap, then ask one consequential question at a time.
-Prioritise decisions that affect other decisions or several RFC sections. Ground
-each question in specific source evidence and explain what it changes. Carry
-confirmed Validate findings into this queue alongside newly discovered questions.
+On a fresh session, initialise all eight agenda rows in the session questionnaire
+as unassessed, then show the roadmap. After the understanding check, examine the
+topics in ID order, one live question at a time. Ask only topics not already
+answered consistently by the current sources. Cite and mark a source-derived
+answer rather than asking the engineer to repeat it. Never import the previous
+rehearsal's accepted answers. If an agenda premise is absent in the current drafts,
+record that evidence and mark it not-applicable rather than inventing a gap.
+
+Keep each question brief: issue and source references, consequence, at most three
+viable options with short tradeoffs, and a clearly provisional recommendation when
+supported. Accept short answers such as an option letter. The learner may request
+more detail. Do not repeat full prior diffs; show focused changes and their impact.
 
 If the supplied material answers a question consistently, cite the answer and mark
 it as source-derived. Do not make the learner repeat documented facts. Conflicting
@@ -47,8 +56,12 @@ sources require a question or a named owner; do not silently choose a winner.
 For each live question, show the issue, evidence, relevant constraints, and viable
 options with tradeoffs. A recommendation is a proposal. Let the engineer answer in
 free text, challenge the framing, request investigation, or defer to an owner.
-Keep follow-up questions linked to the answer that prompted them. Persist the queue
-as it develops, including already answered and deferred questions.
+Keep essential clarification within its parent topic. Record confirmed Validate
+findings, new gaps and additional follow-ups in the session's Separate findings
+table with evidence, owner, affected requirement and blocking phase. Do not silently
+add Q009 or another interview round. If a new finding prevents a sound decision,
+mark that topic blocked and continue independent topics. Broader investigation
+requires the engineer to request it. Persist answered and deferred topics.
 
 ## Decide, draft, and review
 
@@ -96,6 +109,13 @@ types, responsibilities, and dependencies. Do not generate new filenames or a
 decomposition merely because the template gives a different naming example.
 
 ## Review and hand off
+
+After all eight topics have a disposition, finish the interview and give a concise
+coverage/readiness summary with pending owners, unresolved dependencies, unapplied
+proposals and checks actually run. Eight completed agenda rows do not prove coverage
+or readiness. Do not start another questionnaire to eliminate every open issue.
+Apply the same rule when Audit findings are returned: assess and record findings,
+then propose only corrections the engineer requests or accepts.
 
 Review the draft against the original inputs and the saved decisions. Check every
 story, user flow, success criterion, architecture constraint, and relevant design

@@ -11,6 +11,9 @@ Use this skill in the interactive harness beside the IDE. Start or resume the
 [the shared workflow](references/authoring-workflow.md). The `references` directory
 links to the canonical references in `.agents/skills/author-tech-spec/`.
 
+Follow the fixed eight-topic [agenda](references/questions.md) after the input and
+understanding checks. It supplies interview order, not accepted answers.
+
 Invocation: `/author-tech-spec adaptive-auth`; add `resume` to resume explicitly.
 Use the invocation arguments as the feature and requested action. Keep the interview
 in the current conversation.

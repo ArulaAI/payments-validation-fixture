@@ -1,8 +1,9 @@
 # Questionnaire blueprint
 
-Generate questions from evidence, accepted answers, and the installed RFC template.
-These prompts describe design dimensions, not an answer key or a predetermined list
-of feature gaps. Link each question to one or more exact loaded RFC headings.
+Use the fixed order in [questions.md](questions.md). Ground each topic in evidence,
+accepted answers, and the installed RFC template. The dimensions below are a coverage
+check, not an additional interview or answer key. Link each agenda topic or separate
+finding to one or more exact loaded RFC headings.
 
 ## Question record
 
@@ -15,7 +16,8 @@ For each question record:
 - Owner, blocking phase, and affected RFC paths and template headings.
 - Parent question, answer, and resulting decision ID when applicable.
 
-Statuses: `open`, `discussing`, `answered`, `owner-needed`, and `superseded`.
+Statuses: `unassessed`, `open`, `discussing`, `answered`, `owner-needed`, `blocked`,
+`not-applicable`, and `superseded`.
 An answer documented consistently in the inputs can be `answered` with
 `source-derived` provenance. A recommendation alone cannot.
 
@@ -40,9 +42,8 @@ subsection names. A heading's presence is not evidence that its content is settl
 
 ## Adapt the conversation
 
-Start with behaviour and constraints that shape the rest of the design. Ask about
-dependencies before dependent choices. Move between headings when one decision
-affects several parts of the RFC; the interview order need not match document order.
+Follow Q001-Q008 in order. Dependencies can leave a topic conditional or blocked;
+record them without inventing answers. One decision can affect several RFC headings.
 
 Re-read the relevant source sections before asking. Reuse accepted answers and ask
 only the necessary follow-up. If a new question contradicts an earlier answer, show

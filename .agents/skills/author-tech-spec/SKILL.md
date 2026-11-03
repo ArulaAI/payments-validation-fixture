@@ -9,8 +9,8 @@ Use this skill in the interactive harness beside the IDE. Start or resume the
 `adaptive-auth` authoring session by following
 [the shared workflow](references/authoring-workflow.md).
 
-The workflow loads the fixture input manifest, builds a questionnaire from the
-sources and current SPEED RFC template, records the engineer's decisions, and
+The workflow loads the fixture input manifest and current SPEED RFC template, uses
+the fixed eight-topic [agenda](references/questions.md), records the engineer's decisions, and
 proposes edits to both feature RFCs. Keep the interview in the current conversation.
 
 Codex invocation: `$author-tech-spec adaptive-auth`; add `resume` to resume explicitly.

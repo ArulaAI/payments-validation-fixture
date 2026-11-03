@@ -61,12 +61,20 @@ Optional-section convention: [observed rule and chosen compatibility convention]
 
 ## Roadmap
 
-[Short list of consequential decisions in the current proposed order.]
+[Q001-Q008 from references/questions.md, in fixed order, with current status.]
 
 ## Question queue
 
 | ID | Question | Status | Owner | Parent question | Blocking phase | RFC destinations |
 | --- | --- | --- | --- | --- | --- | --- |
+
+## Separate findings
+
+| ID | Finding | Evidence | Owner | Affected requirement | Blocking phase | Disposition |
+| --- | --- | --- | --- | --- | --- | --- |
+
+Use F001-style IDs here; these are not extra interview questions. Unresolved
+Question numbers inside the RFCs are a separate numbering system from Q001-Q008.
 
 ## Question details
 
