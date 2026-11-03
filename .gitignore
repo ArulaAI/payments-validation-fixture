@@ -7,3 +7,6 @@ decisions.json
 # SPEED runtime state
 .speed/
 .scannerwork/
+
+.agents/**/.DS_Store
+.claude/**/.DS_Store
