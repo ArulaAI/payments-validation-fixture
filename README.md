@@ -143,6 +143,12 @@ mutant that no test can ever kill.
 
 Do not read `corpus/round-N/manifest.json` before working the round. It is the answer key.
 
+## SPEED evaluation
+
+For the task-scoped evaluation setup on `test/speed-eval`, see
+[Run SPEED eval on round 0](docs/speed-eval.md). It records the branch base,
+scenario mappings, setup command, and generated report locations.
+
 ## Card data
 
 Every card number here is a published scheme test BIN, and they are Luhn-valid on

@@ -20,6 +20,13 @@ max_tasks = 8
 # speed eval runs one named test at a time with Node's runner; the test gate stays npm test.
 [eval]
 test_command = "node --test"
+# round-0 used the explicit form below; speed eval adds the JUnit reporter to
+# `node --test` itself, so both give the same evidence.
+# speed eval needs a machine-readable test report: node writes JUnit XML to the
+# path eval passes in SPEED_EVAL_JUNIT_FILE. A zero exit with no report is not
+# accepted as evidence.
+# test_command = "node --experimental-strip-types --test --test-reporter=junit --test-reporter-destination=\"$SPEED_EVAL_JUNIT_FILE\" {selectors}"
+test_file_patterns = ["test/*.test.ts"]
 
 [security]
 sast_cmd = "semgrep scan --config p/typescript --json --quiet --metrics=off ."
@@ -47,3 +54,8 @@ host_url = "http://localhost:9000"
 project_key = "payments-validation-fixture"
 scanner_cmd = "$HOME/sonarqube-local/sonar-scanner-6.2.1.4610-macosx-aarch64/bin/sonar-scanner"
 token_file = "~/sonarqube-local/speed-ci-token.txt"
+
+# speed diagnose (from round-0)
+[diagnose]
+classes_file = ".speed/classes.yaml"
+spec_file = "specs/product/payments.md"

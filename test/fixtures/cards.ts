@@ -14,3 +14,6 @@ export const TEST_CARDS = {
 } as const;
 
 export const EXPIRY = '12/30';
+
+/* Added for the retry cases. Mastercard scheme test card. */
+export const RETRY_TEST_CARD = '5105105105105100';
