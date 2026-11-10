@@ -15,16 +15,9 @@ Follow this guide while your facilitator leads. Each step has the same parts:
 
 **Today's case.** A card-payments gateway has two weaknesses. F2.1: a genuine traveler is declined for a large cross-border purchase. F2.2: a script tests forty stolen cards across twenty merchants and every payment is approved. Both fixes share one bank challenge. You review and develop two technical specifications, plan the work, and hand off. **Nobody builds anything today.**
 
-| Step | Minutes | You do |
-|---|---|---|
-| 1. Orient | 16–22 | Run the tests, read four files |
-| 2. Validate | 22–34 | Check one finding against its sources |
-| 3. Define and Draft | 34–67 | Answer questions, review the diff |
-| 4. Audit | 67–80 | Compare the two specs |
-| 5. Plan | 80–95 | Run it, read the task graph |
-| 6. Verify | 95–105 | Run it, read the coverage |
-| 7. Handoff | 105–115 | Write two or three sentences |
-| Close | 115–120 | One question, then feedback |
+![The seven stages of lab 301.1E](docs/lab-guide/overview.svg)
+
+The lab closes with one question and three feedback questions (minutes 115–120).
 
 **Before Step 1.** Setup is already done. In any new terminal, run the export lines from the setup message again, then `cd "$HOME/Lab/301.1E/payments-validation-fixture"`. Keep your IDE on the left, Claude Code on the right, and a separate terminal for the `speed` commands.
 
@@ -41,6 +34,15 @@ node --version
 npm test
 baseline_exit=$?
 printf 'Baseline test exit code: %s\n' "$baseline_exit"
+```
+
+**What you'll see.** From a rehearsal run; your wording, counts and times will differ.
+
+```text
+ℹ tests 102
+ℹ pass 101
+ℹ fail 1
+Baseline test exit code: 1
 ```
 
 **Check.** Expect 102 tests. If `[WB-10]` fails (101 of 102), note it and carry on. It is the fixture's own check, not part of today's lab.
@@ -82,6 +84,25 @@ printf 'Validate exit code: %s\n' "$validate_exit"
 cp -R .speed/logs "$course_evidence_dir/after-validate-logs"
 ```
 
+**What you'll see.** From a rehearsal run; your wording, counts and times will differ. An "Optional grammars not built" warning at the start is harmless.
+
+```text
+→     Found 17 spec files
+→     Sending to Validator agent...
+  ✓ Validator  2m43s
+✓     Validation report saved to .speed/logs/validation.log
+Validation Summary
+  ✗ specs/product/payments.md (ST1)
+  ✗ specs/tech/adaptive-auth/1-high-value-traveller.md (State Machine, Review item) …
+  ✗ specs/tech/adaptive-auth/2-card-testing.md (Merchant notification payload; …)
+  ⚠ 19 warning(s)
+✗ err   Validation FAILED — fix critical gaps before running 'speed plan'
+✗ err   4 critical gap(s) found
+Validate exit code: 1
+```
+
+Some findings are about older files such as `specs/product/payments.md`. They are outside today's feature; skip them.
+
 **Check.** Open `.speed/logs/validation.log`. Find the **72-hour hold-expiry** entry, including under warnings. If your report does not have it, use this claim instead:
 
 > The draft describes expiry after 72 hours and a `holdExpired` webhook. Check whether it identifies what executes expiry and lists the implementation in File Impact.
@@ -116,6 +137,8 @@ Write down what the draft promises and what it leaves unclear.
 
 *What is undecided, and whose call is it?* The assistant proposes. You decide engineering questions. Owners decide everything else.
 
+![How Define and Draft works](docs/lab-guide/define.svg)
+
 **Start fresh.** If Claude Code is still open from Validate, type `/exit`, then run `claude` again at the fixture root, in a terminal where you ran the setup exports. The authoring skill should not inherit the Validate conversation.
 
 **Claude Code.** Start the authoring skill:
@@ -125,6 +148,8 @@ Write down what the draft promises and what it leaves unclear.
 ```
 
 If you type it in the shell and it fails, start `claude` first. To continue an earlier conversation, add `resume` at the end.
+
+**What you'll see.** It reads its inputs for a minute or two, then stops with a summary of what it understood and a question: is this understanding right? Correct anything that is off, or say "confirmed". Nothing changes in the specs until you approve a proposed edit.
 
 **Check the summary it gives you.** Does it match what you saw in Orient? Is the finding you checked in Validate in its list?
 
@@ -212,6 +237,23 @@ printf 'F2.2 Audit exit code: %s\n' "$audit_f22_exit"
 cp -R .speed/logs "$course_evidence_dir/after-audit-f22-logs"
 ```
 
+**What you'll see.** From a rehearsal run; your wording, counts and times will differ. About a minute per spec.
+
+```text
+→     Spec type: rfc
+→     Template:  ~/Lab/workbench/templates/rfc.md
+→     Vision:    specs/product/overview.md
+  ✓ Audit  55s
+  ⚠ [L3] Testing > Acceptance Criteria — PRD success criterion 'Every declined payment carries a reason …'
+  ⚠ [L4] Key Decisions — estimated at about 18 implementation tasks, above the 15-task split threshold
+  ⚠ Sizing: Consider splitting into multiple child RFCs (~18 tasks)
+→     Report saved to .speed/logs/audit-1793674684.json
+⚠ warn  Audit: WARN (3 warning(s))
+F2.1 Audit exit code: 0
+```
+
+`[L1]` is structure, `[L2]` completeness, `[L3]` consistency with other documents, `[L4]` sizing. Sizing is advice: do not split the spec because Audit suggests it.
+
 **Check.** `WARN` with exit 0 is common and does not mean the draft is gap-free. Read the status and the findings together.
 
 **Open.** Compare **Produces** in the F2.1 spec with **Consumes** in the F2.2 spec. Does F2.1 provide the cancellation behavior F2.2 expects? Use the source even if Audit missed it. Aligned is a valid result if you cite it.
@@ -241,6 +283,31 @@ plan_exit=$?
 printf 'Plan exit code: %s\n' "$plan_exit"
 cp -R .speed/features/adaptive-auth "$course_evidence_dir/after-plan-feature"
 ```
+
+**What you'll see.** From a rehearsal run; your wording, counts and times will differ. About 10½ minutes in total.
+
+```text
+→     Running Product Guardian (pre-plan)...
+⚠ warn  Guardian: FLAGGED — Adaptive authorisation fits the vision well. …
+  ⚠ [L2] … ⚠ [L3] …                      (the audit gate re-checks every spec)
+→     Task budget: at most 8 task(s)
+→     Building Layer 1 context index...
+✓     Layer 1: built
+  ✓ Architect  1m47s
+  ✓ Architect (enrich)  2m11s
+⚠ warn  Coverage passed with 7 minor gap(s)
+✓     Decomposition quality gate passed
+Task Graph
+  ○  1    F1 amendment: capture block, idempotent void, void in caller's transaction
+  ○  2    Risk decision core: reason codes, scorer contract, decision policy
+  ○  4    Review queue, risk narrative, hold expiry and webhook outbox (depends on: 1, 2, 3)
+  ○  8    Gateway F2.2: block check, attempt recording, … (depends on: 5, 6, 7)
+Tasks: 8 total | 0 done | 0 running | 8 pending | 0 failed
+Next: speed run --feature adaptive-auth to execute the approved plan
+Plan exit code: 0
+```
+
+The last "Next:" line is a suggestion from the tool. Ignore it.
 
 While it runs, look for the one dependency that matters most for the scope you chose.
 
@@ -278,6 +345,24 @@ printf 'Verify exit code: %s\n' "$verify_exit"
 cp -R .speed/features/adaptive-auth "$course_evidence_dir/after-verify-feature"
 diff -ru "$course_evidence_dir/before-verify-feature/tasks" .speed/features/adaptive-auth/tasks
 ```
+
+**What you'll see.** From a rehearsal run; your wording, counts and times will differ. About 2 minutes when no repair is needed.
+
+```text
+→     Reading feature specs (7 documents):
+→     Gathering task plan (8 tasks)...
+✓     Spec traceability: all requirements covered
+→     Sending to Plan Verifier agent (blind check)...
+    Spec requirements: 18 of 29 covered
+    ✗ ST5: step-up that cannot complete is handled consistently with risk policy (status: partial)
+    ✗ Every declined payment carries a reason the merchant can show the cardholder (status: partial)
+    …
+  Summary: 0 critical, 5 warnings, 9 recommendations
+✓     Plan verification PASSED
+Verify exit code: 0
+```
+
+Notice the two answers. The traceability check says every requirement is covered; the verifier, reading the meaning, says 18 of 29. That gap is the point of this step.
 
 **Check.**
 
