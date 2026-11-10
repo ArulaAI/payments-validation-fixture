@@ -9,88 +9,24 @@ Follow this guide while your facilitator leads. Each step has the same parts:
 | **Run** | Type this in the regular terminal, at the fixture root |
 | **Claude Code** | Type this inside the Claude Code conversation, not the shell |
 | **Check** | What to look at in the result |
-| **Post** | A line to send in the Zoom chat |
-| **Stuck?** | Post the step number and the error in the Zoom chat. A coach will help while we keep going |
+| **Stuck?** | Ask a coach, and tell them the step and the error |
 
 > Wording, findings, task counts and timings differ between people. Read your own output. A command that succeeds does not mean every requirement is covered or every owner agrees.
 
 **Today's case.** A card-payments gateway has two weaknesses. F2.1: a genuine traveler is declined for a large cross-border purchase. F2.2: a script tests forty stolen cards across twenty merchants and every payment is approved. Both fixes share one bank challenge. You review and develop two technical specifications, plan the work, and hand off. **Nobody builds anything today.**
 
-| Step | About | You do | Post in chat |
-|---|---|---|---|
-| Setup | Before we start | Clone, update, check | "OK" |
-| 1. Orient | Minutes 16–22 | Run the tests, read four files | none |
-| 2. Validate | 22–34 | Check one finding against its sources | none |
-| 3. Define and Draft | 34–67 | Answer questions, review the diff | Q1 line, pair line |
-| 4. Audit | 67–80 | Compare two specs | Finding line |
-| 5. Plan | 80–95 | Run, read the task graph | none |
-| 6. Verify | 95–105 | Run, read coverage | none |
-| 7. Handoff | 105–115 | Write 2–3 sentences | Handoff line |
-| Close | 115–120 | Answer, give feedback | Owner question |
+| Step | Minutes | You do |
+|---|---|---|
+| 1. Orient | 16–22 | Run the tests, read four files |
+| 2. Validate | 22–34 | Check one finding against its sources |
+| 3. Define and Draft | 34–67 | Answer questions, review the diff |
+| 4. Audit | 67–80 | Compare the two specs |
+| 5. Plan | 80–95 | Run it, read the task graph |
+| 6. Verify | 95–105 | Run it, read the coverage |
+| 7. Handoff | 105–115 | Write two or three sentences |
+| Close | 115–120 | One question, then feedback |
 
----
-
-## Setup
-
-Use **Terminal** on Mac and **Git Bash** on Windows. Python must be 3.12 or newer and Node 22.18 or newer.
-
-**1. Pick your system and run its block.**
-
-Mac:
-
-```bash
-export SPEED_DIR="$HOME/Lab/workbench"
-export SPEED_PYTHON="$SPEED_DIR/.venv/bin/python3"
-export PATH="$SPEED_DIR:$PATH"; hash -r
-```
-
-Windows (Git Bash):
-
-```bash
-export SPEED_DIR="$HOME/Lab/workbench"
-export SPEED_PYTHON="$SPEED_DIR/.venv/Scripts/python.exe"
-export PATH="$SPEED_DIR:$PATH"; hash -r
-```
-
-**2. Update Workbench.** Skip this if `~/Lab/workbench` does not exist yet and use the first-time block at the end of this section.
-
-```bash
-cd "$SPEED_DIR" && git fetch origin && git checkout feat/301-latest && git pull --ff-only && "$SPEED_PYTHON" -m pip install -q -r requirements.txt
-```
-
-**3. Clone the lab fixture.**
-
-```bash
-mkdir -p "$HOME/Lab/301.1E" && git clone -b feat/301-define-audit-plan-config https://github.com/ArulaAI/payments-validation-fixture.git "$HOME/Lab/301.1E/payments-validation-fixture" && cd "$HOME/Lab/301.1E/payments-validation-fixture"
-```
-
-**4. Check it worked.**
-
-```bash
-"$SPEED_PYTHON" --version; node --version; command -v speed; git branch --show-current; git rev-parse --short HEAD; claude auth status
-```
-
-**Check.** Python 3.12 or newer. Node 22.18 or newer. `speed` is inside the Workbench folder. Branch `feat/301-define-audit-plan-config`. `claude auth status` shows the **team** plan.
-
-**Post.** "OK" when all of that looks right.
-
-**New terminal?** The exports in step 1 apply only to that terminal. Repeat step 1, then `cd "$HOME/Lab/301.1E/payments-validation-fixture"`.
-
-**First time only, if `~/Lab/workbench` does not exist.** Do this before steps 1 and 2.
-
-Mac:
-
-```bash
-git clone -b feat/301-latest https://github.com/ArulaAI/workbench.git ~/Lab/workbench && cd ~/Lab/workbench && python3 -m venv .venv && .venv/bin/pip install -q -r requirements.txt
-```
-
-Windows (Git Bash):
-
-```bash
-git clone -b feat/301-latest https://github.com/ArulaAI/workbench.git ~/Lab/workbench && cd ~/Lab/workbench && py -3.12 -m venv .venv && .venv/Scripts/pip install -q -r requirements.txt
-```
-
-**Your workspace.** IDE on the left (you read the fixture's specs, source and tests). Claude Code on the right (you decide). A separate terminal for the `speed` commands.
+**Before Step 1.** Setup is already done. In any new terminal, run the export lines from the setup message again, then `cd "$HOME/Lab/301.1E/payments-validation-fixture"`. Keep your IDE on the left, Claude Code on the right, and a separate terminal for the `speed` commands.
 
 ---
 
@@ -125,6 +61,8 @@ Amounts are in minor units: `249_900` is £2,499.
 ## Step 2. Validate
 
 *Do the documents agree with each other?* Findings differ between people. The documents are the same.
+
+![How speed validate works](docs/lab-guide/validate.svg)
 
 **Run: three short blocks, in order.**
 
@@ -178,9 +116,9 @@ Write down what the draft promises and what it leaves unclear.
 
 *What is undecided, and whose call is it?* The assistant proposes. You decide engineering questions. Owners decide everything else.
 
-**Run: start the authoring skill.** In Claude Code at the fixture root:
+**Start fresh.** If Claude Code is still open from Validate, type `/exit`, then run `claude` again at the fixture root, in a terminal where you ran the setup exports. The authoring skill should not inherit the Validate conversation.
 
-**Claude Code**
+**Claude Code.** Start the authoring skill:
 
 ```text
 /author-tech-spec adaptive-auth
@@ -220,7 +158,7 @@ Read the part about what would change the design. Then reply in your own words: 
 
 **Topic 1, together.** Your facilitator runs it on screen. Answer in your own words using the table.
 
-**Post.** One line: `decided: … | open: … → owner`
+Write your answer down as one line: `decided: … | open: … → owner`
 
 **Review every change.** Compare what actually changed, not the assistant's description. Save any editor buffer first.
 
@@ -233,7 +171,7 @@ git diff -- specs/tech/adaptive-auth/1-high-value-traveller.md specs/tech/adapti
 
 **On your own, about 10 minutes.** Choose one or two topics closest to your own work. For the rest, accept the recommended option and let it record the answer as provisional.
 
-**Post** when you are back: `decided: … | open: … → owner`
+Record each one the same way: `decided: … | open: … → owner`
 
 **When the facilitator calls time.** Ask the assistant to save the next action, accepted decisions and owner requests. Later, `/author-tech-spec adaptive-auth resume` picks up where you stopped.
 
@@ -255,6 +193,8 @@ The assistant keeps its records here:
 ## Step 4. Audit
 
 *A second reader checks your drafts.* Audit reads documents, not code, so a clean audit is not a correct spec.
+
+![How speed audit works](docs/lab-guide/audit.svg)
 
 **Run: one spec at a time.**
 
@@ -278,7 +218,7 @@ cp -R .speed/logs "$course_evidence_dir/after-audit-f22-logs"
 
 **Decide a disposition for the finding:** a correction, an owner, or no action.
 
-**Post.** One line: `finding · evidence · owner · effect on Plan`
+Write it as one line: `finding · evidence · owner · effect on Plan`
 
 > If an owner decision blocks the scope, say so. The facilitator will walk through the Plan source and a blocked Handoff. Do not invent an approval and do not skip gates.
 
@@ -287,6 +227,8 @@ cp -R .speed/logs "$course_evidence_dir/after-audit-f22-logs"
 ## Step 5. Plan
 
 *What work does the spec turn into?* Plan covers **both specs**, because they share one bank challenge. Continue only when the facilitator says the scope is cleared.
+
+![How speed plan works](docs/lab-guide/plan.svg)
 
 **Run: snapshot first, then plan.** It takes about 10 minutes. Let it finish; do not restart it.
 
@@ -324,6 +266,8 @@ jq -s 'map({id, title, depends_on, files_touched})' .speed/features/adaptive-aut
 
 *Does the plan still say what the spec meant?* A pass means no critical failures. It does not mean complete.
 
+![How speed verify works](docs/lab-guide/verify.svg)
+
 **Run: snapshot, verify, compare.** It takes 2 to 4 minutes. If it repairs the plan, wait for it to finish.
 
 ```bash
@@ -350,8 +294,6 @@ diff -ru "$course_evidence_dir/before-verify-feature/tasks" .speed/features/adap
 
 > **Can proceed:** … **Must wait:** … **Owner who unblocks it:** … **Evidence:** …
 
-**Post** it in the chat when asked.
-
 > Verified is a statement about scope. Decisions that belong to someone else stay decisions, not tasks.
 
 **Stop here.** Do not run `speed run`.
@@ -360,7 +302,7 @@ diff -ru "$course_evidence_dir/before-verify-feature/tasks" .speed/features/adap
 
 ## Close
 
-**Post.** One question to take back to your own work: which decision in your project has no named owner?
+One question to take back to your own work: which decision in your project has no named owner?
 
 Then three feedback questions: what should we cut, what should we keep exactly as it is, and where did you lose the thread?
 
@@ -370,7 +312,7 @@ Then three feedback questions: what should we cut, what should we keep exactly a
 
 | What you see | What to do |
 |---|---|
-| `speed` runs the wrong Workbench in a new terminal | Repeat Setup step 1 and check `command -v speed` |
+| `speed` is missing or runs the wrong Workbench in a new terminal | Run the export lines from the setup message again and check `command -v speed` |
 | `$course_evidence_dir` is empty in a new terminal | Run the first line of the evidence block in Step 2 again |
 | "Unparseable output" or a sign-in error | Run `claude auth status`. It must show the team plan. Keep the output and tell a coach |
 | A skill command fails in the shell | Start `claude` first, then type it inside the conversation |
