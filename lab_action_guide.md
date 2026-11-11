@@ -109,25 +109,25 @@ Seven documents from different teams describe the new feature. Validate sends al
 
    </details>
 
-2. In your IDE, open `.speed/logs/validation.log` and find the entry about **held payments expiring after 72 hours**. It may be listed under warnings. If it isn't there, use this claim instead:
+2. In your IDE, open `.speed/logs/validation.log` and find the entry saying that **not every declined payment carries a reason for the cardholder**. It may be listed as critical or under warnings. If it isn't there, use this claim instead:
 
    ```text
-   The draft describes expiry after 72 hours and a holdExpired webhook.
-   Check whether it identifies what executes expiry and lists the
-   implementation in File Impact.
+   The traveler product spec says every declined payment carries a reason
+   the merchant can show the cardholder. Check whether the tech spec sends
+   a reason on every decline.
    ```
 
-4. In the terminal, start Claude Code at the fixture root. Don't start the authoring skill yet.
+3. In the terminal, start Claude Code at the fixture root. Don't start the authoring skill yet.
 
    ```bash
    claude
    ```
 
-5. In Claude Code, paste this prompt, then the finding or the claim:
+4. In Claude Code, paste this prompt, then the finding or the claim:
 
    ```text
-   Check this finding against the source documents.
-   Confirm or refute it with citations. Keep it brief; make no edits.
+   Check this finding against the source specs and show the relevant
+   file paths and line numbers. Keep it brief, and make no edits.
    [paste the finding here]
    ```
 
