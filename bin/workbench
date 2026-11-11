@@ -5,7 +5,6 @@ import { dirname, join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { allClassIds, contract, failureClasses } from '../corpus/classes.ts';
-import { checks } from '../workbench/checks.ts';
 import { collect } from '../workbench/signals.ts';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -40,7 +39,7 @@ if (command === 'diagnose') {
   mkdirSync(dirname(out), { recursive: true });
 
   const facts = collect(base);
-  const quote = value => `"${String(value).replace(/"/g, '\\"')}"`;
+  const quote = value => `"${String(value).replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
 
   const rows = allClassIds.map(id => {
     const failure = failureClasses.find(item => item.id === id);

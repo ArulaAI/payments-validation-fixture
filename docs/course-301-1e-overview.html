@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Arula 301.1E · Define, Audit, Plan · Course overview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1d1f23;
+    --ink-2: #4a4f57;
+    --ink-3: #6b717a;
+    --rule: #d9dbdf;
+    --panel: #f4f4f5;
+    --card-border: #e2e3e6;
+    --blue-bg: #e8eef7;
+    --blue: #2f5d9a;
+    --dark: #1c1d21;
+    --amber-bg: #fdf4e1;
+    --amber-border: #ecd9ae;
+    --amber: #7a5410;
+    --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+    --sans: Inter, "Helvetica Neue", Arial, sans-serif;
+    --mono: "IBM Plex Mono", Menlo, monospace;
+  }
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: #fff; color: var(--ink); }
+  body { font-family: var(--sans); font-size: 9.6pt; line-height: 1.45; }
+  .page {
+    width: 210mm; height: 297mm; padding: 15mm 17mm 12mm;
+    display: flex; flex-direction: column; page-break-after: always; overflow: hidden;
+  }
+  .page:last-child { page-break-after: auto; }
+  header.top {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding-bottom: 5mm; border-bottom: 1px solid var(--rule); margin-bottom: 8mm;
+  }
+  .brand { font-family: var(--serif); font-weight: 600; font-size: 15pt; letter-spacing: 0.01em; }
+  .runner { font-size: 6.8pt; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); }
+  footer.bottom {
+    margin-top: auto; padding-top: 4mm; border-top: 1px solid var(--rule);
+    display: flex; justify-content: space-between; font-size: 7pt; color: var(--ink-3);
+  }
+  .eyebrow { font-size: 6.8pt; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-2); margin: 0 0 2mm; }
+  h1, h2, h3 { font-family: var(--serif); font-weight: 400; margin: 0; color: var(--ink); }
+  h2.title { font-size: 19.5pt; line-height: 1.15; margin-bottom: 2.5mm; }
+  p.lede { font-size: 10.5pt; color: var(--ink-2); margin: 0 0 6mm; max-width: 150mm; }
+
+  /* Cover */
+  .course-no { display: flex; align-items: baseline; gap: 4mm; }
+  .course-no .num { font-family: var(--serif); font-weight: 300; font-size: 50pt; line-height: 0.9; letter-spacing: -0.02em; }
+  .course-no .tag { font-size: 8pt; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); }
+  h1.cover { font-size: 30pt; line-height: 1.08; margin: 2mm 0 4mm; max-width: 165mm; }
+  .cover-lede { font-size: 12pt; color: var(--ink-2); max-width: 150mm; margin: 0 0 8mm; }
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; margin-bottom: 6mm; }
+  .card { border: 1px solid var(--card-border); border-radius: 10px; padding: 5mm 6mm; }
+  .card.grey { background: var(--panel); }
+  .card h3 { font-size: 13pt; line-height: 1.2; margin-bottom: 3mm; }
+  .card ul { margin: 0; padding-left: 4.5mm; color: var(--ink-2); font-size: 8.8pt; }
+  .card li { margin-bottom: 1.4mm; }
+  .example { background: var(--blue-bg); border-left: 3px solid var(--blue); border-radius: 0 10px 10px 0; padding: 5mm 7mm; margin-bottom: 6mm; }
+  .example .label { font-family: var(--serif); font-size: 11pt; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-2); margin-bottom: 2mm; }
+  .example p { font-family: var(--serif); font-size: 12pt; line-height: 1.4; margin: 0; }
+  .strip { background: var(--dark); color: #d8dbe0; border-radius: 10px; padding: 4.5mm 7mm; font-family: var(--mono); font-size: 8.6pt; line-height: 1.7; margin-bottom: 6mm; white-space: pre; }
+  .strip .on { color: #8fb4ea; }
+  .promise { border-top: 2.5px solid var(--dark); background: var(--panel); padding: 5mm 7mm; }
+  .promise h3 { font-size: 13pt; margin-bottom: 1.5mm; }
+  .promise p { margin: 0; font-size: 9pt; }
+
+  /* Handoff table */
+  table.handoff { width: 100%; border-collapse: collapse; font-size: 8pt; }
+  table.handoff th { background: var(--panel); text-align: left; font-size: 6.6pt; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); padding: 3mm 2.5mm; border: 1px solid var(--card-border); vertical-align: top; }
+  table.handoff td { padding: 3mm 2.5mm; border: 1px solid var(--card-border); vertical-align: top; color: var(--ink-2); }
+  table.handoff td.no { font-family: var(--serif); font-size: 13pt; color: var(--ink-2); width: 11mm; }
+  table.handoff td.what b { color: var(--ink); display: block; }
+  table.handoff code, .cmd { font-family: var(--mono); font-size: 7.4pt; color: var(--blue); }
+  table.handoff td.out { color: var(--ink); font-weight: 600; }
+  .note { background: var(--amber-bg); border: 1px solid var(--amber-border); border-radius: 10px; padding: 4.5mm 6mm; margin-top: 7mm; font-size: 9pt; }
+  .note b { color: var(--amber); }
+
+  /* Stage blocks */
+  .stage { border-top: 1px solid var(--rule); padding: 3mm 0 2.6mm; }
+  .stage-head { display: flex; align-items: flex-end; gap: 5mm; margin-bottom: 1.5mm; }
+  .stage-head .n { font-family: var(--serif); font-size: 19pt; color: var(--ink-2); line-height: 1; width: 11mm; }
+  .stage-head .k { font-size: 6.8pt; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-2); margin-bottom: 1mm; }
+  .stage-head h3 { font-size: 15pt; line-height: 1.1; }
+  .stage .q { font-family: var(--serif); font-size: 10pt; margin: 0 0 2mm; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; column-gap: 8mm; row-gap: 2.5mm; }
+  .grid2 .lbl { font-size: 6.6pt; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-2); margin-bottom: 0.8mm; }
+  .grid2 .txt { font-size: 7.9pt; color: var(--ink-3); line-height: 1.45; }
+  .grid2 ul { margin: 0; padding-left: 3.5mm; font-size: 7.9pt; color: var(--ink-3); }
+  .grid2 .prod { font-family: var(--mono); font-size: 7.8pt; color: var(--ink); }
+
+  /* Closing page */
+  table.lenses { width: 100%; border-collapse: collapse; font-size: 8.4pt; margin-bottom: 6mm; }
+  table.lenses th { text-align: left; font-size: 6.6pt; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); padding: 2.4mm 2.5mm; border-bottom: 1px solid var(--rule); }
+  table.lenses td { padding: 2.4mm 2.5mm; border-bottom: 1px solid var(--rule); color: var(--ink-2); vertical-align: top; }
+  table.lenses td:first-child { color: var(--ink); font-weight: 600; width: 46mm; }
+
+  /* Four-layer stage grid */
+  .layers { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; border: 1px solid var(--card-border); border-radius: 8px; overflow: hidden; margin-bottom: 2.2mm; }
+  .layers > div { padding: 2.2mm 2.6mm; font-size: 7.6pt; color: var(--ink-3); line-height: 1.42; border-right: 1px solid var(--card-border); }
+  .layers > div:last-child { border-right: 0; }
+  .layers > div.sys { background: var(--panel); }
+  .layers .lbl { font-size: 6.1pt; font-weight: 700; letter-spacing: 0.11em; text-transform: uppercase; color: var(--ink-2); margin-bottom: 1mm; }
+  .layers code { font-family: var(--mono); font-size: 7pt; color: var(--blue); }
+  .pill { display: inline-block; font-family: var(--mono); font-size: 5.8pt; font-weight: 500; letter-spacing: 0.04em; padding: 0 1.2mm; border-radius: 3px; vertical-align: 1px; }
+  .pill.llm { background: #efe6fb; color: #5b3a8c; }
+  .pill.det { background: #e3f0e6; color: #2f6b3d; }
+  .grid2.tight .txt { font-size: 7.6pt; }
+  .steps { width: 100%; border-collapse: collapse; font-size: 7.6pt; margin: 1mm 0 2.2mm; }
+  .steps td { padding: 1.3mm 2mm; border-bottom: 1px solid var(--rule); color: var(--ink-2); vertical-align: top; }
+  .steps td.i { font-family: var(--serif); color: var(--ink-3); width: 6mm; }
+  .steps td.k { width: 12mm; }
+  .steps td.s { width: 32mm; color: var(--ink-3); }
+  .shift { font-family: var(--mono); font-size: 8pt; line-height: 1.6; white-space: pre; background: var(--panel); border-radius: 8px; padding: 4mm 6mm; margin-bottom: 5mm; color: var(--ink); }
+  table.plain { width: 100%; border-collapse: collapse; font-size: 8pt; margin-bottom: 5mm; }
+  table.plain th { text-align: left; font-size: 6.4pt; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); padding: 2mm 2.4mm; border-bottom: 1px solid var(--rule); }
+  table.plain td { padding: 2mm 2.4mm; border-bottom: 1px solid var(--rule); color: var(--ink-2); vertical-align: top; }
+  table.plain td:first-child { color: var(--ink); font-weight: 600; }
+  h3.sub { font-size: 12.5pt; margin: 1mm 0 2mm; }
+</style>
+</head>
+<body>
+
+<section class="page">
+  <header class="top"><span class="brand">arula</span><span class="runner">Arula Academy · Client course overview</span></header>
+  <div class="course-no"><span class="num">301.1E</span><span class="tag">Define · Audit · Plan · AI-assisted software engineering</span></div>
+  <h1 class="cover">Turn other people's intent into a plan you can defend.</h1>
+  <p class="cover-lede">A practical lab for engineers who receive a PRD, an architecture and a design from other functions, and own the tech spec and the plan that agents will build from.</p>
+  <div class="cards">
+    <div class="card">
+      <div class="eyebrow">What participants learn</div>
+      <h3>Move from reading specs to commissioning work.</h3>
+      <ul>
+        <li>Read product, architecture and design against each other and against the code.</li>
+        <li>Send each gap to the person who owns it, instead of deciding it.</li>
+        <li>Steer an agent to a tech spec that names what is still open.</li>
+        <li>Know what audit and plan run underneath, what is a model's judgment and what is a deterministic check.</li>
+      </ul>
+    </div>
+    <div class="card grey">
+      <div class="eyebrow">Format</div>
+      <h3>Seven stages · 120 minutes</h3>
+      <ul>
+        <li>Hands-on with SPEED throughout, including its internals</li>
+        <li>Engineers play every role: PM, designer, architect and engineer</li>
+        <li>One brownfield card-payments service and one feature</li>
+        <li>Ends with a verified task plan ready for Execute</li>
+      </ul>
+    </div>
+  </div>
+  <div class="example">
+    <div class="label">The concrete example throughout</div>
+    <p>A traveller in Tokyo is refused a 2,499 pound television by a rule written at launch, while forty stolen cards are approved across twenty merchants in three minutes. Product, architecture and design have each written their part of the fix. Engineering owns the rest.</p>
+  </div>
+  <div class="strip"><span class="on">Orient</span> → Define → Draft tech spec → Audit → Plan → Verify → Handoff
+                ↖ a gap the audit finds goes back to its owner</div>
+  <div class="promise">
+    <h3>The promise to a client</h3>
+    <p>Participants leave able to take a feature from other functions' documents to a verified plan, knowing which parts a person decided, which parts SPEED decided, and which questions are still owned by someone else.</p>
+  </div>
+  <footer class="bottom"><span>Arula Academy · Course 301.1E</span><span>01 / 07</span></footer>
+</section>
+
+<section class="page">
+  <header class="top"><span class="brand">arula</span><span class="runner">The complete handoff</span></header>
+  <div class="eyebrow">Inputs, outputs and continuity</div>
+  <h2 class="title">Every stage produces something the next stage can use.</h2>
+  <p class="lede">The provided documents stay with their owners. Engineering writes one thing, the tech spec, and everything after it is checked against all of them.</p>
+  <table class="handoff">
+    <thead><tr><th>Stage</th><th>Command and purpose</th><th>Inputs</th><th>Participant output</th><th>Handoff</th></tr></thead>
+    <tbody>
+      <tr><td class="no">01</td><td class="what"><b>Orient</b><code>npm test</code></td><td>Problem statement, existing gateway, risk rules and tests</td><td class="out">Baseline test run</td><td>The behaviour the specs must change, pinned as tests.</td></tr>
+      <tr><td class="no">02</td><td class="what"><b>Define</b><code>/define/adaptive-auth</code></td><td>Two PRDs, platform and feature architecture, two designs, product vision</td><td class="out">Suggestions, each accepted or dismissed by its owner</td><td>Decisions the tech spec can rely on. Open questions keep a named owner.</td></tr>
+      <tr><td class="no">03</td><td class="what"><b>Draft the tech spec</b>agent, engineer-steered</td><td>Upstream documents, Define decisions, codebase</td><td class="out">specs/tech/adaptive-auth/</td><td>A draft that names what is undecided.</td></tr>
+      <tr><td class="no">04</td><td class="what"><b>Audit</b><code>speed audit --feature</code></td><td>Every spec in the feature</td><td class="out">Audit report, sizing, split</td><td>Split tech files go to Plan. Upstream gaps go back to Define.</td></tr>
+      <tr><td class="no">05</td><td class="what"><b>Plan</b><code>speed plan --feature</code></td><td>Audited specs, product vision, codebase</td><td class="out">Task records, dependency graph, gate results</td><td>A plan written by the Architect and amended by SPEED.</td></tr>
+      <tr><td class="no">06</td><td class="what"><b>Verify</b><code>speed verify</code></td><td>Task plan, specs</td><td class="out">Verify report, repaired tasks</td><td>A plan checked by something other than its author.</td></tr>
+      <tr><td class="no">07</td><td class="what"><b>Handoff</b>to Execute</td><td>Verified plan, tech files, open decisions</td><td class="out">Execution brief</td><td>No undecided threshold or policy travels as a task.</td></tr>
+    </tbody>
+  </table>
+  <div class="note"><b>Current delivery note.</b> Architecture specs, multi-file features, <span class="cmd">audit --feature</span>, feature-level <span class="cmd">plan</span> and role switching in Define are being added to SPEED alongside this course. The fixture and stage guides are written against that interface.</div>
+  <footer class="bottom"><span>Arula Academy · Course 301.1E</span><span>02 / 07</span></footer>
+</section>
+
+<section class="page">
+  <header class="top"><span class="brand">arula</span><span class="runner">Guided practice · Stages 1–3</span></header>
+  <div class="eyebrow">Start with what exists</div>
+  <h2 class="title">Read the system, then the documents, then write.</h2>
+  <p class="lede">In the first half the engineer does most of the work and SPEED assists. Each stage separates what the engineer decides from what SPEED surfaces and runs.</p>
+
+  <div class="stage">
+    <div class="stage-head"><span class="n">01</span><div><div class="k">npm test</div><h3>Orient</h3></div></div>
+    <p class="q">What does the system do today, before anyone's document describes what it should do?</p>
+    <div class="layers">
+      <div><div class="lbl">Engineer decides</div>What the system does today</div>
+      <div><div class="lbl">Engineer runs</div><code>npm test</code>, then reads the gateway and risk rules</div>
+      <div class="sys"><div class="lbl">SPEED surfaces</div>Nothing yet</div>
+      <div class="sys"><div class="lbl">SPEED runs</div>Nothing yet</div>
+    </div>
+    <div class="grid2 tight">
+      <div><div class="lbl">Adaptive authorisation example</div><div class="txt">The traveller declined, a decline that tells the merchant nothing, the card-testing burst approved in full, and velocity counted separately on every replica.</div></div>
+      <div><div class="lbl">Produces</div><div class="prod">Baseline test run</div><div class="txt">The behaviour the specs must change.</div></div>
+    </div>
+  </div>
+  <div class="stage">
+    <div class="stage-head"><span class="n">02</span><div><div class="k">speed dashboard · define</div><h3>Define</h3></div></div>
+    <p class="q">What do the provided documents leave undecided, and who has to decide it?</p>
+    <div class="layers">
+      <div><div class="lbl">Engineer decides</div>What is a gap and whose it is; then, as the owner, accept or dismiss with a reason</div>
+      <div><div class="lbl">Engineer runs</div>Section suggestions, role switch, commit</div>
+      <div class="sys"><div class="lbl">SPEED surfaces</div>Live template and structure checks <span class="pill det">det</span>; cross-spec, codebase, sizing, vision <span class="pill llm">LLM</span> <span class="pill det">det</span>; ambiguity detector <span class="pill llm">LLM</span>; blast radius <span class="pill det">det</span></div>
+      <div class="sys"><div class="lbl">SPEED runs</div>Commitment gate <span class="pill det">det</span>; auto-ratifies when nobody else is eligible <span class="pill det">det</span></div>
+    </div>
+    <div class="grid2 tight">
+      <div><div class="lbl">Adaptive authorisation example</div><div class="txt">Asks the checkout PM for a baseline behind "30% fewer false declines". Tells the architect a stateless scoring service cannot see an attack spread across twenty merchants. As the PM, records that risk appetite waits on Risk.</div></div>
+      <div><div class="lbl">Produces</div><div class="prod">Owner decisions on suggestions</div><div class="txt">A ratification record exists; independent approval may not.</div></div>
+    </div>
+  </div>
+  <div class="stage">
+    <div class="stage-head"><span class="n">03</span><div><div class="k">agent-drafted · engineer-steered</div><h3>Draft the tech spec</h3></div></div>
+    <p class="q">What did the agent decide that nobody asked it to?</p>
+    <div class="layers">
+      <div><div class="lbl">Engineer decides</div>What the agent assumed; what stays in Unresolved Questions</div>
+      <div><div class="lbl">Engineer runs</div>An agent drafting the tech spec from the documents and code</div>
+      <div class="sys"><div class="lbl">SPEED surfaces</div>Fix suggestions <span class="pill llm">LLM</span>; codebase references checked as you type <span class="pill det">det</span></div>
+      <div class="sys"><div class="lbl">SPEED runs</div>Nothing until audit</div>
+    </div>
+    <div class="grid2 tight">
+      <div><div class="lbl">Adaptive authorisation example</div><div class="txt">Removes a fallback the agent invented for when the bank does not answer. Keeps the risk narrative out of the authorisation path until the architect decides.</div></div>
+      <div><div class="lbl">Produces</div><div class="prod">specs/tech/adaptive-auth/</div><div class="txt">A draft ready to audit.</div></div>
+    </div>
+  </div>
+  <div class="promise" style="margin-top:3mm">
+    <h3>What this changes in practice</h3>
+    <p>A gap in someone else's document stops being a guess an engineer makes quietly. It becomes a suggestion with an owner and a recorded answer.</p>
+  </div>
+  <footer class="bottom"><span>Arula Academy · Course 301.1E</span><span>03 / 07</span></footer>
+</section>
+
+<section class="page">
+  <header class="top"><span class="brand">arula</span><span class="runner">Guided practice · Stages 4–5</span></header>
+  <div class="eyebrow">Let the tools push back</div>
+  <h2 class="title">Audit the feature, then read what one command runs.</h2>
+  <p class="lede">From here SPEED does most of the work. The engineer's job becomes judging what came back and knowing which results came from a model.</p>
+
+  <div class="stage">
+    <div class="stage-head"><span class="n">04</span><div><div class="k">speed audit --feature</div><h3>Audit</h3></div></div>
+    <p class="q">Is the feature ready to plan, and what can the audit not see?</p>
+    <div class="layers">
+      <div><div class="lbl">Engineer decides</div>Whether a finding is real, whose it is, whether to split</div>
+      <div><div class="lbl">Engineer runs</div><code>speed audit --feature adaptive-auth</code></div>
+      <div class="sys"><div class="lbl">SPEED surfaces</div>Findings by level, sizing estimate, split recommendation</div>
+      <div class="sys"><div class="lbl">SPEED runs</div>Spec type from path, templates and linked specs loaded <span class="pill det">det</span>; audit agent, four levels, read-only <span class="pill llm">LLM</span></div>
+    </div>
+    <div class="grid2 tight">
+      <div><div class="lbl">Adaptive authorisation example</div><div class="txt">Flags a design TODO, a success criterion with no number, and a held-payment flow with no screen. Does not notice the architecture cannot detect card testing: it reads documents, not code.</div></div>
+      <div><div class="lbl">Produces</div><div class="prod">Audit report + split tech files</div><div class="txt">Passing the audit does not mean the requirements are right.</div></div>
+    </div>
+  </div>
+  <div class="stage">
+    <div class="stage-head"><span class="n">05</span><div><div class="k">speed plan --feature</div><h3>Plan</h3></div></div>
+    <p class="q">Does the task graph still say what the specs meant?</p>
+    <div class="layers">
+      <div><div class="lbl">Engineer decides</div>Whether to override a gate; whether the graph makes sense</div>
+      <div><div class="lbl">Engineer runs</div><code>speed plan --feature adaptive-auth</code>, one command</div>
+      <div class="sys"><div class="lbl">SPEED surfaces</div>Guardian, audit, spec alignment, coverage and decomposition reports</div>
+      <div class="sys"><div class="lbl">SPEED runs</div>Seven steps before tasks are written:</div>
+    </div>
+    <table class="steps">
+      <tr><td class="i">1</td><td class="k"><span class="pill llm">LLM</span></td><td>Guardian checks specs against the product vision and anti-goals</td><td class="s">Can stop the plan</td></tr>
+      <tr><td class="i">2</td><td class="k"><span class="pill llm">LLM</span></td><td>Audit runs again on every spec, as a gate</td><td class="s">Can stop the plan</td></tr>
+      <tr><td class="i">3</td><td class="k"><span class="pill det">det</span></td><td>Code index: project map, semantic graph, file skeletons, spec-to-code alignment</td><td class="s">Falls back with a warning</td></tr>
+      <tr><td class="i">4</td><td class="k"><span class="pill det">det</span></td><td>Related-spec scoring picks what reaches the Architect, within a token budget</td><td class="s"></td></tr>
+      <tr><td class="i">5</td><td class="k"><span class="pill llm">LLM</span></td><td>Architect writes tasks and a data contract, in phases above ten estimated tasks</td><td class="s"></td></tr>
+      <tr><td class="i">6</td><td class="k"><span class="pill llm">LLM</span></td><td>Coverage verifier adds tasks for requirements the Architect missed</td><td class="s">Changes the plan</td></tr>
+      <tr><td class="i">7</td><td class="k"><span class="pill det">det</span></td><td>Decomposition gate: size, cluster coordination, bridge symbols, file ownership</td><td class="s">Auto-patches, then can stop</td></tr>
+    </table>
+    <div class="grid2 tight">
+      <div><div class="lbl">Adaptive authorisation example</div><div class="txt">Both product specs change the gateway, so file ownership forces an order. The size check passes every task because the files are small: a green check only as good as its measure.</div></div>
+      <div><div class="lbl">Produces</div><div class="prod">Task records + dependency graph</div><div class="txt">A plan more than one actor wrote.</div></div>
+    </div>
+  </div>
+  <footer class="bottom"><span>Arula Academy · Course 301.1E</span><span>04 / 07</span></footer>
+</section>
+
+<section class="page">
+  <header class="top"><span class="brand">arula</span><span class="runner">Guided practice · Stages 6–7</span></header>
+  <div class="eyebrow">Check, then hand over</div>
+  <h2 class="title">Verify the plan, and send only what has been decided.</h2>
+  <p class="lede">Verification is the last place a person can catch a plan that drifted from the specs before agents start building.</p>
+
+  <div class="stage">
+    <div class="stage-head"><span class="n">06</span><div><div class="k">speed verify</div><h3>Verify</h3></div></div>
+    <p class="q">Which verifier findings need an owner, and which are mechanical?</p>
+    <div class="layers">
+      <div><div class="lbl">Engineer decides</div>Which questions go to an owner; which fixes to accept</div>
+      <div><div class="lbl">Engineer runs</div><code>speed verify</code></div>
+      <div class="sys"><div class="lbl">SPEED surfaces</div>Verifier findings, human questions separated from mechanical fixes</div>
+      <div class="sys"><div class="lbl">SPEED runs</div>Spec-to-task traceability <span class="pill det">det</span>; blind Plan Verifier <span class="pill llm">LLM</span>; up to three repair cycles that edit task records <span class="pill llm">LLM</span></div>
+    </div>
+    <div class="grid2 tight">
+      <div><div class="lbl">Adaptive authorisation example</div><div class="txt">Traceability finds no task for merchant notification before the model runs. The verifier asks what happens when the bank does not answer, which only Risk and product can decide.</div></div>
+      <div><div class="lbl">Produces</div><div class="prod">Verify report</div><div class="txt">"Blind" means blind to the Architect's reasoning, not to structure.</div></div>
+    </div>
+  </div>
+  <div class="stage">
+    <div class="stage-head"><span class="n">07</span><div><div class="k">to Execute</div><h3>Handoff</h3></div></div>
+    <p class="q">What goes to Execute, and what must not?</p>
+    <div class="layers">
+      <div><div class="lbl">Engineer decides</div>What is decided enough to build</div>
+      <div><div class="lbl">Engineer runs</div>Assembles the brief</div>
+      <div class="sys"><div class="lbl">SPEED surfaces</div>The verified plan and its open questions</div>
+      <div class="sys"><div class="lbl">SPEED runs</div>Nothing</div>
+    </div>
+    <div class="grid2 tight">
+      <div><div class="lbl">Adaptive authorisation example</div><div class="txt">Decision thresholds, decline reason wording and block length stay with Risk, Legal and product. None of them reaches an agent as a task.</div></div>
+      <div><div class="lbl">Produces</div><div class="prod">Execution brief</div><div class="txt">Ready for the Execute course.</div></div>
+    </div>
+  </div>
+  <div class="promise" style="margin-top:3mm">
+    <h3>Human ownership stays visible</h3>
+    <p>Engineering can ask "what fraud rate will we accept for fewer false declines?" Only Risk can answer it, and the plan waits for the answer rather than inventing one.</p>
+  </div>
+  <footer class="bottom"><span>Arula Academy · Course 301.1E</span><span>05 / 07</span></footer>
+</section>
+
+<section class="page">
+  <header class="top"><span class="brand">arula</span><span class="runner">Under the hood</span></header>
+  <div class="eyebrow">Who does the work</div>
+  <h2 class="title">The work moves from the engineer to SPEED.</h2>
+  <p class="lede">Engineers learn where SPEED grounds itself, which results are a model's judgment, and where it changes their artifacts without asking.</p>
+  <div class="shift">             Orient   Define   Draft   Audit   Plan   Verify
+engineer      ███      ████     ███     ██      █       ██
+SPEED                   █        █      ██     ████    ███</div>
+  <h3 class="sub">What SPEED grounds itself on</h3>
+  <table class="plain">
+    <tr><td>Semantic graph</td><td>Symbols, references, domain clusters and blast radius across the codebase <span class="pill det">det</span></td></tr>
+    <tr><td>File skeletons</td><td>Signatures without bodies, about ten to one. What the Architect actually sees of existing code <span class="pill det">det</span></td></tr>
+    <tr><td>Spec-to-code alignment</td><td>Every code reference in a spec marked confirmed, missing or divergent <span class="pill det">det</span></td></tr>
+    <tr><td>Spec traceability</td><td>Every requirement matched to a task before the verifier's model runs <span class="pill det">det</span></td></tr>
+  </table>
+  <h3 class="sub">Where SPEED acts without asking</h3>
+  <table class="plain">
+    <tr><td>Define</td><td>Ratifies on the author's behalf when nobody else is eligible</td></tr>
+    <tr><td>Plan</td><td>Adds tasks for missed requirements; patches dependencies and re-runs the decomposition gate; reuses cached results while specs are unchanged</td></tr>
+    <tr><td>Verify</td><td>Edits task records in up to three repair cycles</td></tr>
+  </table>
+  <h3 class="sub">Task size, measured three ways</h3>
+  <table class="plain">
+    <tr><td>Audit</td><td>About one developer-day per task; over ten tasks phases the Architect <span class="pill llm">LLM</span></td></tr>
+    <tr><td>Architect</td><td>Told to write 15 to 30 minute tasks; not enforced <span class="pill llm">LLM</span></td></tr>
+    <tr><td>Decomposition gate</td><td>Lines in the files a task touches; warns above 3,000 <span class="pill det">det</span></td></tr>
+  </table>
+  <footer class="bottom"><span>Arula Academy · Course 301.1E</span><span>06 / 07</span></footer>
+</section>
+
+<!-- 05 Value -->
+<section class="page">
+  <header class="top"><span class="brand">arula</span><span class="runner">The feature and client value</span></header>
+  <div class="eyebrow">One feature, five lenses</div>
+  <h2 class="title">A real feature touches every function.</h2>
+  <p class="lede">Adaptive authorisation was chosen because no single document can be right on its own. Each lens below has an owner, and the engineer meets all of them.</p>
+
+  <table class="lenses">
+    <thead><tr><th>Lens</th><th>What the engineer meets</th><th>Owner</th></tr></thead>
+    <tbody>
+      <tr><td>Real-time fraud detection</td><td>A 40 ms risk budget, six replicas with no shared state, and a model that emits a single score</td><td>Architect, data science</td></tr>
+      <tr><td>GenAI risk</td><td>Attackers who script card testing across merchants, and our own LLM narrative fed by merchant-controlled text</td><td>Architect, risk platform PM</td></tr>
+      <tr><td>Customer experience</td><td>Asking before refusing, and what a cardholder sees while a payment is held</td><td>Checkout PM, designer</td></tr>
+      <tr><td>Legal and risk</td><td>Explaining automated declines, 3-D Secure exemptions, and the fraud rate we will accept</td><td>Legal, Risk</td></tr>
+      <tr><td>Business value</td><td>Lost high-value sales against fraud losses and scheme fees on every test</td><td>Product</td></tr>
+    </tbody>
+  </table>
+
+  <div class="cards">
+    <div class="card">
+      <div class="eyebrow">What the client receives</div>
+      <ul>
+        <li>A shared language for readiness, ownership and open questions across product, design, architecture and engineering.</li>
+        <li>Seven stage guides grounded in one brownfield payments feature.</li>
+        <li>A visible path from three functions' documents to a verified task plan.</li>
+        <li>Practice telling a model's judgment from a deterministic check, and both from what only a person can see.</li>
+        <li>Engineers who understand what other functions commit to.</li>
+      </ul>
+    </div>
+    <div class="card grey">
+      <div class="eyebrow">What is not promised</div>
+      <ul>
+        <li>No audit or plan result is presented as proof the requirements are right.</li>
+        <li>The lab does not set fraud thresholds, risk appetite or legal policy.</li>
+        <li>The lab does not replace the client's own product, design or architecture owners.</li>
+        <li>Execution and approval to ship belong to the courses that follow.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="promise" style="margin-top:auto; margin-bottom:6mm">
+    <h3>Resulting behaviour</h3>
+    <p>Before commissioning agent work, participants can say what each document decided, what it left open, who owns each open question, what the tools checked, and why the plan says what it says.</p>
+  </div>
+
+  <footer class="bottom" style="margin-top:0"><span>Arula Academy · Course 301.1E</span><span>07 / 07</span></footer>
+</section>
+
+</body>
+</html>

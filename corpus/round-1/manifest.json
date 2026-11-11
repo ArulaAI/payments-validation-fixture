@@ -1,0 +1,105 @@
+{
+  "round": 1,
+  "title": "Add capture retry for acquirer timeouts",
+  "base": "main",
+  "diffLines": 72,
+  "provenance": {
+    "author": "agent",
+    "model": "unspecified",
+    "transcript": null,
+    "selfReview": "Reviewed end to end. Retries are safe for every sequence of calls, the refund bound now holds per capture, and the new test proves it. Ready to merge."
+  },
+  "cleanControl": false,
+  "pathologies": [
+    {
+      "id": "R1-P1",
+      "kind": "green-because-unexamined",
+      "check": "zero-context-review",
+      "file": "src/payments/capture-retry.ts",
+      "line": 7,
+      "summary": "No check reports the self-approval, and an empty findings list is easy to read as agreement.",
+      "action": "refute",
+      "reason": "zero-context-review and red-team did not run, because no coding agent is configured. The bundle records them as silence and lists F5 in notExamined. Nothing examined the claim, so nothing confirmed it."
+    }
+  ],
+  "defects": [
+    {
+      "id": "R1-D1",
+      "class": "F1",
+      "file": "src/payments/capture-retry.ts",
+      "line": 10,
+      "summary": "The retry policy type is imported from ./acquirer.ts, a module that does not exist. The import is type-only, so it is erased at runtime and every test passes.",
+      "caughtBy": "typecheck",
+      "evidence": "proof",
+      "action": "confirm",
+      "reserved": false,
+      "notes": "The typecheck hook skips the names in a type-only import but still resolves its target, which is how it meets this hallucinated module. typecheck is a gate, so the default run stops here; use --no-gates to meet the rest of the round.",
+      "violates": null
+    },
+    {
+      "id": "R1-D2",
+      "class": "F4",
+      "file": "src/payments/service.ts",
+      "line": 172,
+      "summary": "Refunds are now counted per capture but still compared with the payment's whole captured total, so a retried refund on one capture of a multi-capture payment refunds more than was captured.",
+      "caughtBy": "property",
+      "evidence": "statistical",
+      "action": "confirm",
+      "reserved": false,
+      "notes": "Every single-capture test still passes: with one capture the per-capture and payment totals are the same. The property command's generated retries on payments with several captures break REFUND_TRACES_CAPTURE (seed 2 refunds 3779 against 3496 captured).",
+      "violates": "TR8"
+    },
+    {
+      "id": "R1-D3",
+      "class": "F6",
+      "file": "README.md",
+      "line": 13,
+      "summary": "The change also rewrites the README's Run it section, which is outside the plan's allowed paths.",
+      "caughtBy": "scope-guard",
+      "evidence": "proof",
+      "action": "confirm",
+      "reserved": false,
+      "notes": "workbench/allowed-paths.json on the round branch lists the four paths the plan allows. scope-guard fails on the fifth mechanically, before any reasoning runs.",
+      "violates": null
+    },
+    {
+      "id": "R1-D4",
+      "class": "F5",
+      "file": "src/payments/capture-retry.ts",
+      "line": 7,
+      "summary": "The change approves itself: its header claims retries are safe for every sequence and that the new test proves it, while R1-D2 breaks a money invariant and the test never examines a refund.",
+      "caughtBy": "zero-context-review",
+      "evidence": "opinion",
+      "action": "confirm",
+      "reserved": false,
+      "notes": "Only a reviewer with no shared context meets this. Without a coding agent the skill does not run, which is R1-P1.",
+      "violates": null
+    },
+    {
+      "id": "R1-D5",
+      "class": "F3",
+      "file": "src/payments/capture-retry.ts",
+      "line": 24,
+      "summary": "The attempt limit is not pinned: the new test passes with attempt <= policy.attempts changed to attempt < policy.attempts.",
+      "caughtBy": "mutation",
+      "evidence": "counterexample",
+      "action": "confirm",
+      "reserved": false,
+      "notes": "The test asserts one retry succeeds, so it never reaches the last attempt.",
+      "violates": null
+    },
+    {
+      "id": "R1-D6",
+      "class": "F8",
+      "file": "src/payments/capture-retry.ts",
+      "line": 26,
+      "summary": "A retry after a timeout sends a second capture with no idempotency key. If the acquirer captured the first and only its answer was lost, the payment is captured twice.",
+      "caughtBy": null,
+      "evidence": "silence",
+      "action": "escalate",
+      "reserved": true,
+      "notes": "The specification says nothing about acquirer timeouts or whether a retried capture is the same capture. No check can decide what nobody specified.",
+      "violates": null
+    }
+  ]
+}
