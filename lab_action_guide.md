@@ -179,7 +179,7 @@ Every answer has the same shape: decide the part that's ours and the sources sup
 
    After a minute or two it stops with a summary of what it understood and asks whether that's right.
 
-3. In Claude Code, before you confirm, ask the question everyone asks:
+3. *(Optional, if you want to dig deeper.)* In Claude Code, before you confirm, ask:
 
    ```text
    Before I confirm: what in this summary is inferred rather than stated
@@ -187,7 +187,7 @@ Every answer has the same shape: decide the part that's ours and the sources sup
    turned out to be wrong? Cite the lines.
    ```
 
-4. In Claude Code, reply in your own words. Add anything your question turned up, correct anything that's off, and confirm the scope is both specs and what they share. A plain "confirmed" is fine if nothing turned up.
+4. In Claude Code, reply in your own words. If you asked the optional question, add anything it turned up. Correct anything that's off, and confirm the scope is both specs and what they share. A plain "confirmed" is fine if nothing turned up.
 
 5. Topic 1 together. Your facilitator runs it on screen. Answer it in your own words, using the table above.
 
