@@ -380,24 +380,17 @@ So far only the planner has looked at its own plan. Verify gives it to a separat
 
 ### What's happening
 
-The session ends with a decision you write, not with code. Imagine a colleague picks this up tomorrow. They need to know what can go ahead, what must wait, and who has to decide. A blocked handoff is a valid result.
+The session ends with a decision, not with code. Imagine a colleague picks this up tomorrow. They need to know three things: what can go ahead, what must wait, and who has to decide. Your facilitator walks through one handoff for this plan. There's nothing for you to write or post. A blocked handoff is a valid result.
 
 ### Run
 
-1. On your own, about 5 minutes, write two or three sentences using your saved evidence, in this shape:
-
-   ```text
-   Can proceed: …
-   Must wait: …
-   Owner who unblocks it: …
-   Evidence: …
-   ```
+Nothing to run. The Plan output suggests `speed run`; don't run it.
 
 ### Look for
 
-- [ ] You said what was verified and for which scope, not just "it passed".
-- [ ] Decisions that belong to someone else are listed as decisions with an owner, not as tasks.
-- [ ] You did not run `speed run`.
+- [ ] What was verified, and for which scope, not just "it passed".
+- [ ] Decisions that belong to someone else stay as decisions with an owner, not as tasks.
+- [ ] Which owner each waiting item depends on.
 
 ---
 
@@ -405,7 +398,7 @@ The session ends with a decision you write, not with code. Imagine a colleague p
 
 One question to take back to your own work: which decision in your project has no named owner?
 
-Then three questions for us: what should we cut, what should we keep exactly as it is, and where did you lose the thread?
+If there's a feedback form, three things help us most: what should we cut, what should we keep exactly as it is, and where did you lose the thread?
 
 ---
 
