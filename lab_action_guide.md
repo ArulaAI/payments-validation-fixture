@@ -295,16 +295,10 @@ Plan turns both specs into an ordered set of tasks. It works in three passes. Tw
 
 ### Run
 
-1. In the terminal, snapshot the current state, then plan. It takes about 10 minutes. Let it finish and don't restart it.
+1. In the terminal, run Plan. It takes about 11 minutes. Let it finish and don't restart it.
 
    ```bash
-   if [ -d .speed/features/adaptive-auth ]; then
-     cp -R .speed/features/adaptive-auth "$course_evidence_dir/before-plan-feature"
-   fi
    speed plan --feature adaptive-auth
-   plan_exit=$?
-   printf 'Plan exit code: %s\n' "$plan_exit"
-   cp -R .speed/features/adaptive-auth "$course_evidence_dir/after-plan-feature"
    ```
 
    <details><summary>Example output</summary>
@@ -326,19 +320,19 @@ Plan turns both specs into an ordered set of tasks. It works in three passes. Tw
      ○  8    Gateway F2.2: block check, attempt recording, … (depends on: 5, 6, 7)
    Tasks: 8 total | 0 done | 0 running | 8 pending | 0 failed
    Next: speed run --feature adaptive-auth to execute the approved plan
-   Plan exit code: 0
    ```
 
    </details>
 
    While it runs, think about which dependency matters most for the scope you chose.
 
-2. In the terminal, read the task graph:
+2. Read the task graph at the end of the output, top to bottom. That's the build order. Two of the titles start with "Gateway".
 
-   ```bash
-   speed status --feature adaptive-auth
-   jq -s 'map({id, title, depends_on, files_touched})' .speed/features/adaptive-auth/tasks/*.json
-   ```
+3. In your IDE's file tree, open `.speed/features/adaptive-auth/tasks/` and open the two Gateway tasks. Search each one for `travellerTelevision`, the traveler from test GW-02. (The project-wide search skips `.speed` because it's gitignored, so open the files from the tree.)
+
+4. One folder up, open `cross_cutting_concerns.json`. These are the rules every task must follow. Look for the one about the step-up outcome.
+
+5. Scroll back up in the terminal to the list just before "Validation report saved". Each NOTE or WARNING is something Plan couldn't settle, with who should confirm it. Then go back to a Gateway task and scroll down to `assumptions`.
 
 > [!IMPORTANT]
 > The last line of the Plan output suggests `speed run`. Don't run it. Nothing is built today.
@@ -349,6 +343,9 @@ Plan turns both specs into an ordered set of tasks. It works in three passes. Tw
 - [ ] You noted how many tasks you got. A setting called `max_tasks` caps the number, so it may match your neighbor's for that reason alone.
 - [ ] One dependency you picked runs in the order you would expect.
 - [ ] No two tasks change `gateway.ts` at the same time without one waiting for the other.
+- [ ] GW-02 now expects a step-up, not a decline, in one of the Gateway tasks.
+- [ ] Your topic 1 decision appears as a cross-cutting rule. If it doesn't, note what's there instead.
+- [ ] One default Plan chose that nobody in the room decided, and who has to confirm it.
 
 ---
 
