@@ -83,20 +83,10 @@ Seven documents from different teams describe the new feature. Validate sends al
 
 ### Run
 
-1. In the terminal, set up a folder for this session's evidence. Repeat this line in any new terminal.
-
-   ```bash
-   course_evidence_dir=".speed/course-301-1e/session"
-   mkdir -p "$course_evidence_dir"
-   ```
-
-2. Run Validate. It takes about 3 minutes and ends with exit code 1, which is expected.
+1. In the terminal, run Validate. It takes about 3 minutes and ends with "Validation FAILED", which is expected.
 
    ```bash
    speed validate specs/
-   validate_exit=$?
-   printf 'Validate exit code: %s\n' "$validate_exit"
-   cp -R .speed/logs "$course_evidence_dir/after-validate-logs"
    ```
 
    <details><summary>Example output</summary>
@@ -113,14 +103,13 @@ Seven documents from different teams describe the new feature. Validate sends al
      ⚠ 19 warning(s)
    ✗ err   Validation FAILED — fix critical gaps before running 'speed plan'
    ✗ err   4 critical gap(s) found
-   Validate exit code: 1
    ```
 
    A warning about optional grammars at the start is harmless.
 
    </details>
 
-3. In your IDE, open `.speed/logs/validation.log` and find the entry about **held payments expiring after 72 hours**. It may be listed under warnings. If it isn't there, use this claim instead:
+2. In your IDE, open `.speed/logs/validation.log` and find the entry about **held payments expiring after 72 hours**. It may be listed under warnings. If it isn't there, use this claim instead:
 
    ```text
    The draft describes expiry after 72 hours and a holdExpired webhook.
@@ -240,9 +229,6 @@ You wrote the changes, so you are not the best judge of them. Audit is a second 
 
    ```bash
    speed audit specs/tech/adaptive-auth/1-high-value-traveller.md
-   audit_f21_exit=$?
-   printf 'F2.1 Audit exit code: %s\n' "$audit_f21_exit"
-   cp -R .speed/logs "$course_evidence_dir/after-audit-f21-logs"
    ```
 
    <details><summary>Example output</summary>
@@ -257,7 +243,6 @@ You wrote the changes, so you are not the best judge of them. Audit is a second 
      ⚠ Sizing: Consider splitting into multiple child RFCs (~18 tasks)
    →     Report saved to .speed/logs/audit-1793674684.json
    ⚠ warn  Audit: WARN (3 warning(s))
-   F2.1 Audit exit code: 0
    ```
 
    `[L1]` is structure, `[L2]` completeness, `[L3]` consistency with other documents and `[L4]` sizing.
@@ -268,9 +253,6 @@ You wrote the changes, so you are not the best judge of them. Audit is a second 
 
    ```bash
    speed audit specs/tech/adaptive-auth/2-card-testing.md
-   audit_f22_exit=$?
-   printf 'F2.2 Audit exit code: %s\n' "$audit_f22_exit"
-   cp -R .speed/logs "$course_evidence_dir/after-audit-f22-logs"
    ```
 
 3. In your IDE, compare the **Produces** section of the traveler spec with the **Consumes** section of the card-testing spec. Does the first provide the cancellation behavior the second expects? Check the source even if Audit didn't mention it.
@@ -359,15 +341,12 @@ So far only the planner has looked at its own plan. Verify gives it to a separat
 
 ### Run
 
-1. In the terminal, snapshot the plan, verify it, then compare. It usually takes about 2 minutes, longer if it repairs the plan.
+1. In the terminal, copy the tasks, verify the plan, then compare. Verify usually takes about 2 minutes, longer if it repairs the plan. If the diff prints nothing, Verify didn't change any tasks.
 
    ```bash
-   cp -R .speed/features/adaptive-auth "$course_evidence_dir/before-verify-feature"
+   rm -rf .speed/tasks-before-verify && cp -R .speed/features/adaptive-auth/tasks .speed/tasks-before-verify
    speed verify --feature adaptive-auth
-   verify_exit=$?
-   printf 'Verify exit code: %s\n' "$verify_exit"
-   cp -R .speed/features/adaptive-auth "$course_evidence_dir/after-verify-feature"
-   diff -ru "$course_evidence_dir/before-verify-feature/tasks" .speed/features/adaptive-auth/tasks
+   diff -ru .speed/tasks-before-verify .speed/features/adaptive-auth/tasks
    ```
 
    <details><summary>Example output</summary>
@@ -383,7 +362,6 @@ So far only the planner has looked at its own plan. Verify gives it to a separat
        …
      Summary: 0 critical, 5 warnings, 9 recommendations
    ✓     Plan verification PASSED
-   Verify exit code: 0
    ```
 
    </details>
@@ -394,7 +372,7 @@ So far only the planner has looked at its own plan. Verify gives it to a separat
 
 - [ ] The two numbers disagree. The first check says every requirement is covered; the reader that checks meaning says something like 18 of 29. That difference is what this step is about.
 - [ ] You followed one requirement and know whether its coverage is full, partial or missing.
-- [ ] If the diff shows changes, you read them before trusting the plan. A diff exit code of 1 only means files changed.
+- [ ] If the diff printed changes, you read them before trusting the plan. Changes there are the fix agent's edits, not an error.
 
 ---
 
@@ -436,7 +414,6 @@ Then three questions for us: what should we cut, what should we keep exactly as 
 | What you see | What to do |
 |---|---|
 | `speed` is missing, or runs the wrong Workbench, in a new terminal | Run the export lines from the setup message again and check `command -v speed` |
-| `$course_evidence_dir` is empty in a new terminal | Run the first line of the evidence block in step 2 again |
 | "Unparseable output" or a sign-in error | Run `claude auth status`. It must show the team plan. Keep the output and tell a coach |
 | A skill command fails in the shell | Start `claude` first, then type it inside the conversation |
 | The assistant stopped after reading its inputs | It is waiting for you. Answer its question; don't restart the skill |
