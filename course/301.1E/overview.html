@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Arula Academy 301.1E: guided technical specification authoring, Audit, Plan and Verify for adaptive authorisation.">
+<title>Arula 301.1E | Define, Audit, Plan | Course overview</title>
+<link rel="stylesheet" href="../assets/arula/design-tokens.css">
+<style>
+:root { --paper:var(--ar-white); --white:var(--ar-white); --ink:var(--ar-ink); --muted:var(--ar-slate); --line:var(--ar-mist); --lime:var(--ar-blue); --mint:var(--ar-selected); --rust:var(--ar-blue); --sand:var(--ar-warning-surface); --sans:var(--ar-sans); --serif:var(--ar-serif); --mono:Menlo,Consolas,monospace; }
+@page { size:A4; margin:0; }
+* { box-sizing:border-box; }
+html,body { margin:0; padding:0; background:var(--paper); color:var(--ink); }
+body { font-family:var(--sans); font-size:10pt; line-height:1.5; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+.page { width:210mm; height:297mm; padding:15mm 17mm 27mm; position:relative; display:flex; flex-direction:column; break-after:page; }
+.page:last-child { break-after:auto; }
+.masthead { display:flex; justify-content:space-between; align-items:center; padding-bottom:5mm; border-bottom:1px solid var(--line); margin-bottom:6mm; }
+.brand { display:flex; align-items:center; gap:2.5mm; font-family:var(--serif); font-weight:700; font-size:16pt; letter-spacing:-.02em; line-height:1; }
+.brand-mark { width:6.5mm; height:6.5mm; fill:none; stroke:currentColor; stroke-width:1.55; stroke-linecap:round; stroke-linejoin:round; }
+.running { font-size:7pt; letter-spacing:.12em; text-transform:uppercase; font-weight:600; }
+.footer { position:absolute; left:17mm; right:17mm; bottom:12mm; display:flex; justify-content:space-between; align-items:center; margin-top:auto; border-top:1px solid var(--line); padding-top:4mm; font-size:7pt; color:var(--muted); }
+.footer .folio { font-family:var(--mono); letter-spacing:.08em; }
+.eyebrow { font-size:7.5pt; letter-spacing:.14em; text-transform:uppercase; font-weight:700; margin:0 0 3mm; color:var(--muted); }
+h1,h2,h3,p { margin:0; }
+h1,h2,h3 { font-family:var(--serif); font-weight:400; }
+h2 { font-size:26pt; line-height:1.18; letter-spacing:-.6px; margin-bottom:5mm; }
+h3 { font-size:17pt; line-height:1.24; margin-bottom:3mm; }
+.lede { font-size:10.5pt; line-height:1.55; max-width:163mm; color:var(--muted); margin-bottom:6mm; }
+.small { font-size:8.8pt; color:var(--muted); line-height:1.55; }
+.label { font-size:7pt; text-transform:uppercase; letter-spacing:.12em; font-weight:700; margin-bottom:2mm; }
+.mono,code { font-family:var(--mono); }
+code { font-size:.82em; }
+.two { display:grid; grid-template-columns:1fr 1fr; gap:7mm; }
+.rule { border-top:1px solid var(--line); padding-top:5mm; }
+.callout { padding:5mm 6mm; background:var(--mint); border-left:3px solid var(--ink); }
+.callout p { font-size:9.3pt; }
+.callout.warm { background:var(--sand); border-left-color:var(--ar-warning); }
+.callout .label { color:var(--ink); }
+.push { margin-top:3mm; margin-bottom:0; }
+.number { font-family:var(--serif); font-size:38pt; line-height:1.1; letter-spacing:-1px; }
+.pill { display:inline-block; padding:1mm 2.5mm; background:var(--mint); color:var(--ink); font-size:6.5pt; font-weight:700; letter-spacing:.08em; text-transform:uppercase; }
+.pill.human { background:var(--sand); color:var(--rust); }
+.codebox { border-radius:3mm; background:var(--ar-black); color:var(--white); padding:4.5mm 5mm; margin:3mm 0 4mm; font-family:var(--mono); font-size:8.2pt; line-height:1.65; white-space:pre-wrap; overflow-wrap:anywhere; }
+a { color:inherit; text-decoration:none; border-bottom:1px solid var(--muted); }
+.cover { background:var(--ar-white); color:var(--ink); }
+.cover-no { color:var(--ar-blue); font-size:14pt; letter-spacing:.02em; margin:0 0 5mm; }
+.cover h1 { font-size:46pt; line-height:1.15; letter-spacing:-.04em; max-width:165mm; margin-bottom:6mm; }
+.cover h1 em { font-weight:400; color:var(--ar-blue); }
+.cover-lede { font-size:11.5pt; line-height:1.6; color:var(--muted); max-width:155mm; }
+.cover-art { position:relative; isolation:isolate; background:var(--ar-porcelain); border:1px solid var(--ar-mist); border-radius:6mm; padding:6mm; margin:10mm 0 7mm; overflow:hidden; }
+.cover-art::before { content:""; position:absolute; inset:0; z-index:-1; background:url("../assets/arula/halftone.svg") center/cover no-repeat; opacity:.8; }
+.cover-art>.label { color:var(--muted); }
+.cover-diagram { width:100%; height:54mm; margin:2mm 0; display:block; }
+.cover-art-caption { font-size:7.3pt; color:var(--muted); margin-top:2mm; }
+.cover-bottom { display:grid; grid-template-columns:1.2fr 1fr; gap:10mm; padding-top:5mm; border-top:1px solid var(--line); }
+.cover-bottom p { font-size:9pt; line-height:1.65; color:var(--muted); }
+.cover-bottom .label { color:var(--ink); }
+
+.case { padding:5mm; background:var(--ar-porcelain); border:1px solid var(--line); border-radius:4mm; min-height:76mm; }
+.case.attack { background:var(--ar-selected); }
+.case .metric { font-family:var(--serif); font-size:35pt; letter-spacing:-1.4px; margin:1mm 0 2mm; }
+.case .metric span { font-family:var(--sans); font-size:10pt; letter-spacing:0; }
+.case h3 { font-size:18pt; margin:3mm 0; }
+.case p { font-size:9.5pt; }
+.constraint-strip { display:grid; grid-template-columns:repeat(3,1fr); gap:5mm; padding:6mm 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); margin:7mm 0; }
+.constraint-strip .number { font-size:29pt; }
+.constraint-strip p { font-size:8.3pt; color:var(--muted); margin-top:1mm; }
+.input-row { display:grid; grid-template-columns:37mm 1fr; gap:5mm; border-bottom:1px solid var(--line); padding:3.5mm 0; }
+.input-row strong { font-size:9pt; }
+.input-row span { font-size:9pt; color:var(--muted); }
+.journey { border-top:1px solid var(--line); }
+.journey-row { display:grid; grid-template-columns:10mm 31mm 1fr; gap:4mm; padding:4mm 0; border-bottom:1px solid var(--line); align-items:start; }
+.journey-row .idx { font-family:var(--mono); font-size:8pt; color:var(--rust); padding-top:1mm; }
+.journey-row h3 { font-size:15pt; margin:0; }
+.journey-row p { font-size:9pt; line-height:1.45; }
+.journey-row .output { color:var(--muted); font-size:8pt; margin-top:1mm; }
+.journey-row.focus { background:var(--mint); margin:0 -4mm; padding:4mm; }
+.question { font-family:var(--serif); font-size:22pt; line-height:1.35; margin:0 0 7mm; padding:0 0 0 5mm; border-left:3px solid var(--rust); }
+.loop { display:grid; grid-template-columns:repeat(4,1fr); gap:3mm; margin-bottom:6mm; }
+.loop-step { background:var(--white); border-top:2px solid var(--ink); padding:4mm 3.5mm; min-height:40mm; }
+.loop-step .label { color:var(--rust); }
+.loop-step h3 { font-size:13pt; margin-bottom:2mm; }
+.loop-step p { font-size:8.1pt; color:var(--muted); }
+.topics { display:grid; grid-template-columns:7mm 43mm 1fr; gap:3mm; padding:3.5mm 0; border-bottom:1px solid var(--line); }
+.topics .idx { color:var(--rust); font-family:var(--mono); font-size:8pt; }
+.topics strong { font-size:9pt; }
+.topics p { font-size:8.8pt; color:var(--muted); }
+.workspace { display:grid; grid-template-columns:1fr 1fr; gap:3mm; padding:4mm; background:var(--ar-porcelain); border:1px solid var(--line); border-radius:5mm; margin-bottom:5mm; }
+.pane { border:1px solid var(--line); border-radius:3mm; background:var(--white); min-height:62mm; padding:4mm; }
+.pane-title { display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--line); padding-bottom:2.5mm; margin-bottom:4mm; font-size:7pt; font-weight:700; text-transform:uppercase; letter-spacing:.08em; }
+.pane h3 { font-size:15pt; }
+.pane p { font-size:8.5pt; }
+.document-lines { margin:4mm 0; }
+.document-lines span { display:block; height:2px; background:#ced1d6; margin:2mm 0; }
+.document-lines span:nth-child(2n) { width:80%; }
+.document-lines span:nth-child(3n) { width:60%; }
+.diff-line { font-family:var(--mono); font-size:7pt; padding:2mm; background:var(--mint); margin-top:2mm; }
+.terminal { background:var(--ar-black); color:var(--white); border-color:var(--ar-black); }
+.terminal .pane-title { border-color:#5e646e; }
+.terminal .small { color:#d0d4da; }
+.terminal .prompt { font-size:8pt; font-family:var(--mono); color:#dbe7f6; padding:3mm 0; }
+.terminal .terminal-option { font-size:8pt; margin-top:3mm; color:#e5e6e8; border-top:1px solid #5e646e; padding-top:2mm; }
+.review-check { display:grid; grid-template-columns:9mm 1fr; gap:3mm; margin-bottom:4mm; }
+.review-check .marker { font-family:var(--mono); color:var(--rust); font-size:8pt; padding-top:1mm; }
+.review-check h3 { font-size:14pt; margin-bottom:1mm; }
+.review-check p { font-size:9pt; color:var(--muted); }
+.levels { display:grid; grid-template-columns:1fr 1fr; gap:4mm; margin:0 0 7mm; }
+.level { padding:4mm; background:var(--white); min-height:34mm; border-top:1px solid var(--ink); }
+.level .idx { font-family:var(--mono); font-size:7pt; color:var(--rust); margin-bottom:2mm; }
+.level h3 { font-size:17pt; margin-bottom:2mm; }
+.level p { font-size:9pt; color:var(--muted); }
+.evidence { display:grid; grid-template-columns:1fr 1fr 1fr; gap:5mm; margin:4mm 0; padding:3mm 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+.evidence .big { font-family:var(--serif); font-size:13pt; margin-bottom:2mm; }
+.evidence p { font-size:8.5pt; color:var(--muted); }
+.pipeline { display:grid; grid-template-columns:1fr 1fr; gap:6mm; }
+.pipeline-column { border-top:2px solid var(--ink); padding-top:4mm; }
+.pipeline-column h3 { font-size:23pt; }
+.pipeline-column .stage-line { border-bottom:1px solid var(--line); padding:2mm 0; font-size:8.6pt; }
+.pipeline-column .stage-line strong { display:block; font-size:9pt; }
+.pipeline-column .stage-line span { color:var(--muted); }
+.scope-box { background:var(--sand); padding:4mm 5mm; border-left:3px solid var(--ar-warning); margin-top:4mm; }
+.scope-box p { font-size:8.8pt; }
+.packet { display:grid; grid-template-columns:1fr 1fr; gap:5mm; margin-bottom:5mm; }
+.packet > div { background:var(--white); padding:5mm; border-top:1px solid var(--ink); }
+.packet h3 { font-size:15pt; }
+.packet p { font-size:8.8pt; color:var(--muted); }
+.resource { display:flex; align-items:baseline; justify-content:space-between; padding:3mm 0; border-bottom:1px solid var(--line); gap:5mm; }
+.resource a { font-size:10pt; font-weight:600; }
+.resource span { font-size:8pt; color:var(--muted); }
+.closing { font-family:var(--serif); font-size:22pt; line-height:1.3; max-width:155mm; margin:5mm 0 0; }
+@media screen { body { padding:24px 0; background:#e5e6e8; } .page { margin:0 auto 24px; box-shadow:0 8px 32px #102d3020; } }
+@media print { .page { margin:0; box-shadow:none; } }
+</style>
+</head>
+<body>
+
+<section class="page cover" aria-label="Cover">
+<header class="masthead"><span class="brand"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3 27 9.5v13L16 29 5 22.5v-13L16 3Z"/><path d="M16 3v13m0 0 11 6.5M16 16 5 22.5M5.3 9.5 16 16l10.7-6.5"/></svg><span>arula</span></span><span class="running">Academy / Engineering practice</span></header>
+<p class="eyebrow">AI-assisted software engineering</p>
+<p class="cover-no">Course 301.1E</p>
+<h1>Define, Audit,<br><em>Plan.</em></h1>
+<p class="cover-lede">Turn product intent into a technical specification<br>and a plan you can explain and defend.</p>
+<div class="cover-art"><p class="label">From supplied intent to reviewed engineering work</p>
+<svg class="cover-diagram" viewBox="0 0 670 210" role="img" aria-label="Product, design and architecture converge into reviewed RFCs and then a checked plan">
+<g fill="none" stroke="#aab1ba" stroke-width="1.5"><path d="M170 33H208Q228 33 228 53V89Q228 105 250 105H285"/><path d="M170 105H285"/><path d="M170 177H208Q228 177 228 157V121Q228 105 250 105"/><path d="M455 105H510"/></g>
+<g fill="#ffffff" stroke="#aab1ba"><rect x="0" y="8" width="170" height="50" rx="10"/><rect x="0" y="80" width="170" height="50" rx="10"/><rect x="0" y="152" width="170" height="50" rx="10"/></g>
+<rect x="285" y="69" width="170" height="72" rx="10" fill="#eaf0f8"/>
+<rect x="510" y="69" width="160" height="72" rx="10" fill="#ffffff" stroke="#eaf0f8" stroke-width="1.5"/>
+<g font-family="Libre Franklin,Arial,sans-serif" font-size="15" fill="#27292d" text-anchor="middle"><text x="85" y="39">Product</text><text x="85" y="111">Design</text><text x="85" y="183">Architecture</text><text x="590" y="103">Checked plan</text><text x="590" y="122" font-size="11" fill="#5e646e">scope + evidence</text></g>
+<g font-family="Libre Franklin,Arial,sans-serif" fill="#27292d" text-anchor="middle"><text x="370" y="103" font-size="17">Reviewed RFCs</text><text x="370" y="122" font-size="11">engineer + harness</text></g>
+</svg>
+<p class="cover-art-caption">Product, Design and Architecture supply the inputs. Engineering owns the technical specification.</p></div>
+<div class="cover-bottom"><div><p class="label">The engineer's responsibility</p><p>Read the sources. Investigate the decisions.<br>Review the contracts. Keep ownership visible.</p></div><div><p class="label">The course fixture</p><p>Adaptive authorisation in an existing payments service. Two scenarios. One shared system.</p></div></div>
+<footer class="footer"><span>Course overview · Updated 12 October 2026</span><span class="folio">01 / 08</span></footer>
+</section>
+
+<section class="page" aria-label="The feature">
+<header class="masthead"><span class="brand"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3 27 9.5v13L16 29 5 22.5v-13L16 3Z"/><path d="M16 3v13m0 0 11 6.5M16 16 5 22.5M5.3 9.5 16 16l10.7-6.5"/></svg><span>arula</span></span><span class="running">01 / The feature</span></header>
+<p class="eyebrow">One feature. Two failure patterns.</p>
+<h2>Help the genuine customer.<br>Recognise the attack.</h2>
+<p class="lede">F2 adaptive authorisation asks engineering to connect product intent, customer experience and a distributed system. Both scenarios share the gateway and bank-confirmation contracts.</p>
+<div class="two">
+<article class="case"><p class="label">F2.1 / Genuine traveller</p><p class="metric">£2,499</p><h3>An unusual purchase<br>gets refused.</h3><p>A traveller in Tokyo buys a television. The launch-era high-value cross-border rule declines the payment.</p><p class="small" style="margin-top:4mm"><strong>Intended behavior:</strong> scored decisions, bank confirmation, safe explanations and analyst review where needed.</p></article>
+<article class="case attack"><p class="label">F2.2 / Card testing</p><p class="metric">40 <span>cards · 20 merchants</span></p><h3>A distributed attack<br>looks ordinary.</h3><p>Stolen cards are tested in under three minutes. Each card is tried once, so the per-card velocity rule misses the pattern.</p><p class="small" style="margin-top:4mm"><strong>Intended behavior:</strong> detect the pattern, challenge matching attempts, notify merchants and support release and expiry.</p></article>
+</div>
+<div class="constraint-strip"><div><p class="number">6</p><p>Stateless gateway replicas</p></div><div><p class="number">40 ms</p><p>Risk-decision p99 budget</p></div><div><p class="number">Vault</p><p>Card-data trust boundary</p></div></div>
+<div class="input-row"><strong>Product</strong><span>Two PRDs, stories, success criteria and the product vision.</span></div>
+<div class="input-row"><strong>Design + architecture</strong><span>Checkout and analyst experiences, component responsibilities and failure constraints.</span></div>
+<div class="input-row"><strong>Engineering</strong><span>Existing code, characterisation tests and two RFC drafts to inspect and develop.</span></div>
+<footer class="footer"><span>Arula Academy · 301.1E · Define, Audit, Plan</span><span class="folio">02 / 08</span></footer>
+</section>
+
+<section class="page" aria-label="Course journey">
+<header class="masthead"><span class="brand"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3 27 9.5v13L16 29 5 22.5v-13L16 3Z"/><path d="M16 3v13m0 0 11 6.5M16 16 5 22.5M5.3 9.5 16 16l10.7-6.5"/></svg><span>arula</span></span><span class="running">02 / The course journey</span></header>
+<p class="eyebrow">From evidence to a responsible handoff</p>
+<h2>Each step gives the next<br>step something to work with.</h2>
+<p class="lede">Follow one feature throughout. A finding can return to a question, a source or an owner before the work moves forward.</p>
+<div class="journey">
+<div class="journey-row"><span class="idx">01</span><h3>Orient</h3><div><p>Run the baseline and read what the gateway does today.</p><p class="output">Output / Observed behavior and test evidence</p></div></div>
+<div class="journey-row"><span class="idx">02</span><h3>Validate</h3><div><p>Compare specifications; investigate a finding against its sources.</p><p class="output">Output / Confirmed gaps and unresolved claims</p></div></div>
+<div class="journey-row focus"><span class="idx">03</span><h3>Define</h3><div><p>Use a source-based interview to resolve consequential decisions.</p><p class="output">Output / Accepted answers, rationale and owner requests</p></div></div>
+<div class="journey-row focus"><span class="idx">04</span><h3>Draft</h3><div><p>Review focused edits to both RFCs under SPEED's exact template.</p><p class="output">Output / Technical contracts and a coverage review</p></div></div>
+<div class="journey-row"><span class="idx">05</span><h3>Audit</h3><div><p>Check structure, substance, consistency and estimated scope.</p><p class="output">Output / Findings with dispositions and sizing recommendations</p></div></div>
+<div class="journey-row"><span class="idx">06</span><h3>Plan</h3><div><p>Inspect the gates, input context and generated dependency graph.</p><p class="output">Output / Tasks, available contracts and planning reports</p></div></div>
+<div class="journey-row"><span class="idx">07</span><h3>Verify</h3><div><p>Check the plan against its source scope and review task repairs.</p><p class="output">Output / Verifier results, diffs and human decisions</p></div></div>
+<div class="journey-row"><span class="idx">08</span><h3>Handoff</h3><div><p>State what is ready, what is unchecked and who owns the next action.</p><p class="output">Output / Execution brief or an explicit blocked handoff</p></div></div>
+</div>
+<div class="callout" style="margin-top:6mm"><p><strong>Put the most time into Define and Draft.</strong> Interview depth and agent waiting time vary. Set delivery pacing after rehearsal.</p></div>
+<footer class="footer"><span>Arula Academy · 301.1E · Define, Audit, Plan</span><span class="folio">03 / 08</span></footer>
+</section>
+
+<section class="page" aria-label="Guided authoring">
+<header class="masthead"><span class="brand"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3 27 9.5v13L16 29 5 22.5v-13L16 3Z"/><path d="M16 3v13m0 0 11 6.5M16 16 5 22.5M5.3 9.5 16 16l10.7-6.5"/></svg><span>arula</span></span><span class="running">03 / The heart of Define</span></header>
+<p class="eyebrow">Source-based technical authoring</p>
+<h2>A good spec starts with<br>a consequential question.</h2>
+<p class="lede">The authoring skill reads the supplied materials and builds its questionnaire from the feature. The engineer investigates the choices, accepts the decisions and reviews the resulting wording.</p>
+<p class="question">“What must stay consistent when a bank challenge completes on another replica?”</p>
+<div class="loop">
+<div class="loop-step"><p class="label">01</p><h3>Read</h3><p>Load inputs and drafts. Confirm the understanding with source references.</p></div>
+<div class="loop-step"><p class="label">02</p><h3>Investigate</h3><p>Ask one consequential question. Compare evidence, options and tradeoffs.</p></div>
+<div class="loop-step"><p class="label">03</p><h3>Decide</h3><p>Record the accepted answer, rationale, owner and affected contracts.</p></div>
+<div class="loop-step"><p class="label">04</p><h3>Review</h3><p>Inspect the proposed diff. Accept wording, update coverage and continue.</p></div>
+</div>
+<p class="eyebrow">Five rounds of investigation</p>
+<div class="topics"><span class="idx">01</span><strong>Shared lifecycle</strong><p>Challenge identity, persistence, trusted completion, retries, cancellation, expiry and capture races.</p></div>
+<div class="topics"><span class="idx">02</span><strong>Integration + UX</strong><p>Merchant facts, typed checkout outcomes, held states and analyst actions.</p></div>
+<div class="topics"><span class="idx">03</span><strong>Detector reliability</strong><p>Cross-replica publication, outages, release, notifications and history.</p></div>
+<div class="topics"><span class="idx">04</span><strong>Policy + privacy</strong><p>Risk owners, safe reasons, retained data and permitted narrative inputs.</p></div>
+<div class="topics"><span class="idx">05</span><strong>Acceptance + rollout</strong><p>Observable stories, measurement, load and failure tests, cutover and rollback.</p></div>
+<div class="callout warm" style="margin-top:6mm"><p><strong>Ownership is part of the design.</strong> Engineering decides within the supplied constraints. Product, Design, Risk and Legal keep their decisions and unresolved dependencies.</p></div>
+<footer class="footer"><span>Arula Academy · 301.1E · Define, Audit, Plan</span><span class="folio">04 / 08</span></footer>
+</section>
+
+<section class="page" aria-label="The authoring workspace">
+<header class="masthead"><span class="brand"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3 27 9.5v13L16 29 5 22.5v-13L16 3Z"/><path d="M16 3v13m0 0 11 6.5M16 16 5 22.5M5.3 9.5 16 16l10.7-6.5"/></svg><span>arula</span></span><span class="running">04 / The working setup</span></header>
+<p class="eyebrow">IDE 50% / Native harness 50%</p>
+<h2>Read and review on the left.<br>Investigate on the right.</h2>
+<p class="lede">One project skill, shared references and two native entry points. The IDE shows the sources and saved RFCs; the TUI holds the live authoring conversation.</p>
+<div class="workspace" role="img" aria-label="Illustrative IDE and harness workspace, not a live product screenshot">
+<div class="pane"><div class="pane-title"><span>IDE / Sources + RFCs</span><span>50%</span></div><p class="label">1-high-value-traveller.md</p><h3>Shared challenge contract</h3><p class="small">Inputs · states · completion · errors</p><div class="document-lines" aria-hidden="true"><span></span><span></span><span></span><span></span></div><div class="diff-line">+ reviewed engineering decision</div><div class="diff-line">+ observable acceptance criterion</div></div>
+<div class="pane terminal"><div class="pane-title"><span>Harness / Interview</span><span>50%</span></div><p class="prompt">› author-tech-spec adaptive-auth</p><p>Which component owns the durable challenge and its terminal transition?</p><p class="small" style="margin-top:3mm">Evidence → constraints → options → tradeoffs</p><p class="terminal-option">Engineer: investigate, accept, revise<br>or defer to the appropriate owner.</p></div>
+</div>
+<div class="two" style="margin-bottom:7mm"><div><p class="label">Inside Codex</p><div class="codebox">$author-tech-spec adaptive-auth</div></div><div><p class="label">Inside Claude Code</p><div class="codebox">/author-tech-spec adaptive-auth</div></div></div>
+<div class="review-check"><span class="marker">01</span><div><h3>Review decisions and wording separately.</h3><p>Accept the design answer, review its proposed RFC diff, then approve the wording. Save overlapping IDE buffers before edits.</p></div></div>
+<div class="review-check"><span class="marker">02</span><div><h3>Preserve the RFC contract.</h3><p>Use the installed SPEED template and its exact headings. Map both PRDs' stories and constraints to acceptance criteria.</p></div></div>
+<div class="review-check"><span class="marker">03</span><div><h3>Save progress and resume.</h3><p>Add <code>resume</code> to continue the records under <code>.speed/authoring/adaptive-auth/</code>. Recheck changed inputs before continuing.</p></div></div>
+<p class="small push">Start the harness from the repository root; invoke the skill inside its TUI. No hooks are required.</p>
+<footer class="footer"><span>Arula Academy · 301.1E · Define, Audit, Plan</span><span class="folio">05 / 08</span></footer>
+</section>
+
+<section class="page" aria-label="Validate and Audit">
+<header class="masthead"><span class="brand"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3 27 9.5v13L16 29 5 22.5v-13L16 3Z"/><path d="M16 3v13m0 0 11 6.5M16 16 5 22.5M5.3 9.5 16 16l10.7-6.5"/></svg><span>arula</span></span><span class="running">05 / Quality and evidence</span></header>
+<p class="eyebrow">Read the finding. Follow the source.</p>
+<h2>Use the checks to sharpen<br>engineering judgment.</h2>
+<p class="lede">Validate compares the supplied specifications. Audit checks an RFC against its template and linked context. Every substantive finding returns to the actual documents and their owners.</p>
+<div class="codebox">speed validate specs/
+speed audit specs/tech/adaptive-auth/1-high-value-traveller.md
+speed audit specs/tech/adaptive-auth/2-card-testing.md</div>
+<p class="eyebrow" style="margin-top:3mm">Audit's four levels</p>
+<div class="levels"><div class="level"><p class="idx">01 / STRUCTURE</p><h3>Is it complete?</h3><p>Template headings, meaningful sections, placeholders and resolved links.</p></div><div class="level"><p class="idx">02 / SUBSTANCE</p><h3>Can it be built?</h3><p>Defined contracts, examples, states, decisions and observable tests.</p></div><div class="level"><p class="idx">03 / CONSISTENCY</p><h3>Does it agree?</h3><p>Requirements, linked PRDs and contracts across the RFC family.</p></div><div class="level"><p class="idx">04 / SIZING</p><h3>How should it divide?</h3><p>Scope estimates and recommendations for phases or child RFCs.</p></div></div>
+<div class="evidence"><div><p class="big">Provider result</p><p>The model response and its event record.</p></div><div><p class="big">Command outcome</p><p>Response acceptance and the actual process exit.</p></div><div><p class="big">Engineer judgment</p><p>Confirmed, refuted and unresolved findings.</p></div></div>
+<div class="callout"><p class="label">The worked Validate example</p><p>Trace the held-payment checkout finding through the PRD, design and RFC. Recheck historical findings against current sources; keep both F2 scenarios in scope.</p></div>
+<p class="small" style="margin-top:5mm">Audit recommends splits; the engineer reviews and authors them.</p>
+<footer class="footer"><span>Arula Academy · 301.1E · Define, Audit, Plan</span><span class="folio">06 / 08</span></footer>
+</section>
+
+<section class="page" aria-label="Plan and Verify">
+<header class="masthead"><span class="brand"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3 27 9.5v13L16 29 5 22.5v-13L16 3Z"/><path d="M16 3v13m0 0 11 6.5M16 16 5 22.5M5.3 9.5 16 16l10.7-6.5"/></svg><span>arula</span></span><span class="running">06 / Plan and Verify</span></header>
+<p class="eyebrow">Inspect what the commands actually receive</p>
+<h2>A task graph should preserve<br>the meaning of the spec.</h2>
+<p class="lede">Read the role prompts and gate reports as the work progresses. Inspect the actual source scope, the dependency edges and the acceptance criteria in the saved tasks.</p>
+<div class="pipeline">
+<div class="pipeline-column"><p class="pill">Plan / Gates + generation</p><h3 style="margin-top:3mm">Build the work.</h3><div class="stage-line"><strong>Guardian + Audit</strong><span>Vision alignment and registered-spec quality checks.</span></div><div class="stage-line"><strong>Code + related context</strong><span>Generated grounding and budgeted selection of related sources.</span></div><div class="stage-line"><strong>Architect + coverage</strong><span>Tasks and contracts; conditional coverage review and added-task proposals.</span></div><div class="stage-line"><strong>Validation + decomposition</strong><span>Critical validation gate, file ownership and dependency checks.</span></div></div>
+<div class="pipeline-column"><p class="pill human">Verify / Check + repair</p><h3 style="margin-top:3mm">Check the meaning.</h3><div class="stage-line"><strong>Traceability</strong><span>Inspect spec-to-task mapping and any unavailable checks.</span></div><div class="stage-line"><strong>Plan Verifier</strong><span>Coverage, relationships and semantic drift against the saved primary scope.</span></div><div class="stage-line"><strong>Fix Agent</strong><span>Up to three task-repair cycles; review before/after changes.</span></div><div class="stage-line"><strong>Human decisions</strong><span>Unresolved design or policy returns to its owner and the appropriate earlier stage.</span></div></div>
+</div>
+<p class="label" style="margin-top:6mm">Current CLI path in the checked installation</p>
+<div class="codebox">speed plan specs/tech/adaptive-auth/1-high-value-traveller.md \
+  --feature adaptive-auth --specs-dir specs
+
+speed verify --feature adaptive-auth</div>
+<div class="scope-box"><p class="label">Keep the coverage claim precise</p><p>This path starts from one primary RFC. <code>--feature</code> selects the namespace; <code>--specs-dir</code> adds related-context candidates. Verify checks the saved primary scope. Whole-feature Audit and Plan remain planned in the script's checked installation.</p></div>
+<p class="small" style="margin-top:5mm">Plan replaces task records in its namespace; Verify can edit them. Preserve snapshots and reports. Record gates that warned, failed or did not run. An explicit parsed pass applies to the input scope actually checked.</p>
+<footer class="footer"><span>Arula Academy · 301.1E · Define, Audit, Plan</span><span class="folio">07 / 08</span></footer>
+</section>
+
+<section class="page" aria-label="Handoff and trainer pickup">
+<header class="masthead"><span class="brand"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3 27 9.5v13L16 29 5 22.5v-13L16 3Z"/><path d="M16 3v13m0 0 11 6.5M16 16 5 22.5M5.3 9.5 16 16l10.7-6.5"/></svg><span>arula</span></span><span class="running">07 / Handoff and trainer pickup</span></header>
+<p class="eyebrow">A useful ending is an honest starting point</p>
+<h2>Make the next action clear.<br>Keep its owner visible.</h2>
+<p class="lede">Participants leave able to explain what the documents decided, what the tools checked and what remains open before commissioning implementation.</p>
+<div class="packet"><div><p class="label">The technical packet</p><h3>Sources + decisions</h3><p>Both reviewed RFCs, source revisions, accepted decisions, coverage and unresolved dependencies.</p></div><div><p class="label">The evidence packet</p><h3>Plan + checked scope</h3><p>Audit reports, tasks, available contract, gate results and reviewed Verify repairs.</p></div></div>
+<div class="two rule" style="margin-bottom:7mm"><div><h3>When ready</h3><p class="small">Hand off the stated scope, acceptance methods and dependencies. Execute owns implementation and its verification.</p></div><div><h3>When blocked</h3><p class="small">Name the missing decision or failed gate, its evidence, owner and next action.</p></div></div>
+<p class="eyebrow">Trainer starting points</p>
+<div class="resource"><a href="https://github.com/ArulaAI/payments-validation-fixture/blob/course/301e/course/301.1E/speaker-script.md">Read the speaker script ↗</a><span>Full walkthrough + commands</span></div>
+<div class="resource"><a href="https://github.com/ArulaAI/payments-validation-fixture/blob/course/301e/course/301.1E/trainer-brief.md">Read the trainer brief ↗</a><span>Setup + resume + rehearsal</span></div>
+<div class="resource"><a href="https://github.com/ArulaAI/payments-validation-fixture/blob/feat/301-define-audit-plan-config/.agents/skills/author-tech-spec/references/input-manifest.md">Inspect the input manifest ↗</a><span>Required sources + template</span></div>
+<p class="small" style="margin-top:3mm">Repository: ArulaAI/payments-validation-fixture<br>Branch: <span class="mono" style="font-size:8pt">feat/301-define-audit-plan-config</span></p>
+<div class="callout warm" style="margin-top:6mm"><p class="label">Delivery readiness</p><p>The script and skills are built; static checks and initial skill startup were checked. Rehearse authoring, reviewed edits, resume and the command flow in both harnesses before delivery. A fresh clone does not include local authoring records.</p></div>
+<p class="closing">Clarity. Ownership. Evidence.</p>
+<footer class="footer"><span>Arula Academy · 301.1E · Define, Audit, Plan</span><span class="folio">08 / 08</span></footer>
+</section>
+</body>
+</html>
