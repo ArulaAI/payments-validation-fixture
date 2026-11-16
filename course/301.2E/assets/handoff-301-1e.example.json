@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "readiness": "blocked",
+  "feature": "adaptive-auth",
+  "baseline": "REPLACE_WITH_FROZEN_301_1E_COMMIT",
+  "target": "REPLACE_WITH_ADMITTED_BRANCH",
+  "spec_sha256": {
+    "specs/product/adaptive-auth/1-high-value-traveller.md": "REPLACE_WITH_ACTUAL_DIGEST",
+    "specs/product/adaptive-auth/2-card-testing.md": "REPLACE_WITH_ACTUAL_DIGEST",
+    "specs/architecture/adaptive-auth.md": "REPLACE_WITH_ACTUAL_DIGEST",
+    "specs/design/adaptive-auth/1-checkout-challenge.md": "REPLACE_WITH_ACTUAL_DIGEST",
+    "specs/design/adaptive-auth/2-risk-review-queue.md": "REPLACE_WITH_ACTUAL_DIGEST",
+    "specs/tech/adaptive-auth/1-high-value-traveller.md": "REPLACE_WITH_REVIEWED_DIGEST",
+    "specs/tech/adaptive-auth/2-card-testing.md": "REPLACE_WITH_REVIEWED_DIGEST"
+  },
+  "scope": {
+    "in_scope": [],
+    "excluded_or_blocked": [],
+    "task_ids": []
+  },
+  "task_sha256": {},
+  "contract": {"path": ".speed/features/adaptive-auth/contract.json", "sha256": "REPLACE_WITH_ACTUAL_DIGEST"},
+  "verify_report": {"path": ".speed/features/adaptive-auth/logs/plan-verification.log", "sha256": "REPLACE_WITH_ACTUAL_DIGEST", "status": "NOT_VERIFIED", "checked_scope": ""},
+  "decision_records": [],
+  "target_checks": ["npm test"],
+  "gate_configuration_review": ""
+}
