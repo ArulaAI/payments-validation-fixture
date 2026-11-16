@@ -1,0 +1,9 @@
+# SPEED configuration for the Engineering 301 courses.
+
+[agent]
+support_model = "opus"
+timeout = 2400
+
+[plan]
+# 301.1E Plan reads this cap. The lab guide tells learners it exists.
+max_tasks = 8

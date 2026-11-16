@@ -20,6 +20,10 @@ let counter = 0;
 
 export const tokenise = (pan: string, expiry: string): Card => {
   const digits = pan.replace(/\D/g, '');
+  // The message names the rule, never the value, because it reaches the failure sink.
+  if (digits.length < 12 || digits.length > 19) {
+    throw new RangeError('card number must be 12 to 19 digits');
+  }
   const token = `tok_${(++counter).toString(36).padStart(8, '0')}` as Token;
   const record = { last4: digits.slice(-4), bin: digits.slice(0, 6), expiry };
   store.set(token, record);
@@ -35,6 +39,9 @@ export const maskedFor = (token: Token): string => {
   const r = store.get(token);
   return r ? `${r.bin}******${r.last4}` : 'unknown';
 };
+
+/** Every record the vault holds, as copies. Lets a test assert no PAN at rest. */
+export const snapshot = (): Card[] => [...store.keys()].map(token => describe(token) as Card);
 
 export const reset = (): void => {
   store.clear();

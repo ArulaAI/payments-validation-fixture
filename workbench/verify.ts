@@ -29,15 +29,16 @@ check(!pkg.devDependencies, 'NFR-9: package.json declares devDependencies');
  * block is read from corpus/course-contract.json rather than written here.
  *
  * Exempt from the vocabulary scan: specs/, which quotes the course and the client
- * verbatim; this file, which necessarily names the words it bans; and the contract
- * itself, which defines them.
+ * verbatim; docs/ and course/, which are prose about the fixture and the courses rather
+ * than the fixture itself; this file, which necessarily names the words it bans; and
+ * the contract itself, which defines them.
  */
 const EXEMPT = new Set(['workbench/verify.ts', 'corpus/course-contract.json']);
 const EM_DASH = String.fromCharCode(0x2014);
 
 for (const file of sourceFiles()) {
   const path = rel(file);
-  if (path.startsWith('docs/') || path.startsWith('.validation/') || EXEMPT.has(path)) continue;
+  if (path.startsWith('docs/') || path.startsWith('course/') || path.startsWith('.validation/') || EXEMPT.has(path)) continue;
   const text = readFileSync(file, 'utf8');
   for (const word of contract.vocabulary.banned) {
     if (new RegExp(`\\b${word}s?\\b`, 'i').test(text)) {
@@ -65,16 +66,19 @@ for (const c of checks) {
 
 /*
  * Every class the course teaches must have somewhere to be met. A class with no seeded
- * defect is the course claiming coverage the fixture cannot back.
+ * defect is the course claiming coverage the fixture cannot back. The rule applies once
+ * any round exists: the baseline carries no seeded change, and a branch with no rounds
+ * at all is claiming nothing yet.
  */
 const seeded = new Set<string>();
-for (const dir of readdirSync(join(ROOT, 'corpus')).filter(d => d.startsWith('round-'))) {
+const seededRounds = readdirSync(join(ROOT, 'corpus')).filter(d => d.startsWith('round-'));
+for (const dir of seededRounds) {
   const mf = join(ROOT, 'corpus', dir, 'manifest.json');
   if (!existsSync(mf)) continue;
   for (const d of JSON.parse(readFileSync(mf, 'utf8')).defects) seeded.add(d.class);
 }
 const unseeded = contract.failureClasses.filter(c => !seeded.has(c.id)).map(c => c.id);
-if (unseeded.length > 0) {
+if (seededRounds.length > 0 && unseeded.length > 0) {
   failures.push(`the course teaches ${unseeded.join(', ')} but no round seeds a defect for them`);
 }
 
@@ -108,7 +112,7 @@ for (const dir of rounds) {
   // The manifest claimed 212 lines against a 54-line diff. Measure it.
   if (typeof manifest.diffLines === 'number') {
     try {
-      const stat = execFileSync('git', ['diff', '--numstat', `${manifest.base}...${dir.replace('round-', 'round-')}`], {
+      const stat = execFileSync('git', ['diff', '--numstat', `${manifest.base}...${dir}`], {
         cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'],
       });
       const actual = stat.trim().split('\n').filter(Boolean)

@@ -7,7 +7,7 @@
  * Refund does not.
  */
 
-import { type Minor, add, allocate, applyRate, minor, sub } from '../domain/money.ts';
+import { type Minor, SCHEME_FEE_RATE, add, allocate, applyRate, minor, sub } from '../domain/money.ts';
 import { Ledger } from '../domain/ledger.ts';
 import { type Card, type Token, maskedFor, tokenise } from '../vault.ts';
 import { log, redact, serialiseFailure, span, webhook } from '../obs/index.ts';
@@ -36,8 +36,6 @@ export type AuthoriseRequest = {
   idempotencyKey?: string;
 };
 
-const SCHEME_FEE_RATE = 0.0149;
-
 export class PaymentsService {
   readonly ledger = new Ledger();
   readonly payments: PaymentStore = new Map();
@@ -55,6 +53,9 @@ export class PaymentsService {
       return this.idempotent.get(req.idempotencyKey) as Payment;
     }
 
+    // Validate the amount before tokenising, so a bad amount leaves no vault record.
+    const authorised = minor(req.amount);
+
     let card: Card;
     try {
       card = tokenise(req.pan, req.expiry);
@@ -68,7 +69,7 @@ export class PaymentsService {
       id: this.nextId('pay'),
       token: card.token,
       last4: card.last4,
-      authorised: minor(req.amount),
+      authorised,
       currency: req.currency ?? 'GBP',
       status: 'authorised',
       captures: [],
@@ -103,8 +104,9 @@ export class PaymentsService {
     }
 
     const payment = this.require(paymentId);
-    const already = payment.captures.reduce((s, c) => s + c.amount, 0);
-    const remaining = sub(payment.authorised, minor(already));
+    if (payment.status === 'voided') throw new RangeError('cannot capture a voided payment');
+    const already = payment.captures.reduce((s, c) => add(s, c.amount), minor(0));
+    const remaining = sub(payment.authorised, already);
     const requested = minor(amount ?? remaining);
 
     if (requested > remaining) {
@@ -154,11 +156,14 @@ export class PaymentsService {
     const capture = payment.captures.find(c => c.id === captureId);
     if (!capture) throw new RangeError(`no capture ${captureId} on ${paymentId}`);
 
-    const requested = minor(amount ?? capture.amount);
-    const captured = payment.captures.reduce((s, c) => s + c.amount, 0);
-    const refunded = payment.refunds.reduce((s, r) => s + r.amount, 0);
-    if (refunded + requested > captured) {
-      throw new RangeError(`refund ${requested} exceeds refundable ${captured - refunded}`);
+    // The bound is per capture: earlier refunds against this capture reduce what is left.
+    const refunded = payment.refunds
+      .filter(r => r.captureId === captureId)
+      .reduce((s, r) => add(s, r.amount), minor(0));
+    const refundable = sub(capture.amount, refunded);
+    const requested = minor(amount ?? refundable);
+    if (requested > refundable) {
+      throw new RangeError(`refund ${requested} exceeds refundable ${refundable}`);
     }
     const refund: Refund = { id: this.nextId('ref'), amount: requested, captureId, at: Date.now() };
     payment.refunds.push(refund);
