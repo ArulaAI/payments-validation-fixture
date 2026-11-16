@@ -1,0 +1,16 @@
+@font-face{font-family:'Libre Baskerville';src:url('./libre-baskerville-italic.ttf') format('truetype');font-weight:400 700;font-style:italic;font-display:swap}
+/* Arula v1.0.0. Canonical values; components consume semantic aliases. */
+@font-face{font-family:'Libre Baskerville';src:url('./libre-baskerville.ttf') format('truetype');font-weight:400 700;font-display:swap}
+@font-face{font-family:'Libre Franklin';src:url('./libre-franklin.ttf') format('truetype');font-weight:100 900;font-display:swap}
+:root{
+  --ar-white:#fff;--ar-porcelain:#f6f6f7;--ar-mist:#e5e6e8;--ar-slate:#5e646e;--ar-ink:#27292d;--ar-black:#17191d;--ar-blue:#315f9e;
+  --ar-surface:var(--ar-white);--ar-surface-recessed:var(--ar-porcelain);--ar-text:var(--ar-ink);--ar-text-secondary:var(--ar-slate);--ar-border:var(--ar-mist);--ar-border-control:#858b95;--ar-action:var(--ar-black);--ar-on-action:var(--ar-white);--ar-focus:var(--ar-blue);--ar-selected:#eaf0f8;
+  --ar-success:#286044;--ar-success-surface:#edf6ef;--ar-warning:#79521c;--ar-warning-surface:#fff5e5;--ar-error:#a33135;--ar-error-surface:#fff0ef;
+  --ar-serif:'Libre Baskerville',Georgia,serif;--ar-sans:'Libre Franklin',Arial,sans-serif;
+  --ar-display-compact:clamp(2.375rem,3.4vw,3rem);--ar-display:clamp(2.375rem,1.8rem + 2.4vw,3.5rem);--ar-heading:clamp(1.875rem,1.5rem + 1.6vw,2.75rem);--ar-feature:clamp(1.5rem,1.25rem + 1vw,2rem);--ar-subheading:1.5rem;--ar-title:1.25rem;--ar-utility-height:1.75rem;--ar-lead:1.125rem;--ar-body:1rem;--ar-ui:.875rem;--ar-caption:.75rem;--ar-label:.6875rem;
+  --ar-space-1:.25rem;--ar-space-2:.5rem;--ar-space-3:.75rem;--ar-space-4:1rem;--ar-space-6:1.5rem;--ar-space-8:2rem;--ar-space-12:3rem;--ar-space-16:4rem;--ar-space-24:6rem;--ar-space-32:8rem;
+  --ar-gutter:clamp(1.25rem,4vw,4rem);--ar-section-gap:clamp(4rem,8vw,8rem);--ar-content:75rem;--ar-reading:65ch;
+  --ar-radius-control:.5rem;--ar-radius-panel:1rem;--ar-radius-stage:1.5rem;--ar-control-height:2.75rem;
+  --ar-shadow-raised:0 12px 28px -16px #21242c35,0 2px 4px #21242c08;--ar-shadow-overlay:0 24px 64px #17191d26;--ar-shadow-inset:inset 0 1px 2px #fff,inset 0 1px 5px #21242c08;
+  --ar-duration-fast:120ms;--ar-duration-standard:200ms;--ar-ease:cubic-bezier(.2,0,0,1);
+}

@@ -3,7 +3,8 @@
 How this teaching repository is built and why. **Ours, not the learner's.**
 
 Nothing here specifies the payments service. A change to the service is judged against
-[`../specs/`](../specs/), never against these.
+[`../specs/`](../specs/), never against these. The courses themselves live in
+[`../course/`](../course/).
 
 | File | Contains |
 | --- | --- |
@@ -20,7 +21,7 @@ the specification.
 
 | | Audience | Role |
 | --- | --- | --- |
-| `specs/product/payments.md` | Learners | The requirement. Deliberately incomplete, and the incompleteness is Course 5 |
+| `specs/product/payments.md` | Learners | The requirement. Deliberately incomplete, and the incompleteness is the F8 lesson |
 | `docs/02-requirements.md` | Us | The build spec. FR-6 explains why that incompleteness exists |
 
 One holds the gap. The other records that we put it there on purpose.

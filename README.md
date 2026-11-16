@@ -1,6 +1,6 @@
 # payments-validation-fixture
 
-The codebase the Validation Workbench course validates. A small card-payments
+The codebase the Engineering 301 pathway works on. A small card-payments
 authorisation service with a double-entry ledger, a vendored set of checks, a workflow
 runner that emits evidence bundles, and a versioned corpus of seeded defects.
 
@@ -76,38 +76,45 @@ usually a learner's first encounter with the idea.
 ## Layout
 
 ```
-specs/          The PRD, requirements and plan. Read these first
-src/            The service. Money, ledger, invariants, payments, the PAN sinks
+specs/          The payments service, as specified. Product, design, architecture, tech
+src/            The service. Money, ledger, invariants, payments, risk, the PAN sinks
 test/           The suite
 workbench/      checks.ts declares everything. hooks/ commands/ skills/ run.ts score.ts
-corpus/         Failure classes, the manifest schema, one directory per round
-docs/           requirement.md, which is what the skills compare the code against
+corpus/         Failure classes, the manifest schema, one directory per seeded round
+course/         The three Engineering 301 courses, one folder each
+docs/           How this teaching repository is built. Ours, not the learner's
 ```
 
-Start with [`docs/04-plan.md`](docs/04-plan.md). It cites the requirement behind every
-task and says plainly what is not built yet.
+Start with [`specs/README.md`](specs/README.md) if you are here to work on the service,
+and with [`course/README.md`](course/README.md) if you are here to teach or take a course.
+[`docs/04-plan.md`](docs/04-plan.md) cites the requirement behind every fixture task and
+says plainly what is not built yet.
 
-## Rounds
+## Courses and start states
 
-Each round is a branch carrying a manifest of ground truth.
+Engineering 301 follows one change, adaptive authorisation, from definition to delivery
+across three courses. Each course starts from a tagged commit on this branch, so it can
+be run fresh or on its own:
+
+| Tag | Course | Starts from |
+| --- | --- | --- |
+| `301.1E-start` | Define, Audit, Plan | The baseline: upstream documents, code and tests |
+| `301.2E-start` | Execute, Integrate, Learn | The reviewed 301.1E output packet |
+| `301.3E-start` | Payments Change Validation | The 301.2E candidate, with planted problems |
+
+A seeded change carries a manifest of ground truth under `corpus/round-N/`. Score your
+evidence ledger against it when the course asks you to:
 
 ```sh
-git switch round-0
-workbench validate -- --no-gates
-
 cp corpus/decisions.example.json decisions.json   # then edit it as you work the round
-node workbench/score.ts bundles/<latest>.json corpus/round-0/manifest.json decisions.json
+node workbench/score.ts bundles/<latest>.json corpus/round-N/manifest.json decisions.json
 ```
 
 `decisions.json` is your evidence ledger. It records what you confirmed, refuted,
 escalated and invented. The workflow measures what was surfaced. The ledger is the only
 thing that measures your judgment, and boundary calibration cannot pass without it.
 
-`--no-gates` is needed on round 0 because a documented false positive sits on a gating
-check, and one finding at a gate stops everything after it. Meeting that is the point.
-Decide for yourself afterwards whether the gate earns its place.
-
-Chapter 6 asks you to commission a repair and re-run. Diff the two bundles:
+To compare a change before and after a repair, diff the two bundles:
 
 ```sh
 npm run diff -- bundles/<before>.json bundles/<after>.json
@@ -117,6 +124,8 @@ It separates `newly clean` from `newly silent`, and that distinction is the whol
 command. A check that stopped running has no findings, exactly like a check that started
 passing. On any summary that counts findings they are the same number. One means the
 defect is gone. The other means nobody looked.
+
+Do not read `corpus/round-N/manifest.json` before working the round. It is the answer key.
 
 ### Exit codes
 
@@ -131,17 +140,9 @@ defect is gone. The other means nobody looked.
 A workflow exiting 1 is not a failure. It means checks found something, which is what they
 are for. CI treats it that way too.
 
-On `main`, the workflow exits 1 with exactly one finding: the equivalent mutant in
-`Ledger.net()`. That is deliberate and documented as `R0-P2`. No test can kill it, and
-fixing it is wasted work. Every other check is clean on `main`, so any other finding on a
-round branch was introduced by that round.
-
-Round 0 seeds five defects. Four are reachable by some check. One is not, and the correct
-response to that one is to escalate rather than to fix. It also carries three evidence
-pathologies, including a false positive that fires for every learner and an equivalent
-mutant that no test can ever kill.
-
-Do not read `corpus/round-N/manifest.json` before working the round. It is the answer key.
+On the baseline, every check is clean and the workflow exits 0, so any finding on a
+seeded round was introduced by that round. Skills report silence until a coding agent is
+configured, which is honest and is usually a learner's first encounter with the idea.
 
 ## Card data
 
