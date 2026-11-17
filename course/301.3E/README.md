@@ -1,31 +1,57 @@
 # 301.3E Payments Change Validation
 
-In 301.3E, engineers decide whether an AI-generated change can be trusted, using evidence
-rather than a passing build, and repair it where needed, with a named person making each
-decision.
+Engineers decide whether the agent-built adaptive authorisation change can be trusted,
+using evidence rather than a passing build, and accept, repair or escalate it, with a
+named person making each decision. 120 minutes, live, hands-on.
 
-## State of this folder
+| Starts from | Hands on |
+| --- | --- |
+| The 301.2E candidate, with gaps added on top and its task records | A checked verdict per question, a filed defect, a bounded repair, an escalation to its owner |
 
-The course validates the candidate that 301.2E produces: the adaptive authorisation
-change, integrated by agents, with problems planted on top of it and recorded in a round
-manifest under `corpus/`. That candidate does not exist in git yet, so this folder holds
-no session material.
+## Still to make
 
-An earlier version of this course, Lab 3, was written for a 175-minute pod format on a
-different change, a refund retry that lives on the `round-0` branch. Its eight stages
-(Inspect, Diagnose, Review, Eval, Human judgment, Define, Plan and Verify, Run and
-Inspect) and its five questions carry over. Its case, commands and answer keys do not,
-and they are not copied here.
+This folder has its shape and a draft gap design, but no course yet. In order, each
+waiting on the one before:
 
-## What arrives here, in order
+1. The snapshot: the 301.2E candidate plus one commit that adds the gaps it lacks.
+2. The answer key: [`instructor/gap-design.md`](instructor/gap-design.md) fixed against
+   the real candidate.
+3. The lab action guide in `learner/`.
+4. The speaker script and trainer brief in `instructor/`.
+5. `overview.html` and `overview.pdf`, in the same shape as [301.1E's](../301.1E/overview.html).
 
-1. The 301.2E candidate, tagged `301.2E-start` plus its run, is committed.
-2. One commit plants the problems: an unrequested sensitive edit, a weak test, a real
-   defect, a self-approving summary and one question no check can settle. Its manifest
-   follows the shape `npm run verify` enforces: exactly one reserved defect and at least
-   one evidence pathology.
-3. That commit is tagged `301.3E-start`.
-4. The lab action guide, speaker script and trainer brief are written against it, in the
-   same shape as [`../301.1E/`](../301.1E/).
-5. The overview PDF is corrected to the adaptive-auth case and to the SPEED commands the
-   installed tool actually provides.
+## Set up
+
+The snapshot does not exist yet. It is made from the 301.2E run: the candidate plus one
+commit that adds the gaps it lacks.
+
+```sh
+course/make-snapshot.sh 301.3E <repo-after-301.2E-with-gaps>
+```
+
+Once it exists, with the SPEED build all three courses use (see
+[SPEED version](../README.md#speed-version)):
+
+```sh
+git clone course/301.3E/snapshot/fixture.bundle payments-validation-fixture
+cd payments-validation-fixture
+npm test
+```
+
+## What the starting state holds
+
+To be filled in when the snapshot is made. The answer key, which gaps the candidate has
+and what settles each, lives in `instructor/` and stays out of the snapshot.
+
+## For learners
+
+`learner/` is empty. The lab action guide is written once the snapshot exists, in the
+shape of the earlier refund-retry guide on the `round-0` branch, with its eight steps:
+Inspect, Diagnose, Review, Eval, Human judgment, Define, Plan and Verify, Run and Inspect.
+
+## For instructors
+
+[`instructor/gap-design.md`](instructor/gap-design.md) is the draft design of the five
+gaps learners meet, where each comes from in the F2 documents, and the decisions still
+open. The speaker script, trainer brief and final answer key are written against the
+snapshot.

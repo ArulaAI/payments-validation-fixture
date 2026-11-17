@@ -6,8 +6,25 @@ import assert from 'node:assert/strict';
 import { describe, maskedFor, reset, snapshot, tokenise } from '../src/vault.ts';
 import { log, redact, resetSinks, serialiseFailure, sinks, span, webhook } from '../src/obs/index.ts';
 import { TEST_CARDS, EXPIRY } from './fixtures/cards.ts';
-import { ALLOWLIST_BINS } from '../workbench/hooks/pan-scan.ts';
-import { luhn } from '../workbench/lib.ts';
+
+// The card schemes' published test BINs. Every fixture card must use one.
+const TEST_BINS = ['411111', '400005', '555555', '378282', '601111'];
+
+const luhn = (digits: string): boolean => {
+  let sum = 0;
+  let alt = false;
+  for (let i = digits.length - 1; i >= 0; i -= 1) {
+    let d = digits.charCodeAt(i) - 48;
+    if (d < 0 || d > 9) return false;
+    if (alt) {
+      d *= 2;
+      if (d > 9) d -= 9;
+    }
+    sum += d;
+    alt = !alt;
+  }
+  return digits.length > 0 && sum % 10 === 0;
+};
 
 const PAN = TEST_CARDS.visaDebit;
 const MIDDLE = PAN.slice(6, -4);
@@ -126,9 +143,9 @@ test('[OBS-03] resetSinks empties the log, span and webhook sinks', () => {
   assert.deepEqual(sinks, { logs: [], spans: [], webhooks: [] });
 });
 
-test('[FIX-01] every fixture card is a Luhn-valid, allowlisted scheme test number', () => {
+test('[FIX-01] every fixture card is a Luhn-valid scheme test number', () => {
   for (const [scheme, pan] of Object.entries(TEST_CARDS)) {
     assert.ok(luhn(pan), `${scheme} fails Luhn`);
-    assert.ok(ALLOWLIST_BINS.includes(pan.slice(0, 6)), `${scheme} BIN is not allowlisted`);
+    assert.ok(TEST_BINS.includes(pan.slice(0, 6)), `${scheme} BIN is not a scheme test BIN`);
   }
 });

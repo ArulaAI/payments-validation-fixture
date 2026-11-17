@@ -7,3 +7,7 @@ timeout = 2400
 [plan]
 # 301.1E Plan reads this cap. The lab guide tells learners it exists.
 max_tasks = 8
+
+[diagnose]
+# F1 to F8 for speed diagnose. Copied from SPEED tests/test_diagnose_round0_fixture.py.
+classes_file = ".speed/classes.yaml"

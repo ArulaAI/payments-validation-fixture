@@ -1,11 +1,9 @@
 node_modules/
-bundles/*.json
-!bundles/.gitkeep
-.validation/
 decisions.json
 
 # SPEED runtime state
-.speed/
+.speed/*
+!.speed/classes.yaml
 .scannerwork/
 
 .agents/**/.DS_Store

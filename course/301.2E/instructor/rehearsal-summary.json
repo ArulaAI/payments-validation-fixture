@@ -1,0 +1,119 @@
+{
+  "current_source_commit": "a8bde62faad732eee456491387e2240c7c9621dd",
+  "current_source_status": "Source re-inspected at this pinned commit. No run of any kind has been rehearsed at it; a same-fixture rehearsal at this commit is still required.",
+  "previous_course_source_commit": "95a00d74bc002c8e84725fef4f6045ca2d511525",
+  "earlier_course_source_commit": "c4583efafa610d03f47e5b1d63a65175c075b817",
+  "course_fixture": "Same payments-validation-fixture and actual reviewed 301.1E adaptive-auth handoff",
+  "course_duration_minutes": 120,
+  "course_stages_minutes": [
+    15,
+    20,
+    15,
+    20,
+    20,
+    20,
+    10
+  ],
+  "same_fixture_native_rehearsal": {
+    "status": "not completed",
+    "reason": "Authoring checkout has draft RFCs and no populated adaptive-auth task set; actual reviewed 301.1E handoff and source-matched checkpoints must be supplied before live delivery."
+  },
+  "updated_technical_smoke": {
+    "source_commit": "95a00d74bc002c8e84725fef4f6045ca2d511525",
+    "repeated_at_current_source": false,
+    "fixture": "Retired standalone checkout-receipt project; not the course fixture and not evidence of native F2 completion",
+    "project": "/tmp/arula-301-2e-updated-rehearsal",
+    "baseline": "7da82d23605c683edd84efc797a438bbab0a038f",
+    "candidate": "bde4eced676d6699733a761cca9c7fdd6cab7edd",
+    "run": {
+      "exit": 0,
+      "tasks_done": 3,
+      "tasks_failed": 0
+    },
+    "review": {
+      "exit": 0,
+      "verdicts": [
+        "approve",
+        "approve",
+        "approve"
+      ],
+      "limits": "Static review with empty supplied diffs reconstructed from Git; reviewer test attempts denied; 7 nits retained."
+    },
+    "coherence": {
+      "exit": 0,
+      "status": "pass",
+      "limits": "Static reconstruction; partial target integration accurately noted before merge."
+    },
+    "integrate": {
+      "exit": 0,
+      "dependencies_merged_during_run": 2,
+      "remaining_branches_merged": 1,
+      "configured_regression": "npm test; 18 passed, zero failed per integration output",
+      "acceptance_probe": "25 checks passed per integration output; retired project cases only",
+      "traceability_ratio": 0.0,
+      "observation_prompt": "n; separate required Learn commands followed"
+    },
+    "learn": {
+      "preview_exit": 0,
+      "extraction_exit": 0,
+      "synthesis_exit": 0,
+      "observations": 52,
+      "types": {
+        "gate_failure": 9,
+        "agent_concern": 11,
+        "reviewer_finding": 20,
+        "guardian_verdict": 2,
+        "coherence_issue": 9,
+        "context_miss": 1
+      },
+      "automatic_conventions": 4,
+      "synthesis": {
+        "last_run": "2026-10-20T10:20:46.506228+00:00",
+        "features_processed": [
+          "checkout-receipt"
+        ],
+        "observation_hash": "sha256:3898db54d915c0ae557c4269fd8c76966b37c1b2b4850340c0a56e6d82eb9a42",
+        "entry_counts": {
+          "developer": 1,
+          "reviewer": 5,
+          "guardian": 0,
+          "coherence": 0,
+          "architect": 0
+        },
+        "rejected": 67,
+        "conflicts": 0
+      },
+      "context_preview_exit": 0,
+      "learned_patterns_present": true,
+      "project_conventions_present": true,
+      "limits": [
+        "9 gate_failure observations came from passing test logs; source heuristic treats most nonempty logs as failure signals.",
+        "The four auto-discovered conventions include sparse co-change patterns; convention labels do not make them authoritative.",
+        "Actual context preview contained a context_miss entry via fallback plus an emerging co-change convention.",
+        "Spec injection still said not found despite the original file existing.",
+        "No claim that learned advice improves future behavior or that full F2 execution passed."
+      ]
+    },
+    "retained_local_commands": [
+      "/tmp/arula-301-2e-updated-command-run",
+      "/tmp/arula-301-2e-updated-learn-synthesize",
+      "/tmp/arula-301-2e-updated-command-integrate",
+      "/tmp/arula-301-2e-updated-learn-preview",
+      "/tmp/arula-301-2e-updated-learn-extract",
+      "/tmp/arula-301-2e-updated-context-preview",
+      "/tmp/arula-301-2e-updated-learn-summary",
+      "/tmp/arula-301-2e-updated-command-review",
+      "/tmp/arula-301-2e-updated-command-coherence",
+      "/tmp/arula-301-2e-updated-rehearsal"
+    ]
+  },
+  "utility_safeguard_checks": 10,
+  "utility_scope": "Synthetic consistency, preservation and command-recording safeguards; no product acceptance.",
+  "earlier_rehearsal_preserved_locally": "/tmp/arula-3012-original-rehearsal-summary.json",
+  "delivery_limits": [
+    "No native completed same-fixture 301.1E to 301.2E flow is claimed.",
+    "120-minute design is a fixed teaching allocation; real-cohort delivery remains unvalidated.",
+    "Live and recorded participation require separate reporting.",
+    "The technical smoke ran at 95a00d7 only; no run has been rehearsed at a8bde62."
+  ]
+}
