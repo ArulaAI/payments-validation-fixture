@@ -1,12 +1,9 @@
 # 301.2E source delta and rehearsal record
 
-Pinned SPEED source: `a8bde62` (see [SPEED version](../../README.md#speed-version)).
-The source was re-inspected at that commit. No run has been rehearsed at it. The
-technical smoke run below was done earlier, at `95a00d7`. Earlier course source: `c4583ef`.
-The [manifest](speed-source-manifest.json) retains exact hashes at `a8bde62`;
-the [summary](rehearsal-summary.json) records actual checks and limits.
-The course now requires the same 301.1E payments fixture, includes Learn and totals
-120 minutes. The standalone receipt project has been retired from delivery.
+Pinned SPEED source: `a8bde62` (see [SPEED version](../../README.md#speed-version)). The
+[manifest](speed-source-manifest.json) holds file hashes at that commit, and the
+[summary](rehearsal-summary.json) records the checks below. The course runs on the
+301.1E payments fixture, includes Learn and totals 120 minutes.
 
 ## Verified source changes and their course consequences
 
@@ -23,8 +20,7 @@ The course now requires the same 301.1E payments fixture, includes Learn and tot
 | Learn | No source change in this pull; the course previously omitted its existing pipeline | Required extraction, synthesis, review and future-context inspection now occupy 20 minutes |
 
 The table compares `95a00d7` with `c4583ef`. Each row was re-checked at `a8bde62` and
-still holds. These are source findings, not proof that the cohort has produced the
-required handoff. The 301.1E documents were not rewritten as part of this update.
+still holds.
 
 ## Source changes from `95a00d7` to `a8bde62`
 
@@ -41,54 +37,63 @@ required handoff. The 301.1E documents were not rewritten as part of this update
 
 Learn sources are unchanged apart from Python selection and path handling.
 
-## Actual native technical check at `95a00d7`
+## Recorded run at `a8bde62`, 18 November 2026
 
-This run used SPEED `95a00d7`. It has not been repeated at `a8bde62`, and its results
-do not describe that build. A fresh disposable instance of the prior technical smoke
-project exercised the then-current Run, Review, Coherence and Integrate. Run completed
-three tasks; Review approved all three with seven retained nits, input gaps and denied
-test attempts; Coherence passed by static reconstruction. Integrate merged the remaining
-branch and ran its configured regression. Its output reported 18 passing tests and 25 passing probe assertions. These
-results apply to that retired project only, not to the F2 fixture or the course outcomes.
+One run of the whole course from the 301.2E snapshot (`85bc3e0`). Its end state is
+[`checkpoint/after-run.bundle`](checkpoint/after-run.bundle).
 
-Native Learn then ran preview, extraction, summary and synthesis. Extraction wrote
-52 observations and automatically discovered four conventions. Synthesis retained six
-entries (one developer and five reviewer), rejected 67 routed/reframed entries and
-reported zero conflicts. Different counts reflect different pipeline stages.
+| Stage | Result |
+| --- | --- |
+| Admit | `inspect-handoff.py`: 97 checks pass, 2 true errors (task 10 declares no files; Verify did not pass) |
+| Run, round 1 | 33 minutes. Tasks 1 to 8 done and merged into `main` as each passed. Tasks 9 and 10 blocked: no production sign-offs exist |
+| Review, round 1 | Changes requested on all 8 tasks. Each went back to pending with its findings in `review_feedback` |
+| Run, round 2 | 14 minutes. Tasks 1, 2, 3, 6 and 7 reworked. Task 4 blocked on a spec question (may a status check after the deadline settle the challenge, when polling must have no side effects?). Tasks 5 and 8 waited on task 4 |
+| Review, round 2 | Changes requested on all five reworked tasks. Latest findings across tasks 1 to 8: 28 major, 2 minor |
+| Coherence, Integrate | "No completed tasks". Nothing integrated. The integrate prompt was answered `n` |
+| Candidate | `main` after round 2: 37 commits over the snapshot, 186 tests pass, never integrated |
+| Learn | Dry run 158 observations. Extraction wrote 158 (126 review findings, 11 agent concerns, 10 verify findings, 7 retries, 4 gate failures) and found 14 conventions. Synthesis kept 42 (7 architect, 19 developer, 16 reviewer) and rejected 214 |
+| Context | The task 1 preview has a Learned Patterns section with three entries, chosen by the top-three fallback |
 
-The actual installed developer context bridge emitted a Learned Patterns section and
-Project Conventions. No new agent was started for this preview. This verifies that the
-observed advice can enter the context; it does not verify its correctness or benefit.
+The checkpoint stops before Learn, so learners extract into empty memory.
 
-## Important observed limits
+### How the run was made
 
-Nine extracted gate_failure observations came from passing test logs. The source's
-log heuristic treats most nonempty log content as failure signals. Raw observation types
-therefore require comparison with actual command results. They were retained, not edited
-to manufacture a clean extraction.
+Read this before quoting the run as typical.
 
-An automatically discovered co-change convention was based on sparse bootstrap history
-and appeared in the actual context. It is not an accepted project rule. The task-scope
-bridge used fields absent from the supplied teaching plan and fell back to weighted
-learning selection. Spec text in the actual preview still said not found despite the
-file existing. These limits remain visible in the Learn exercise and source reference.
+- **Provider.** The run used Codex (`gpt-6.2-astra`) for every SPEED agent, through a
+  locally patched copy of SPEED's Codex provider. Class uses Claude Code. The logs in the
+  snapshots and checkpoint were then cleaned: local paths became lab paths
+  (`~/Lab/...`), the model name became `opus`, and Codex-specific header and status lines
+  were removed. Commit authors became `301.2E learner`.
+- **Task models.** The 301.1E plan recorded `gpt-6.2-astra` as each task's `agent_model`.
+  Those fields were rewritten to `opus`, the course setting, throughout the history of both
+  the snapshot and the checkpoint, so `speed run` works with Claude.
+- **Environment failures before the recorded run.** In the first attempt, the agents' own
+  global instructions told them to ask before changing code, so they wrote nothing
+  ("Empty diff"). In the second and third, the agent sandbox blocked commits to `.git`.
+  Both are environment causes; the recovery guide uses the first as a case. The recorded
+  run had the sandbox lifted.
+- **Not done.** No run with Claude as provider, and no cohort rehearsal.
 
-## Same-fixture course readiness
+## Observed limits
 
-The actual authoring checkout has RFC drafts and no populated adaptive-auth task set.
-No complete native F2 Run/Integrate/Learn rehearsal or accepted 301.1E handoff is claimed.
-No run of any kind has been rehearsed at the pinned `a8bde62`.
-Before live delivery, the trainer must supply that exact reviewed packet and rehearse
-its source-matched live/recorded checkpoints at `a8bde62`. The old technical smoke is not
-a substitute.
+All four `gate_failure` observations have summaries that end in passing test lines. As in
+the earlier rehearsal, the log heuristic labels much log content as failure. Check the
+actual command result before using a type label as a fact.
 
-Ten utility safeguard checks passed using clearly synthetic structural input: consistent
-packet inspection, blocked readiness, changed spec digest, missing plan, cycle, conflicting
-recorded base, actual nonzero command exit, failed startup, learning-memory capture and
-snapshot overwrite refusal. These checks neither grant semantic acceptance nor validate
-F2 behavior.
+Planned tasks declare `files_touched`. The context bridge selects learnings by
+`files_to_modify` and `files_to_create`, so nothing matches and the three highest-weight
+entries are injected into every task's context.
 
-The fixed 120-minute teaching design includes waiting, transitions, assessment and wrap-up.
-A real cohort rehearsal, assessor calibration and native same-fixture checkpoints remain
-necessary before commercial delivery claims. Live and recorded participation must be
-reported separately.
+Verify's repair added two tasks a class cannot finish, and took the plan above the 301.1E
+cap of 8 tasks.
+
+## Readiness
+
+The snapshot, handoff, checkpoint and material agree with this run. Before commercial
+delivery, still needed: one rehearsal with Claude as provider, a real cohort to calibrate
+timing and assessment, and assessor calibration. Report live and recorded participation
+separately.
+
+Ten utility safeguard checks pass with synthetic input (`learner/assets/verify-assets.py`).
+They test the utilities, not F2 behaviour.

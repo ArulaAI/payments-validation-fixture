@@ -17,7 +17,7 @@ during classroom execution.
 | `speed status --feature NAME` | Reports feature/task state | Compare labels with actual branch and check evidence |
 | `speed retry --feature NAME --task-id ID --context "..."` | Appends human feedback; inspects prior work; normally resets eligible failed/blocked work to pending | Resulting task state, accumulated feedback, branch audit and retained work before another Run |
 | `speed recover --feature NAME` | Can terminate tracked agents, break locks, reset running tasks and remove worktrees | Confirm original run is inactive and retain patches/commits/logs first |
-| `speed review --feature NAME` | Reviews done tasks and can change their dispositions; includes Guardian checks | Actual input diff, cited spec, model findings, resulting task verdict and limits |
+| `speed review --feature NAME` | Reviews done tasks and includes Guardian checks. A "request changes" verdict sets the task back to pending and stores the findings in `review_feedback`; the next Run reworks it (`lib/tasks.sh:209`) | Actual input diff, cited spec, model findings, resulting task verdict and limits |
 | `speed review --feature NAME --task ID` | Its prompt holds the task's diff, declared files and author model, not its description or criteria; writes `reviews/task-ID.review` and leaves task status unchanged | The diff range it prints and the written review |
 | `speed coherence --feature NAME` | Compares task implementations for composition problems | Shared interfaces, schemas, names, connections and actual available diffs |
 | `speed coherence --feature NAME --resolve` | Creates follow-up task work from findings | A separate plan decision and the new task's scope |
@@ -91,7 +91,8 @@ typecheck and test commands from the AGENTS/CLAUDE Quality Gates section. With n
 entry, they fall back to `npm test` when `package.json` has a test script. Lint and
 typecheck have no fallback. Integrate's regression runs only the listed commands. Run and
 Integrate do not run other entries in that section, such as `e2e`. Read the actual
-section and keep unavailable lint/type entries visible.
+section and keep unavailable lint/type entries visible. This fixture's `AGENTS.md` lists
+only `test: npm test`, so lint and typecheck never run.
 
 ## Integration in source order
 
@@ -119,7 +120,7 @@ candidate disposition.
 | Global options such as `--feature` and `--json` are read wherever they appear | Teach one form, `speed run --feature NAME`, matching the workbook |
 | MAIN_BRANCH wins; otherwise Run records the starting branch, reuses a valid recorded base, then falls back to default-branch detection | Inspect environment, current branch and feature base together. Syntax gates now use this base instead of hardcoded main |
 | Run can baseline-commit all dirty project files | Use a clean independent classroom repository and inspect what will enter history |
-| Run merges dependencies before spawning dependent work | Save the baseline before the first Run and inspect history throughout execution |
+| Run merges dependencies into the target before spawning dependent work (`lib/cmd/run.sh:873`), and merges a completed task into the target (`lib/git.sh:348`). In the recorded run all eight built tasks were merged into `main` before Review | Save the baseline before the first Run and inspect history throughout execution |
 | Populated `agent_model` takes precedence over Run's model fallback | Read actual per-task models instead of inferring them from a command flag |
 | An ancestor task branch may be treated as already integrated during branch audit | Verify real implementation commits and behavior, particularly after provider startup failures |
 | Run's exit/JSON completion can omit blocked/pending scope from the failure test | Inspect all task counts and the admitted requirement scope |
@@ -148,13 +149,13 @@ A dry run avoids observation writes but does not print or approve every observat
 
 `lib/learn/synthesize.py` routes and reframes observations by agent, handles staleness,
 deduplication/conflicts, structural quality and token budgets, then writes learning files.
-It makes no LLM call. Those checks do not prove a reusable claim is true. The earlier
-technical rehearsal observed successful test logs classified as gate failures; inspect
-source results before using a type label as a fact.
+It makes no LLM call. Those checks do not prove a reusable claim is true. Check the
+source result before using an observation's type label as a fact.
 
 `lib/context_bridge.sh` loads these learning files into actual agent prompts. File or
-directory matching can fall back to the highest-weight three entries. Inspect the exact
-task fields passed and actual output. Single-player synthesis has no mandatory human
+directory matching uses `files_to_modify` and `files_to_create`. Planned tasks declare
+`files_touched`, so nothing matches and the filter falls back to the three highest-weight
+entries (`lib/learn/synthesize.py:796`). Inspect the exact task fields passed and actual output. Single-player synthesis has no mandatory human
 approval gate. `--pending`, `--merge` and `--curate` are separate multi-player operations.
 `--post-merge` is an optional correction-signal extension, with heuristic approval labels.
 

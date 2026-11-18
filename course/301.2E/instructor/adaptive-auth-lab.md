@@ -7,10 +7,10 @@ using clearly labelled recorded checkpoints from that same source when required.
 
 ## Admit the actual 301.1E packet
 
-The trainer supplies an independent copy of the reviewed source baseline and accepted
-runtime plan. Preserve the original working checkout, authoring session and reports.
-Use a frozen export or approved classroom clone that includes accepted specification
-edits; cloning an older commit omits uncommitted authoring work and ignored SPEED state.
+The 301.2E snapshot holds the whole packet in three commits: the 301.1E start state, the
+reviewed tech specs, and the plan with its `.speed/` records (tasks, contract, authoring
+decisions, verify log). `learner/assets/handoff-301-1e.json` names the baseline commit and
+the digest of every file the plan depends on.
 
 | Input | Required review |
 | --- | --- |
@@ -28,8 +28,22 @@ task records and admission decision must describe the same accepted work.
 
 ## Inspect the feature dependencies
 
-This map identifies relationships to check in the actual generated task graph. It does
-not prescribe task IDs or replace the accepted plan.
+The saved plan has 10 tasks:
+
+| Task | Title | Depends on |
+| --- | --- | --- |
+| 1 | Scoring, decision policy and reason maps | none |
+| 2 | Capture blocks and append-only audit storage | none |
+| 3 | Held-payment review, expiry and narratives | 1, 2 |
+| 4 | Replica-local step-up lifecycle | 1 |
+| 5 | Scored authorisation and policy challenges at the gateway | 1, 3, 4 |
+| 6 | Shared attempt detection and replica-local block lookup | none |
+| 7 | Attack operations, expiry and merchant notifications | 2, 6 |
+| 8 | Block challenges and the combined authorisation path | 5, 6, 7 |
+| 9 | Remove `HIGH_VALUE_CROSS_BORDER` after full merchant cutover (added by Verify) | 8 |
+| 10 | Gate and verify the production rollout (added by Verify, no files) | 8 |
+
+This map shows which source contracts each area depends on.
 
 | Work area | Source contract | Execution or integration question |
 | --- | --- | --- |
@@ -48,8 +62,8 @@ interfaces are available needs correction or an explicit stub/contract strategy.
 
 ## Carry the known owner boundaries
 
-The supplied drafts distinguish build, shadow-mode and cutover blockers. Recheck the
-current accepted revisions before class; do not treat this list as an approval.
+The full list, with owners, is in `.speed/authoring/adaptive-auth/questions.md` in the
+snapshot. These are the ones that shape the run. None is approved.
 
 | Recorded question | Responsible functions | Affected boundary |
 | --- | --- | --- |
@@ -59,6 +73,11 @@ current accepted revisions before class; do not treat this list as an approval.
 | F2.2 block length and scope | Product and Risk | Enabling blocking |
 | Merchant notification design | Design | Notifications |
 | Recording attempts that match an active block | Risk, Product and platform engineering | Follow-up notification and timeline coverage |
+| Shadow-mode length: one week (F2.2) or two (architecture)? (Q006) | Architecture | Enabling blocking |
+| Verify critical: closing the challenge sheet must cancel the payment | F2.1 PM, checkout repository | Checkout cutover |
+| Verify critical: a card-testing decline cannot be traced to one purchase | F2.1 and F2.2 PMs | Cardholder explanations |
+| Task 4 in the recorded run: may a status check after the deadline settle the challenge? | F2.1 owner | Tasks 4, 5 and 8 |
+| Tasks 9 and 10: cutover and rollout sign-offs | Risk, PM and Legal | Removing the old rule; production |
 
 An implementation agent can expose these questions and explain consequences. It cannot
 approve the policy. If an admitted task requires an unanswered decision, keep that scope
@@ -66,8 +85,8 @@ blocked and return the question to its owner.
 
 ## Run and inspect the admitted feature
 
-Inside the independently prepared classroom repository, use the target selected by
-the trainer and retain its actual baseline. The task graph and checks come directly from the reviewed 301.1E handoff.
+In the learner's clone of the snapshot, the target is `main` and the baseline is the
+snapshot's HEAD. The task graph and checks come from the reviewed 301.1E handoff.
 
 ```sh
 speed run --feature adaptive-auth --max-parallel 2 --verbose

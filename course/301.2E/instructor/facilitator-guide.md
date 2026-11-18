@@ -5,16 +5,15 @@ outside the learner's execution repository and agent context.
 
 ## What to protect
 
-Teach the same payments fixture, both reviewed F2 RFCs and actual 301.1E task/decision
-handoff in 120 minutes. Current drafts and
-an empty task folder are not an admitted packet. Preserve the source and ignored
-runtime records; do not invent completed earlier stages.
+Teach the same payments fixture, both reviewed F2 RFCs and the 301.1E plan in 120
+minutes. The snapshot carries all of it. Do not hide that Verify failed or that the plan
+has two tasks beyond the cap; both are part of the lesson.
 
 ## Timed intervention
 
-Use stage lengths 15 / 20 / 15 / 20 / 20 / 20 / 10. Provide source-matched recorded
-checkpoints before class and keep their workspaces separate. At a deadline, label the
-switch and record participation. Leave active work with its operator. No learner setup
+Use stage lengths 15 / 20 / 15 / 20 / 20 / 20 / 10. At the end of stage 2, move everyone
+to the recorded checkpoint in a separate folder. Label the switch and record
+participation. Leave active work with its operator. No learner setup
 or extra homework is added. Written assessment takes 12 + 5 + 3 minutes; grading occurs
 after the session if needed.
 
@@ -29,6 +28,16 @@ after the session if needed.
 | Context | Scope matching can fall back; conventions can activate automatically | Show what the actual context bridge emitted |
 | Handoff | Recipient can reproduce candidate and learning provenance | Locate the source, candidate, active memory and remaining owner |
 
+## Stage keys from the recorded run
+
+| Stage | A good answer |
+| --- | --- |
+| 1 Admit | Run tasks 1 to 8 with the two Verify criticals recorded as open owner questions. Hold tasks 9 and 10: they need sign-offs no class can produce. Name the gate gap: only `npm test` runs |
+| 2 Run | Notice that each passing task is merged into `main` during Run, so `main` moves before Integrate |
+| 3 Recover | Task 4 goes to the F2.1 owner with both conflicting requirements quoted; retry will not answer it. Tasks 9 and 10 stay blocked. The "Empty diff" attempt is an environment cause |
+| 4 Integrate | Blocked. Review asked for changes on every task, so there is nothing approved to integrate. 186 passing tests do not answer the 28 major findings |
+| 5 Learn | The task 1 context got three learnings by fallback, not by scope: tasks declare `files_touched`, the bridge reads `files_to_modify` |
+
 ## Guided F2 recovery and Learn key
 
 Use the marked cases in the recovery and Learn guides. F2.1 policy-provider unavailability
@@ -38,14 +47,15 @@ owner's accepted decisions. A learner must reject “all unavailable challenges 
 an unsupported generalization. Changing an accepted requirement needs its owner and
 new source/plan/test/memory evidence, not a more confident agent answer.
 
-A useful source-bounded observation is that a particular reviewer reconstructed an empty
-diff and could offer static judgment only. It is not proof that target tests passed or
-that every future empty diff is safe. A single-player review note does not implement an
+A useful source-bounded observation is a review finding tied to one file and line, for
+example task 1's: a rejected Promise from the model can end the gateway process
+(`src/risk/scoring.ts:52`). It describes that code at that commit. It is not a rule for
+every model call. A single-player review note does not implement an
 approval gate. Stop future use of unsafe active advice and route an accountable correction.
 
-The retired technical smoke produced gate-failure observations from successful test logs
-and a co-change convention from sparse bootstrap history. These facts demonstrate why
-raw extraction cannot be promoted as truth. They are not observations from the F2 class.
+In the recorded run, synthesis kept 42 entries and rejected 214. Ask learners why so many
+were rejected, and whether a kept entry could still be wrong. Structural filters check
+form and size, not truth.
 
 ## Assessment key
 

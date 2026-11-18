@@ -29,7 +29,8 @@ command -v speed         # the build above, not another install
 - `src/`, `test/`: the gateway as it runs today. GW-02 and GW-05 lock in the behaviour the
   feature changes.
 - `.claude/skills/author-tech-spec/`: the authoring skill used in Define and Draft.
-- No `.speed/` state. Every SPEED result in the session is produced live.
+- `.speed/classes.yaml` only: the failure-class rules `speed diagnose` reads in 301.3E. No other
+  `.speed/` state. Every SPEED result in the session is produced live.
 
 ## For learners
 

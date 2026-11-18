@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "readiness": "ready",
+  "feature": "adaptive-auth",
+  "baseline": "85bc3e0568651ce7a41e8eddfcd4361e1ac4352a",
+  "target": "main",
+  "spec_sha256": {
+    "specs/product/adaptive-auth/1-high-value-traveller.md": "5ec71b2e8d6a22e6b5c59e44fdd79f67b5ae8faca510f80a446ae7d9911536dd",
+    "specs/product/adaptive-auth/2-card-testing.md": "6a82aa60270c862c92a39e2cd840d9e479d7a3e27b929e1d57749b68b89d86a5",
+    "specs/architecture/adaptive-auth.md": "7f4e91fd5704a5dfa23899813776fd573b7fb23ee53f9577c91cd350c4bd8c56",
+    "specs/design/adaptive-auth/1-checkout-challenge.md": "30292a93527c61e7ef34b3068698f63f2eca5aafc25e3a86d77bd4a504259f37",
+    "specs/design/adaptive-auth/2-risk-review-queue.md": "8c232edfa704418cdb2c899443cc196534aa7b9ca5c3c6165d2d5a5623c1d4c9",
+    "specs/tech/adaptive-auth/1-high-value-traveller.md": "8b0a2f6ad96f45a7e000c6fdacfb5566778113774cc6be3fe35852e2d7041d08",
+    "specs/tech/adaptive-auth/2-card-testing.md": "4353d7e1a5768feea9e490385c2ea1b3e8e2a689ba649ef0c8290eb13741b69b"
+  },
+  "scope": {
+    "in_scope": [
+      "F2.1 high-value traveller step-up: tasks 1 to 5",
+      "F2.2 card-testing detection and block challenge: tasks 6 to 8"
+    ],
+    "excluded_or_blocked": [
+      "Task 9 removes HIGH_VALUE_CROSS_BORDER only after every merchant is cut over: needs Risk's cutover approval",
+      "Task 10 production rollout gates: need dated sign-offs from Risk, PM and Legal",
+      "Checkout challenge sheet and review-queue screens: other repositories",
+      "Verify critical 1: closing the challenge sheet must cancel the payment (checkout repository, PM F2.1)",
+      "Verify critical 2: a card-testing decline cannot be traced to one purchase (F2.1 and F2.2 PMs)"
+    ],
+    "task_ids": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "10"
+    ]
+  },
+  "task_sha256": {
+    "1.json": "66b1e2e681191144cf14bc8e4adb29b0fd4f1567c5ab7227c8c75f1023072175",
+    "10.json": "7a9256e8070740c0735043e3925ccc4f1ec06d9f104e9ff87cf0c4f303b3e01a",
+    "2.json": "0bf67d2eb70997ef792212ff350be6ede9c0b6dfc9587bb1f1103430cfd6e087",
+    "3.json": "22119b162b8936e00d533cab37f9693f73918d1acc832311e8987ab252e1f444",
+    "4.json": "cff94d400df3f8dfa88093d3208c3052d7fee936ec0ac6c706015316d7aaa391",
+    "5.json": "d8d4ade2eaa0a1239748346b1930c4e7a3e5928efe8b9b0a56ff985471bc6d23",
+    "6.json": "9321174f9945b06409630bb33c6d49ab938115ec8832fd1f59e122fb6c396f13",
+    "7.json": "aa613f9d937cb70139c4f281ecf9a9601fc77d0f2090a4b0c324583a55e67074",
+    "8.json": "608bd214e53be06fe025882572814f23bad02186e857203e9e82be4d23304c0c",
+    "9.json": "05ec43a8306154c1d0e1ed74ea67cb871af3671af39f77838180544b155064a4"
+  },
+  "contract": {
+    "path": ".speed/features/adaptive-auth/contract.json",
+    "sha256": "1471bd964232cc29432b728f64d485b885a64a65c2bc7728b9d0745f8c647da7"
+  },
+  "verify_report": {
+    "path": ".speed/features/adaptive-auth/logs/plan-verification.log",
+    "sha256": "298ac1d85a675c20897d0c2f12686e1987639285a0d1f8e1d898b972de3921f4",
+    "status": "fail",
+    "checked_scope": "All 10 tasks against the 7 feature documents. 8 of 14 requirements covered on the first pass; 2 critical issues remain after 3 repair passes, both owner questions."
+  },
+  "decision_records": [
+    ".speed/authoring/adaptive-auth/decisions.md",
+    ".speed/authoring/adaptive-auth/questions.md"
+  ],
+  "target_checks": [
+    "npm test"
+  ],
+  "gate_configuration_review": "AGENTS.md Quality Gates lists only test: npm test. Run's task gates and Integrate's regression therefore run npm test only; lint and typecheck are skipped."
+}

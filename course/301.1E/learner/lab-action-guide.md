@@ -308,6 +308,10 @@ Plan turns both specs into an ordered set of tasks. It works in three passes. Tw
 
    While it runs, think about which dependency matters most for the scope you chose.
 
+   Plan may stop and ask whether to add tasks for critical coverage gaps (`[y/N]`). Read the
+   list first. Gaps in the checkout or review-queue screens, or in production database
+   stores, belong to other repositories: answer `n` and note them for the handoff.
+
 2. Read the task graph at the end of the output, top to bottom. That's the build order. Two of the titles start with "Gateway".
 
 3. In your IDE's file tree, open `.speed/features/adaptive-auth/tasks/` and open the two Gateway tasks. Search each one for `travellerTelevision`, the traveler from test GW-02. (The project-wide search skips `.speed` because it's gitignored, so open the files from the tree.)
@@ -373,6 +377,7 @@ So far only the planner has looked at its own plan. Verify gives it to a separat
 - [ ] The two numbers disagree. The first check says every requirement is covered; the reader that checks meaning says something like 18 of 29. That difference is what this step is about.
 - [ ] You followed one requirement and know whether its coverage is full, partial or missing.
 - [ ] If the diff printed changes, you read them before trusting the plan. Changes there are the fix agent's edits, not an error.
+- [ ] If the fix agent added tasks, you checked whether they can be built here. A task that needs a production sign-off cannot, and the plan may now exceed `max_tasks`.
 
 ---
 

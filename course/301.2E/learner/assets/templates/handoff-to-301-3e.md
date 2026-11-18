@@ -10,7 +10,7 @@ Integration target and included task branches:
 | Task execution and gate results | | |
 | Task Review and cross-task Coherence | | |
 | Target branch regression | | |
-| Supplied acceptance probe | | |
+| Acceptance criteria checked, and how | | |
 | Contract artifact check | | |
 | Guardian report and actual diff supplied | | |
 | Specification traceability | | |

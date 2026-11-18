@@ -1,75 +1,89 @@
-# 301.2E recovery: preserve the same F2 work
+# 301.2E recovery: deal with a stopped task
 
-Use 15 minutes for one observed failure or one marked constructed case. Continue the
-301.1E baseline, accepted RFCs and actual task plan. Record the original evidence before
-retry, Recover, branch deletion or any other mutation. This guide does not authorize
-new product decisions or resetting a user's repository.
+Use 15 minutes on one stopped task. Keep the reviewed specs and the plan as they are.
+Save the evidence before you change anything. This guide does not let you make product
+decisions or reset someone's repository.
 
 ## The recovery decision
 
-| Step | Inspect | Retain or decide |
+| Step | Look at | Decide |
 | --- | --- | --- |
-| Preserve | Command, raw provider/gate output, task state, branch tips, worktrees and original baseline | Snapshot the failed attempt and valuable commits/uncommitted patches |
-| Locate | Did failure occur before provider startup, during code generation, at a gate or during merge? | Separate verified facts from hypotheses |
-| Attribute | Environment, implementation, task dependency, shared contract or unresolved owner decision | Choose one supported cause and accountable correction |
-| Bound | Current accepted specification, affected files, dependency and prior valid work | State what may change and what must remain |
-| Retry or hand back | Actual task state and useful branch contents | Append guidance, inspect state, run eligible work or return the blocker |
-| Compare | New candidate, same requirement and actual checks | Retain both attempts and the remaining limits |
+| Save | The command, raw output, task JSON, branch, worktree and baseline | Copy the failed attempt and any useful commits or changes |
+| Locate | Did it stop before the agent started, while it worked, at a gate or at a merge? | Separate what you saw from what you suspect |
+| Attribute | Environment, code, a dependency, a shared contract, or an owner's open question | Pick one supported cause and who corrects it |
+| Bound | The accepted spec, the files involved, dependencies and earlier good work | Say what may change and what must not |
+| Act | The task's state and its branch | Retry with guidance, or hand the question to its owner |
+| Compare | The next attempt, against the same requirement | Keep both attempts and what is still open |
 
-## Case 1 Provider startup failure
+## Case 1 The agent wrote nothing
 
-An earlier technical rehearsal, on the now-retired smoke project, observed `Not logged in`
-before implementation. That is evidence about an execution environment, not an F2
-product defect. In this fixture, require the actual raw response before assigning the
-same diagnosis. Inspect whether the branch contains useful implementation before any
-branch recreation. Correct the environment through its operator; preserve requirements.
+In an earlier attempt of the recorded run, tasks 1, 2 and 6 failed within two minutes:
 
-## Case 2 Constructed bank-confirmation mismatch
+```text
+✗ Empty diff — agent produced no code changes
+✗ Missing declared files: src/risk/reasons.ts,src/risk/scoring.ts,src/risk/policy.ts,…
+```
 
-Teaching input, not a claimed observed native F2 run: a block-match challenge uses the
-F2.1 policy fallback when its bank provider cannot confirm it. The candidate returns a
-held result, and a task test has been changed to expect that result.
+The task log showed why. The agent's own global instructions told it to ask for approval
+before changing code, so it asked and stopped. Nothing was wrong with the task or the code.
+This is an environment cause. Fix the agent's setup through whoever owns it, then retry.
+Do not change the task or the spec to get past it.
 
-Ask the learner to read the accepted F2.1 and F2.2 state-machine/API contracts, establish
-which challenge source the input represents, and compare the actual diff and changed
-assertion with the intended outcome. F2.1's policy unavailable path and F2.2's block-match
-unavailable path differ. Reuse of a shared adapter does not authorize one shared policy.
+A later attempt stopped differently: the agent finished the code but could not commit,
+because its sandbox blocked writes to the repository's `.git` folder. The work existed only
+in the worktree. Again an environment cause: save the worktree before anything removes it.
 
-Preserve the failing input/output and original assertions. Request the contract-consistent
-bounded repair or return an actual unresolved decision to its owner. Do not weaken a
-fixture/test to fit the implementation. Recheck both paths on the resulting candidate.
-Carry the same distinction into Learn; “all unavailable challenges hold” is unsafe advice.
+## Case 2 A spec question (task 4)
 
-## Case 3 Interrupted producer/consumer work
+Task 4 builds the step-up challenge lifecycle. In round 2 it stopped as blocked:
 
-Constructed input: the shared-contract producer is done and already merged; a dependent
-consumer has a partial commit and an uncommitted test edit; the original controller is
-gone. Inspect tracked processes, locks, actual worktree and refs. Preserve the partial
-commit, binary patch, task JSON, logs and target before choosing Recover.
+> May a synchronous status poll process an already-due deadline? A poll arriving after ten
+> minutes but before the timer callback sees pending. Returning the final result
+> immediately means settling during the poll, which conflicts with the requirement that
+> polling have no side effects.
 
-`speed recover --feature adaptive-auth` can kill tracked agents, break locks, reset running
-state and remove worktrees. Use it only after establishing that the original run is dead
-and preserving valuable work. Keep the completed producer. Do not reset the whole plan.
-A live controller remains under its operator's control even when the class changes to a
-recorded checkpoint for timing.
+The agent is right that the specs do not say. Retrying will not answer it. Find the two
+requirements that pull against each other in the F2.1 tech spec, write the question with
+both quotes, and send it to the F2.1 owner. Tasks 5 and 8 depend on task 4, so record
+that they wait too.
 
-## Supported commands and stopping conditions
+## Case 3 Work that needs a sign-off (tasks 9 and 10)
+
+Task 9 removes the old cross-border rule only after every merchant has moved to the new
+scoring. Task 10 checks the production rollout gates. Both stopped as blocked: there are
+no dated sign-offs or production flag changes to check. That is the correct result. Leave
+both blocked, and name Risk, PM and Legal as the owners in the handoff.
+
+## Case 4 Teaching case: two challenge paths that look alike
+
+This one is constructed for discussion; it did not happen in the recorded run. A
+block-match challenge uses the F2.1 fallback when the bank cannot answer. The payment is
+held, and a test was changed to expect that.
+
+Read the F2.1 and F2.2 tech specs. F2.1's "provider unavailable" path and F2.2's
+block-match path have different outcomes. Sharing an adapter does not mean sharing a
+policy. Keep the original test, ask for a repair that matches each contract, or send the
+question to its owner. Do not weaken a test to fit the code.
+
+## Commands
 
 ```sh
 speed retry --feature adaptive-auth --task-id ACTUAL_ID \
-  --context "Evidence, permitted correction, retained valid work and discriminating next check."
+  --context "What failed, the evidence, what may change, what must stay the same."
 speed status --feature adaptive-auth
-# A subsequent Run executes pending work after its actual state is inspected.
+# The next speed run picks up the task.
 ```
 
-`--reset-branch` is destructive and requires a deliberate decision about inspected contents.
-An ancestor branch can be audited as integrated, including a branch with no useful code;
-verify actual implementation. An unsupported `integrate --continue` suggestion is not a
-valid command in this parser. Distinguish a Git merge in progress, a completed partial
-integration and a failed target check before choosing a supported recovery route.
+`speed retry` only accepts a task that failed or is blocked. A task that Review sent back
+is already pending; the next Run reworks it using its `review_feedback`.
 
-For an integration failure, keep the candidate blocked for the affected scope and preserve
-each individual report. A feature completed by an earlier Integrate stays completed when
-a rerun fails, so do not read that state as a pass. For unsafe learned advice,
-retain observation/entry IDs and before/after memory, stop future agent use of that state,
-and request an accountable correction. A human review note alone does not change memory.
+`speed recover --feature adaptive-auth` stops tracked agents, clears locks, resets running
+state and removes worktrees. Use it only when the original run is dead and its work is
+saved. Keep completed work. Do not reset the whole plan.
+
+`speed retry --reset-branch` deletes the task's branch. Read the branch first.
+`speed integrate --continue` does not exist.
+
+If Integrate fails, keep the candidate blocked for the affected tasks and keep each report.
+A feature that an earlier Integrate marked complete stays complete when a rerun fails, so
+do not read that state as a pass.

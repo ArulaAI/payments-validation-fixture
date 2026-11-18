@@ -1,82 +1,81 @@
-# 301.2E trainer pickup brief
+# 301.2E trainer brief
 
-Teach **Execute, Integrate, Learn** in exactly 120 minutes. Continue the actual 301.1E
-payments fixture and adaptive-auth handoff. Preserve the original source, reviewed specifications and plan scope.
+Teach **Execute, Integrate, Learn** in 120 minutes. Learners continue the 301.1E work on
+adaptive authorisation: they supervise the run, recover a stopped task, decide what may be
+integrated, and check what the run teaches future agents.
 
 ## Pickup order
 
 | Resource | Use |
 | --- | --- |
-| [Framework](execute-integrate.md) | Seven timed stages, prerequisite and completion standard |
-| [Speaker script](speaker-script.md) | Say/Do, prompts and checkpoints |
-| [Workbook](../learner/learner-workbook.md) | Same-feature commands and evidence |
-| [Fixture continuity](adaptive-auth-lab.md) | F2 source inputs, shared contracts and owners |
-| [Learn](../learner/learn.md) | Required 20-minute feedback-loop exercise |
-| [Reference](../learner/speed-reference.md) | Updated installed-source behavior |
-| [Recovery](../learner/recovery-flow.md) | Bounded recovery decisions |
+| [Framework](execute-integrate.md) | Seven timed stages and the completion standard |
+| [Speaker script](speaker-script.md) | What to say and do, with prompts and checkpoints |
+| [Workbook](../learner/learner-workbook.md) | The learners' commands and records |
+| [Fixture continuity](adaptive-auth-lab.md) | The plan, its dependencies and the owners |
+| [Learn](../learner/learn.md) | The required feedback-loop exercise |
+| [Reference](../learner/speed-reference.md) | SPEED behaviour at `a8bde62` |
+| [Recovery](../learner/recovery-flow.md) | The four recovery cases |
 | [Assessment](assessment.md) | Individual packets and rubric |
-| [Private facilitator guide](facilitator-guide.md) | Keys, interventions and grading |
-| [Rehearsal and delta](rehearsal.md) | What was actually checked and what remains unvalidated |
-| [Overview PDF](../overview.pdf) | Eight-page overview following the 301.1E format |
+| [Facilitator guide](facilitator-guide.md) | Keys, interventions and grading |
+| [Rehearsal](rehearsal.md) | What the recorded run did and what is still unchecked |
+| [Overview PDF](../overview.pdf) | One page per section |
 
-## Required 301.1E packet
+## What learners start from
 
-Provide the same fixture baseline, exact reviewed specifications, accepted decisions,
-actual plan/contract, explicit Verify verdict and checked scope. Include the owner
-questions and any unplanned or unverified F2.2 requirements. The old 301.1E script's
-primary-RFC fallback does not establish a whole-feature plan; current SPEED supports
-feature planning, but that source capability is not evidence that this cohort used it.
+The snapshot, `snapshot/fixture.bundle`, holds the reviewed 301.1E work: both tech specs,
+the decisions and owner questions, a 10-task plan, its contract and the verify log.
+`learner/assets/handoff-301-1e.json` records the baseline commit and file digests.
 
-The authoring checkout inspected here has drafts and no populated adaptive-auth task
-set. A deliverable course design is not an admitted execution packet. Before live delivery,
-complete and review the actual 301.1E handoff and source-matched checkpoint rehearsals.
-Do not claim those missing stages were completed by the retired technical smoke lab.
+Be ready for three things learners will notice in stage 1:
 
-Use the supplied `handoff-301-1e.example.json` as a schema example. Replace its values
-with actual revisions, digests, task IDs, scope, target, decision and report references.
-Never convert the example's blocked status to ready merely to pass inspection. The
-read-only `inspect-handoff.py` checks structural consistency; it does not grant acceptance.
+- Verify **failed**. Two critical issues remain, and both are owner questions. The handoff
+  admits tasks 1 to 8 with those questions open. Make the learners decide whether that is
+  acceptable, rather than deciding for them.
+- Verify's repair added tasks 9 and 10, taking the plan above the 301.1E cap of 8.
+- `inspect-handoff.py` reports exactly two errors: task 10 declares no files, and Verify
+  did not pass. Both are true.
 
-## Provision before participants arrive
+## Before class
 
-Prepare one independent approved continuation checkout per pair. Preserve the original
-301.1E authoring repository and ignored runtime/decision records. A normal Git clone
-alone omits uncommitted accepted RFC edits and ignored `.speed/` artifacts. Use the
-trainer's frozen export of the complete reviewed packet, then verify its hashes.
+1. Give each learner or pair a lab folder with the snapshot cloned in it, an empty evidence
+   folder outside it, a copy of `learner/assets/`, and `instructor/checkpoint/after-run.bundle`.
+2. Check each machine has Bash 3.2 or later, Node 22 or later, Python 3.11 or later
+   (SPEED's start-up check needs it), Git, jq and Claude Code signed in.
+3. Check `command -v speed` points at the SPEED checkout at `a8bde62`.
+4. In one clone, run `npm test` (93 pass) and `speed status --feature adaptive-auth`
+   (10 pending). Run `inspect-handoff.py` and confirm the two expected errors.
+5. Clone the checkpoint once and run `npm test` (186 pass).
 
-Check Bash 3.2 or newer, compatible native TypeScript execution, Python 3.11 or newer
-(SPEED's startup check requires it), Git, jq, SPEED's agent timeout runner, provider/model
-access and the exact source manifest at the pinned `a8bde62`.
-Verify that the actual configured task and target gates run the intended test commands.
-Do not change a shared environment or restart user services during class preparation.
-Learners need no additional installation or homework.
+Learners need no homework and install nothing.
 
-## Prepare a fixed-duration delivery
+## Timing
 
-Rehearse Run, recovery, Review, Coherence, Integrate, target checks and Learn on the same
-admitted feature. Retain before/after snapshots at each stage, actual command exits,
-candidate SHAs and learning/context artifacts. Prepare separate source-matched workspaces
-for the reviewed-plan, completed-run and integrated-candidate checkpoints.
+The slots are 15 / 20 / 15 / 20 / 20 / 20 / 10 minutes, waits included. Use a visible
+timer. Round 1 of Run took 33 minutes in the recorded run, so it will not finish inside
+stage 2. At the end of stage 2, every learner moves to the checkpoint in a new folder.
+Leave live runs alone; do not stop or reset them to fit the clock, and do not suggest they
+produced the checkpoint.
 
-The live slots total 120 minutes: 15 / 20 / 15 / 20 / 20 / 20 / 10. Command waits and
-transitions are included. Use a visible timer. At the slot boundary, move to the labelled
-recorded checkpoint in a separate workspace. Leave active runs with their operator;
-do not reset them or imply they produced the recorded candidate. Assess participation
-accurately and grade individual written work after class if needed.
+## What the checkpoint holds
 
-If the actual 301.1E packet or same-fixture checkpoint evidence is unavailable, the
-class is not ready for live delivery. A transparently labelled discussion of the gap is
-possible, but it is not a completed native same-fixture rehearsal.
+The run's end state after two rounds of Run and Review:
+
+- Tasks 1 to 8 built and merged into `main`; 186 tests pass.
+- Review asked for changes on every built task. Each task's `review_feedback` holds its
+  latest findings, 28 major and 2 minor in all.
+- Task 4 blocked on a spec question; tasks 9 and 10 blocked on production sign-offs.
+- Coherence and Integrate reported "No completed tasks". Nothing was integrated.
+- No learning memory yet. Learners run Learn themselves in stage 5.
+
+[rehearsal.md](rehearsal.md) has the full record, including how the run was made.
 
 ## Learning and assessment boundaries
 
-Single-player Learn can write observations, retrain a classifier, trigger convention
-discovery and write synthesized context without a mandatory human approval screen.
-Review before/after memory and actual assembled context. `--curate` is a multi-player
-convention-conflict workflow, not the core lab's generic approval command.
+Single-player Learn writes memory that later agents read, with no approval screen.
+Learners review it before and after. `--curate` belongs to multi-player mode; it is not an
+approval command.
 
-Release one unfamiliar packet and its counterfactual at assessment time. Keep keys out
-of learner repositories and agent context. Retain the learner's own execution evidence,
-learning review and written response. The two-hour class does not establish independent
-operation of every full-feature stage or authorize production release. Calibrate timing
-and scoring with a real cohort before commercial certification claims.
+Release one unfamiliar packet per learner at assessment time. Keep the keys out of learner
+repositories and agent context. The two-hour class does not show that a learner can run
+every stage alone, and it does not authorise a production release. Calibrate timing and
+scoring with a real cohort before making certification claims.

@@ -14,7 +14,7 @@ what can we safely learn from that execution, and what must the next engineer va
 | --- | --- | --- |
 | 301.1E Define, Audit, Plan | Existing payments code, Product/Architecture/Design and both F2 RFCs; reconcile decisions, author, audit, plan and verify | Exact source baseline, reviewed RFC revisions, actual task graph/contract, planning and verification evidence, owner decisions and blockers |
 | 301.2E Execute, Integrate, Learn | That same repository and handoff; supervise execution, recover, inspect integration and review learning | Candidate SHA, original intent, actual included scope, command/check evidence, learning provenance and unresolved owners |
-| 301.3E Tooled Judgment | That candidate and evidence; independently diagnose risks, select methods, repair and revalidate | A technical disposition supported by bounded evidence |
+| 301.3E Payments Change Validation | That candidate and evidence; independently diagnose risks, select methods, repair and revalidate | A technical disposition supported by bounded evidence |
 
 The whole feature remains F2.1 genuine travellers and F2.2 cross-merchant card testing.
 Related context does not prove a saved plan covers both. Execute only the scope admitted
@@ -24,14 +24,11 @@ promotion remain with their named owners.
 ## Audience and entry
 
 Experienced engineers who can read a specification and diff, explain task dependencies
-and run repository tests. Prerequisite: 301.1E capability and its reviewed handoff.
-The trainer provisions independent continuation workspaces and source-matched checkpoint
-records before class. No additional learner homework or installation is required.
-
-The current authoring checkout contains draft RFCs and no populated adaptive-auth task
-set. It is not a ready execution packet. Do not invent acceptance, fabricate a plan or
-relabel another fixture to conceal that gap. The [trainer brief](trainer-brief.md)
-defines the required delivery preparation.
+and run repository tests. Prerequisite: 301.1E capability. Each learner clones the 301.2E
+snapshot, which holds the reviewed 301.1E work and its 10-task plan. The trainer hands out
+the recorded checkpoint, `checkpoint/after-run.bundle`, for the stages a live run cannot
+reach in time. No homework or extra installation is needed. The
+[trainer brief](trainer-brief.md) covers preparation.
 
 ## The 120-minute progression
 
@@ -42,15 +39,16 @@ There is no additional live setup block or time added for slow providers.
 | --- | ---: | --- | --- |
 | 1 Admit the handoff and inspect the harness | 15 | Match source/spec/plan revisions, approved scope, dependencies, actual models, target and configured checks | Entry decision, baseline and annotated task graph |
 | 2 Supervise Run | 20 | Predict eligibility and context; inspect worktrees, commits, dependency merges and task gates | Execution ledger linked to actual artifacts |
-| 3 Diagnose and recover | 15 | Establish one cause, preserve useful work and choose bounded retry or owner action | Failed evidence, recovery decision and comparison |
+| 3 Recover a stopped task | 15 | Establish one cause, preserve useful work and choose bounded retry or owner action | Failed evidence, recovery decision and comparison |
 | 4 Admit and inspect integration | 20 | Reconcile branches, Review/Coherence and owner blockers; inspect merges and each target check | Candidate SHA and integration admission |
 | 5 Learn from the evidence | 20 | Preview/extract observations, inspect synthesis and trace a learning into future context | Learning review with source IDs, scope and rejected claims |
 | 6 Transfer independently | 20 | Diagnose one unfamiliar packet, cite evidence and answer a counterfactual | Individual scored disposition |
 | 7 Hand off to 301.3E | 10 | Make candidate, checks, memory changes and unanswered decisions reproducible | Completed handoff and closing review |
 | Total | 120 | | |
 
-At a stage deadline, move to the trainer's labelled recorded checkpoint from the same
-301.1E baseline and reviewed scope. Do not interrupt or reset active work merely to fit
+At a stage deadline, move to the recorded checkpoint (`checkpoint/after-run.bundle`). It
+descends from the same snapshot commit. In the recorded run, round 1 alone took 33
+minutes, so every cohort uses it from stage 2's deadline onward. Do not interrupt or reset active work merely to fit
 the clock. Keep live and recorded workspaces separate; record what the learner actually
 executed. A replay supports evidence interpretation, not a claim of live operation.
 
@@ -67,11 +65,12 @@ executed. A replay supports evidence interpretation, not a claim of live operati
 
 ## Through-line in the actual F2 fixture
 
-Follow the shared gateway and bank-confirmation contracts across both RFCs. The trainer
-selects an already admitted producer/consumer seam in the saved plan: for example,
-F2.1's decision/step-up contract consumed by F2.2's block-match handling. These are source
-relationships to inspect, not invented task IDs or an instruction to implement all F2 in
-20 minutes. Keep unplanned or unverified F2.2 scope visible.
+Follow the shared gateway and bank-confirmation contracts across both RFCs. In the saved
+plan, task 4 (the F2.1 step-up lifecycle) feeds task 5 (the F2.1 gateway), and both feed
+task 8, where F2.2's block-match challenge reuses that flow. Task 6 (F2.2 detection) feeds
+tasks 7 and 8. Use one of those seams. In the recorded run, task 4 stopped on a spec
+question in round 2, so tasks 5 and 8 were never reworked: the seam shows how one owner
+question holds up its consumers.
 
 Run executes eligible pending tasks in the selected feature; it has no classroom-only
 filter that silently reduces a plan. A smaller execution scope requires an explicitly

@@ -12,7 +12,7 @@ with tempfile.TemporaryDirectory(prefix='arula-3012-utility-') as t:
  def git(*args):return subprocess.run(['git','-C',str(project),*args],check=True,capture_output=True,text=True).stdout.strip()
  git('config','user.name','Structural utility check');git('config','user.email','course-test@example.invalid')
  (project/'.gitignore').write_text('.speed/\n')
- handoff=json.loads((assets/'handoff-301-1e.example.json').read_text())
+ handoff=json.loads((assets/'handoff-301-1e.json').read_text())
  for rel in handoff['spec_sha256']:
   p=project/rel;p.parent.mkdir(parents=True,exist_ok=True);p.write_text('Synthetic path/hash fixture for utility checks only.\n')
   handoff['spec_sha256'][rel]=sha(p)

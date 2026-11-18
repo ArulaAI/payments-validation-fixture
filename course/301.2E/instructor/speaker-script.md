@@ -16,13 +16,13 @@ evidence/Git history. The source walkthrough uses the installed SPEED checkout n
 in the source manifest. Source anchors below are function names so a line-number change
 does not silently redirect a lesson.
 
-Use independent continuations of the same payments fixture. The original code, accepted
-RFC revisions, plan/contract, Verify scope and owner decisions come from 301.1E. The current authoring checkout has no populated
-adaptive-auth plan; inspect the actual cohort handoff before scheduling live delivery.
+Each learner works in their own clone of the 301.2E snapshot. The code, reviewed specs,
+plan, contract, Verify result and owner decisions all come from 301.1E.
 
 Use the seven framework slots: 15 / 20 / 15 / 20 / 20 / 20 / 10 minutes. Waiting and
-transitions are included. At a slot deadline, switch to a labelled recorded checkpoint
-from the same frozen source and admitted scope in a separate workspace. Leave active
+transitions are included. At the end of stage 2, switch everyone to the recorded checkpoint
+(`checkpoint/after-run.bundle`) in a separate folder. Round 1 took 33 minutes in the
+recorded run, so no live run finishes in the slot. Leave active
 work under its operator's control. Record live versus replay participation. Provisioning
 happens before class; learners need no additional homework.
 
@@ -90,10 +90,9 @@ Have learners annotate the actual plan, selecting a producer and dependent consu
 Read `agent_model` on each task. A populated task model takes precedence over the Run
 command's fallback model selection.
 
-Open the actual AGENTS/CLAUDE Quality Gates configuration. Show which lint, typecheck and
-test commands it lists. This fixture lists `lint`, `typecheck`, `test` and `e2e`; Run and
-Integrate run only the first three. With no test entry, Run's task gates would fall back
-to the `npm test` script; Integrate's regression would not. Retain unconfigured or
+Open the Quality Gates section of `AGENTS.md`. This fixture lists only `test: npm test`,
+so lint and typecheck never run in Run or Integrate. With no test entry, Run's task gates
+would fall back to the `npm test` script; Integrate's regression would not. Retain unconfigured or
 failing entries. Do not describe those as green checks.
 The legacy text criteria need manual interpretation even when artifact checks pass.
 
@@ -163,7 +162,7 @@ Each pair records one complete task transition and one actual omission or warnin
 They compare the process exit, task states, check output and Git history. If the run
 stops early, that failure becomes the next recovery exercise.
 
-## 3 Diagnose and recover: 15 minutes
+## 3 Recover a stopped task: 15 minutes
 
 ### Say
 
@@ -173,9 +172,10 @@ stops early, that failure becomes the next recovery exercise.
 
 ### Do
 
-Use an observed failure. The authentication case in
-[recovery flow](../learner/recovery-flow.md) provides a recorded example. If there is
-no live failure, give the constructed F2 bank-confirmation mismatch and label it as case analysis.
+Use a stopped task from the checkpoint. The [recovery flow](../learner/recovery-flow.md)
+has three real cases from the recorded run (the empty-diff environment failure, task 4's
+spec question, and tasks 9 and 10 waiting for sign-off) and one constructed case, marked
+as such.
 
 Require a five-part diagnosis before a recovery command:
 
@@ -234,9 +234,9 @@ target-relative report may omit. A report based on no changed lines cannot estab
 that implementation's semantic correctness.
 
 Have pairs complete the integration-admission template. Require evidence for every
-included task branch, remaining warning and owner blocker. If Review requests changes,
-handle the recorded task state and actual findings before proceeding. Do not modify a
-verdict just to permit integration.
+included task branch, remaining warning and owner blocker. In the recorded run, Review
+requested changes on every task, so Coherence and Integrate report "No completed tasks".
+The right admission is blocked. Do not modify a verdict just to permit integration.
 
 ### Checkpoint
 
@@ -265,7 +265,9 @@ Choose `n` to defer extraction to the required Learn stage that immediately foll
 Record the choice and do not omit Learn. The prompt reads `/dev/tty`, so a pipe to stdin is not an equivalent control.
 Do not add `--yes`: it runs extraction without asking.
 
-Walk the actual results in order:
+In the checkpoint, Integrate stops at "No completed tasks to integrate", because Review
+approved nothing. Then walk the stages it would have run, from `cmd_integrate`, so learners
+know what an approved task must pass:
 
 | Stage | Mechanism | Evidence and limit |
 | --- | --- | --- |
@@ -318,7 +320,9 @@ five to extract/inspect, six to synthesize/trace and six to decide. The commands
 
 Show `cmd_learn`, `learn_extract`, `synthesize` and the actual context bridge. Explain
 observation IDs/source artifacts, auto-discovered conventions, structural quality rejects,
-file/directory matching and the top-three fallback. A preview prints counts/warnings;
+file/directory matching and the top-three fallback. In this plan the fallback always
+fires: tasks declare `files_touched`, while the bridge matches `files_to_modify` and
+`files_to_create`. The task 1 preview shows three unscoped learnings. A preview prints counts/warnings;
 it is not a complete observation approval screen. Single-player writes can become active
 without mandatory human curation. Preserve before/after memory and the actual context.
 

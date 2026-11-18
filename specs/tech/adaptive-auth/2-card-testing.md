@@ -32,7 +32,7 @@ results.slice(0, 10).every(r => r.status === 'approved');   // before the attack
 results.slice(11).every(r => r.status === 'step_up');       // challenged, not approved
 // The script cannot authenticate, so each challenge ends in a decline:
 gateway.completeStepUp(results[11].challengeId, 'not_authenticated');
-// → { status: 'declined', code: 'do_not_honour', reason: <card-testing reason> }
+// → { status: 'declined', code: 'do_not_honour', reason: cardholderReason('card_testing_pattern') }
 
 detector.activeAttacks();
 // → [{ id: 'atk_000001', bin: '411111', amount: 100, cards: 10, merchants: 10, status: 'blocked', ... }]
