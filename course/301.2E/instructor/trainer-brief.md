@@ -1,7 +1,7 @@
 # 301.2E trainer brief
 
 Teach **Execute, Integrate, Learn** in 120 minutes. Learners continue the 301.1E work on
-adaptive authorisation: they supervise the run, recover a stopped task, decide what may be
+adaptive authorization: they supervise the run, recover a stopped task, decide what may be
 integrated, and check what the run teaches future agents.
 
 ## Pickup order
@@ -13,7 +13,7 @@ integrated, and check what the run teaches future agents.
 | [Workbook](../learner/learner-workbook.md) | The learners' commands and records |
 | [Fixture continuity](adaptive-auth-lab.md) | The plan, its dependencies and the owners |
 | [Learn](../learner/learn.md) | The required feedback-loop exercise |
-| [Reference](../learner/speed-reference.md) | SPEED behaviour at `a8bde62` |
+| [Reference](../learner/speed-reference.md) | SPEED behavior at `a8bde62` |
 | [Recovery](../learner/recovery-flow.md) | The four recovery cases |
 | [Assessment](assessment.md) | Individual packets and rubric |
 | [Facilitator guide](facilitator-guide.md) | Keys, interventions and grading |
@@ -77,5 +77,5 @@ approval command.
 
 Release one unfamiliar packet per learner at assessment time. Keep the keys out of learner
 repositories and agent context. The two-hour class does not show that a learner can run
-every stage alone, and it does not authorise a production release. Calibrate timing and
+every stage alone, and it does not authorize a production release. Calibrate timing and
 scoring with a real cohort before making certification claims.

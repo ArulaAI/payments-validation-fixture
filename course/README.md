@@ -1,6 +1,6 @@
 # Engineering 301
 
-Three 120-minute courses that follow one change, adaptive authorisation, from definition
+Three 120-minute courses that follow one change, adaptive authorization, from definition
 to delivery on this payments fixture. Each course hands the next something a person can
 check. Each course folder carries a snapshot of the fixture as that course starts, so any
 course can run on its own.
@@ -11,7 +11,7 @@ course can run on its own.
 | 301.2E Execute, Integrate, Learn | The reviewed 301.1E output | Candidate code and evidence | [`301.2E/`](301.2E/) |
 | 301.3E Payments Change Validation | The 301.2E candidate, with gaps added | Accept, repair or escalate | [`301.3E/`](301.3E/) |
 
-The feature is all of F2 adaptive authorisation: a genuine traveller declined abroad
+The feature is all of F2 adaptive authorization: a genuine traveler declined abroad
 (F2.1) and a card-testing attack approved across merchants (F2.2), sharing one bank
 step-up challenge. Its upstream documents are in [`../specs/`](../specs/).
 

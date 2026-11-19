@@ -34,7 +34,7 @@ The 301.3E snapshot continues the recorded 301.2E run (see the
 ## Not yet run
 
 - `speed review`, `speed eval`, `speed plan --defects`, `speed verify` and `speed run` on this
-  snapshot. They call models. Their output, timing and behaviour in this lab are unconfirmed.
+  snapshot. They call models. Their output, timing and behavior in this lab are unconfirmed.
 - Any run with Claude Code as provider, and any cohort.
 
 ## Known issue

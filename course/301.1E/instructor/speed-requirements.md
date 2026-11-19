@@ -1,8 +1,8 @@
 # SPEED requirements for 301.1E
 
-For whoever is building the SPEED changes. 301.1E was written against these behaviours
+For whoever is building the SPEED changes. 301.1E was written against these behaviors
 before they existed. Some now exist. Each row names the course moment that breaks if the
-behaviour lands differently, so a change in plan here tells us exactly which part of the
+behavior lands differently, so a change in plan here tells us exactly which part of the
 course to revisit.
 
 Checked against the pinned SPEED build, commit `a8bde62` (see
@@ -24,11 +24,11 @@ specs/
   tech/adaptive-auth/2-card-testing.md          draft learners finish
 ```
 
-## Required behaviour
+## Required behavior
 
-| # | Behaviour | Today | Course moment that needs it |
+| # | Behavior | Today | Course moment that needs it |
 |---|---|---|---|
-| 1 | `specs/architecture/` is a recognised spec type with its own template | **Met.** `speed audit` maps `specs/architecture/` to `templates/architecture.md` (`lib/cmd/audit.sh:57`) and checks it at Levels 1 and 2 (`agents/audit.md:180`). Define has no architecture tab yet (row 6) | Define: engineers read and comment on the architecture |
+| 1 | `specs/architecture/` is a recognized spec type with its own template | **Met.** `speed audit` maps `specs/architecture/` to `templates/architecture.md` (`lib/cmd/audit.sh:57`) and checks it at Levels 1 and 2 (`agents/audit.md:180`). Define has no architecture tab yet (row 6) | Define: engineers read and comment on the architecture |
 | 2 | Nested feature folders: `specs/<type>/<feature>/<n>.md`, several files per type | **Met** for `speed plan --feature`, which finds every file under `specs/<type>/<feature>/` (`lib/features.sh:52`). `audit` detects the type from the path prefix, so one nested file works. A single-file `plan` still finds siblings by replacing `/tech/` in the path (`lib/cmd/plan.sh:1236`), then falls back to the spec's `> See` links (`:1249`) | Every stage |
 | 3 | `speed audit --feature <name>` audits every spec in the feature and cross-checks tech against product, design **and architecture** | **Open.** `audit` takes one file (`lib/cmd/audit.sh:22`). Level 3 compares an RFC or a design with the PRD it links; architecture files get Levels 1 and 2 only (`agents/audit.md:60`, `:180`). `speed plan --feature` audits every feature file, one report per file, before it plans (`lib/cmd/plan.sh:1515`) | Audit |
 | 4 | Feature-level sizing: the audit recommends splitting the tech spec into numbered files under `specs/tech/<feature>/` | **Open.** Sizing is per spec. A multi-RFC recommendation suggests child filenames with no fixed pattern (`agents/audit.md:166`), and the audit writes no files | Audit: watching sizing shape the RFC split |
@@ -36,12 +36,12 @@ specs/
 | 6 | Define shows one tab per spec file, including architecture, and accepts section suggestions on each | **Open.** Tabs are `prd`, `design`, `rfc` and `rfc-<slug>` (`dashboard/backend/resolvers/ceremony_claims.py:55`) | Define: engineers send inputs to the PM, designer and architect |
 | 7 | One person can switch roles in Define (engineer, then PM, designer, architect) without restarting the dashboard | **Open.** The actor comes from `SPEED_ACTOR`, then git `user.name`, and is cached for the life of the process (`dashboard/backend/resolvers/ceremony_types.py:960`) | Define: engineers act as the owner and accept or dismiss suggestions |
 
-## Behaviour the course relies on that exists today
+## Behavior the course relies on that exists today
 
 These are not requests. They are listed so that a refactor does not remove them without
 anyone noticing.
 
-| Behaviour | Where | Course moment |
+| Behavior | Where | Course moment |
 |---|---|---|
 | `speed plan` runs the audit on every registered spec and stops on a gate failure | `lib/cmd/plan.sh:1503` | Plan: audit as both a command and a gate |
 | An audit estimate above 10 tasks makes the Architect plan in phases, unless a task budget is set | `lib/cmd/plan.sh:1568`, `:1587`, `ARCHITECT_PHASE_TASK_THRESHOLD` | Plan |

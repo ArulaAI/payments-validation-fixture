@@ -1,6 +1,6 @@
 # 301.3E Payments Change Validation
 
-Engineers validate the adaptive authorisation change that agents built in 301.2E. It is
+Engineers validate the adaptive authorization change that agents built in 301.2E. It is
 reviewed, integrated and green. They decide what is true about it, repair what is theirs to
 repair, and escalate what belongs to its owners. 120 minutes, live, hands-on.
 

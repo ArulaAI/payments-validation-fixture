@@ -1,7 +1,7 @@
 # 301.2E Execute, Integrate, Learn
 
 A 120-minute engineering course that continues the same payments fixture and adaptive-
-authorisation feature from 301.1E. Engineers supervise `speed run`, investigate a failure,
+authorization feature from 301.1E. Engineers supervise `speed run`, investigate a failure,
 inspect `speed integrate`, use `speed learn` and hand the candidate and its evidence to
 301.3E. 
 
@@ -16,7 +16,7 @@ what can we safely learn from that execution, and what must the next engineer va
 | 301.2E Execute, Integrate, Learn | That same repository and handoff; supervise execution, recover, inspect integration and review learning | Candidate SHA, original intent, actual included scope, command/check evidence, learning provenance and unresolved owners |
 | 301.3E Payments Change Validation | That candidate and evidence; independently diagnose risks, select methods, repair and revalidate | A technical disposition supported by bounded evidence |
 
-The whole feature remains F2.1 genuine travellers and F2.2 cross-merchant card testing.
+The whole feature remains F2.1 genuine travelers and F2.2 cross-merchant card testing.
 Related context does not prove a saved plan covers both. Execute only the scope admitted
 in the actual 301.1E handoff. Product acceptance, operational readiness and production
 promotion remain with their named owners.

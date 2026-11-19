@@ -1,6 +1,6 @@
 # payments-validation-fixture
 
-The codebase the Engineering 301 pathway works on. A small card-payments authorisation
+The codebase the Engineering 301 pathway works on. A small card-payments authorization
 service with a double-entry ledger, its specs and its tests.
 
 It is not a payments product. It is a teaching artifact that behaves like one. Every check
@@ -21,20 +21,20 @@ TypeScript runs directly through Node's native type stripping.
 
 ## The service
 
-**F1 Payments** is what exists today. A gateway authorises a card payment, captures all or
+**F1 Payments** is what exists today. A gateway authorizes a card payment, captures all or
 part of it, refunds against a capture and voids an uncaptured one. Every movement of money is
 a balanced pair of ledger entries, and card numbers stay in a vault: the rest of the service
 sees a token and a masked card.
 
-**F2 Adaptive authorisation** is the change the pathway delivers. It has two parts that share
+**F2 Adaptive authorization** is the change the pathway delivers. It has two parts that share
 one bank step-up challenge:
 
 | Part | The problem today | The change |
 | --- | --- | --- |
-| F2.1 High-value traveller | A genuine customer abroad buying a £2,499 television is declined by a blanket cross-border rule | Score the payment; approve, ask the bank to confirm, hold for review or decline |
+| F2.1 High-value traveler | A genuine customer abroad buying a £2,499 television is declined by a blanket cross-border rule | Score the payment; approve, ask the bank to confirm, hold for review or decline |
 | F2.2 Card testing | A script tries 40 stolen cards across 20 merchants, one each, and every attempt is approved | Detect the burst across merchants and challenge further attempts on that card range |
 
-Tests `GW-02` and `GW-05` in `test/gateway.test.ts` record today's behaviour: the traveller
+Tests `GW-02` and `GW-05` in `test/gateway.test.ts` record today's behavior: the traveler
 is declined and the attack is approved.
 
 ## Layout
@@ -66,7 +66,7 @@ SPEED reads three files from this repository:
 <!-- snapshot:drop -->
 ## The Engineering 301 pathway
 
-Three 120-minute, hands-on courses follow one change, F2 adaptive authorisation, from its
+Three 120-minute, hands-on courses follow one change, F2 adaptive authorization, from its
 documents to a validated release decision. Each course starts from a snapshot of this
 fixture, so any course can run on its own, and each hands the next something a person can
 check.
@@ -139,13 +139,13 @@ scoring. In 301.3E, review, eval, plan, verify and run have not yet been run on 
 ## Card data
 
 Every card number here is a published scheme test number, and they are Luhn-valid on
-purpose. Expect your organisation's secret scanning, push protection or DLP to flag this
+purpose. Expect your organization's secret scanning, push protection or DLP to flag this
 repository. Tell your security team before it lands, not after. The courses depend on those
 numbers being present.
 
 ## House rules
 
-Prose follows AP style. No em-dashes, no mirrored sentence pairs, no negative-then-positive
-constructions.
+Prose follows AP style, with American spelling. No em-dashes, no mirrored sentence pairs,
+no negative-then-positive constructions.
 
 `docs/` and `specs/` are exempt only where they quote a third party verbatim.

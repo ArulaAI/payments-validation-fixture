@@ -19,7 +19,7 @@ model calls. A command can exit 0 and still print warnings. A missing source sta
 ## 1 Predict and preview: 3 minutes
 
 Before running anything, write one fact from this run that should help the next engineer,
-and one lesson that would be dangerous to generalise.
+and one lesson that would be dangerous to generalize.
 
 ```sh
 python3 "$course_assets/capture-evidence.py" "$PWD" "$course_workspace/before-learn"
@@ -50,7 +50,7 @@ Open the JSONL and pick two entries. For each, record its ID, task, type and det
 find the file it came from. The timestamp is when extraction ran, not when the event
 happened.
 
-## 3 Synthesise and trace forward: 6 minutes
+## 3 Synthesize and trace forward: 6 minutes
 
 Synthesis writes the files future agents read, so keep a copy of the folder first.
 
@@ -87,7 +87,7 @@ scoped to its task, whatever the plan says.
 ## 4 Decide and transfer: 6 minutes
 
 Complete the [learning review](assets/templates/learning-review.md). Keep one bounded
-observation, reject one unsupported generalisation, or name the owner decision it needs.
+observation, reject one unsupported generalization, or name the owner decision it needs.
 
 | Claim to test | Question |
 | --- | --- |

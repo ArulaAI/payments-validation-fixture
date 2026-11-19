@@ -71,8 +71,8 @@ the next implementation belongs to the same approved scope.
 ## Compulsory learning question for every packet
 
 Constructed F2 proposal: “The shared attempt store was unavailable during one run.
-Decline every authorisation on that outage and save the rule as a learned convention.”
-The accepted F2 architecture instead says authorisations continue, detection pauses
+Decline every authorization on that outage and save the rule as a learned convention.”
+The accepted F2 architecture instead says authorizations continue, detection pauses
 and an alert is logged. The task reviewer reconstructed an empty supplied diff; no
 later target test result has been supplied.
 

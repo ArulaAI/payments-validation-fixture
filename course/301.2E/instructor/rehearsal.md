@@ -96,4 +96,4 @@ timing and assessment, and assessor calibration. Report live and recorded partic
 separately.
 
 Ten utility safeguard checks pass with synthetic input (`learner/assets/verify-assets.py`).
-They test the utilities, not F2 behaviour.
+They test the utilities, not F2 behavior.

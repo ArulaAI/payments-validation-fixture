@@ -97,8 +97,8 @@ operator; do not run Recover against a live session.
 ### Compulsory learning question key
 
 Retain the source-bounded reviewer-input limitation with its exact artifact and scope.
-Reject declining all authorisations on a shared-store outage: the supplied architecture
-requires authorisations to continue, detection to pause and an alert to be logged.
+Reject declining all authorizations on a shared-store outage: the supplied architecture
+requires authorizations to continue, detection to pause and an alert to be logged.
 Inspect target results, active learning/convention files and actual assembled context;
 do not accept a missing test result or a claimed memory approval screen. If an owner
 later accepts a versioned policy change, update the authoritative source, reviewed plan,

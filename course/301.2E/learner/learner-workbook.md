@@ -1,6 +1,6 @@
 # 301.2E learner workbook
 
-You continue the 301.1E work on adaptive authorisation. The plan has 10 tasks. Today agents
+You continue the 301.1E work on adaptive authorization. The plan has 10 tasks. Today agents
 build it while you supervise, decide what may reach the candidate, and check what the run
 teaches future agents. The session lasts 120 minutes.
 
@@ -166,7 +166,7 @@ python3 "$course_assets/capture-evidence.py" "$PWD" "$course_workspace/after-int
 
 ## 5 Learn: 20 minutes
 
-Follow the [Learn exercise](learn.md): predict, extract, synthesise, trace one learning
+Follow the [Learn exercise](learn.md): predict, extract, synthesize, trace one learning
 into the context a future agent receives, and decide what to keep. Submit the
 [learning review](assets/templates/learning-review.md).
 

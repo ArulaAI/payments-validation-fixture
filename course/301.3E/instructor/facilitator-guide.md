@@ -23,7 +23,7 @@ asked, say the candidate is what the run produced and their job is to establish 
 
 ## Interventions
 
-| Learner behaviour | Response |
+| Learner behavior | Response |
 | --- | --- |
 | Calls a diagnose zero a pass | Ask which rule would have matched, and what it reads |
 | Treats the stored review approval as proof | Ask what the reviewer was given and what it never ran |

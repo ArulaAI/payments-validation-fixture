@@ -13,7 +13,7 @@ with a verified task plan, which is where 301.2E picks up.
 **Is this feature defined well enough to plan, and does the plan still say what the specs
 meant?**
 
-A traveller in Tokyo is refused a 2,499 pound television by a rule written at launch.
+A traveler in Tokyo is refused a 2,499 pound television by a rule written at launch.
 Meanwhile forty stolen card numbers are approved across twenty merchants in three
 minutes, because the same platform counts attempts per card and each card was tried once.
 Product, architecture and design have each written their part of the fix. Engineering
@@ -50,7 +50,7 @@ facilitators only.
 | F2.1 high-value purchases | PM, checkout | `specs/product/adaptive-auth/1-high-value-traveller.md` |
 | F2.2 card testing | PM, risk platform | `specs/product/adaptive-auth/2-card-testing.md` |
 | Platform architecture | Principal architect | `specs/architecture/overview.md` |
-| Adaptive authorisation architecture | Principal architect | `specs/architecture/adaptive-auth.md` |
+| Adaptive authorization architecture | Principal architect | `specs/architecture/adaptive-auth.md` |
 | Checkout step-up design | Designer, checkout | `specs/design/adaptive-auth/1-checkout-challenge.md` |
 | Risk review queue design | Designer, operations console | `specs/design/adaptive-auth/2-risk-review-queue.md` |
 | Existing code and tests | | `src/payments/gateway.ts`, `src/risk/`, `test/gateway.test.ts` |
@@ -61,7 +61,7 @@ The five lenses the feature touches, and where each one lives in the provided do
 
 | Lens | Lives in |
 |---|---|
-| Real-time fraud detection and authorisation scoring | Architecture, both PRDs |
+| Real-time fraud detection and authorization scoring | Architecture, both PRDs |
 | GenAI risk | F2.2 problem (attackers), architecture risk narrative (ours) |
 | Customer experience | F2.1, checkout design |
 | Legal and risk | Security sections, open questions, overview principles |
@@ -110,11 +110,11 @@ can also miss what is plainly there.
 |---|---|---|---|
 | What the system does today, before any document says what it should do | `npm test`; reads `gateway.ts` and `rules.ts` | Nothing yet | Nothing yet |
 
-The characterisation tests show the traveller declined (GW-02), the decline that says
+The characterization tests show the traveler declined (GW-02), the decline that says
 nothing (GW-03), the card-testing burst approved in full (GW-05), and velocity counted
 per replica (GW-06).
 
-**Produces:** a baseline test run. The behaviour the specs must change, pinned as tests
+**Produces:** a baseline test run. The behavior the specs must change, pinned as tests
 that will have to change with it.
 
 The room leaves with: a shared picture of the system as it is.
@@ -264,7 +264,7 @@ agent `lib/cmd/verify.sh:562`.
 
 ### Where to read in each prompt
 
-| Agent | Sections that explain its behaviour on this feature |
+| Agent | Sections that explain its behavior on this feature |
 |---|---|
 | Auditor | Check Levels (what each level can see), Level 4 sizing rules and the ten- and fifteen-task thresholds |
 | Product Guardian | What You Check (anti-goals, renamed concepts), Status Definitions, Guidelines ("quote the vision document") |
@@ -326,12 +326,12 @@ Two things the room should see:
 | Plan, index failure | Falls back to cruder grounding with a warning, not a stop | `plan.sh:1634` |
 | Plan, gate unavailable | Skips the decomposition gate with a warning | `plan.sh:459` |
 
-## SPEED behaviour this course depends on
+## SPEED behavior this course depends on
 
-Several stages use SPEED behaviour that was built alongside the course. The pinned build,
+Several stages use SPEED behavior that was built alongside the course. The pinned build,
 commit `a8bde62`, has an architecture spec type, multi-file features and feature-level
 `plan`. `audit --feature`, per-file Define tabs and role switching are still open. See
-[`speed-requirements.md`](speed-requirements.md) for each behaviour, what SPEED does
+[`speed-requirements.md`](speed-requirements.md) for each behavior, what SPEED does
 today, and the course moment that depends on it.
 
 ## Not yet decided

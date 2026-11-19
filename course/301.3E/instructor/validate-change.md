@@ -1,7 +1,7 @@
 # 301.3E Payments Change Validation
 
 A 120-minute engineering course that ends the pathway. Engineers take the adaptive
-authorisation candidate from 301.2E, which every check calls done, and establish what is
+authorization candidate from 301.2E, which every check calls done, and establish what is
 actually true about it.
 
 **Governing question:** Which claims about this change are true, which defects are ours to

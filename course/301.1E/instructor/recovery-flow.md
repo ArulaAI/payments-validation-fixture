@@ -7,7 +7,7 @@ run again. This example concerns specification and plan recovery before implemen
 
 ## The concrete example
 
-A traveller buys a £2,499 television. In the proposed F2.1 flow, the risk assessment
+A traveler buys a £2,499 television. In the proposed F2.1 flow, the risk assessment
 holds the payment for review. An analyst later declines it, so the payment is voided.
 **How does the shop learn the decision and explain it to the customer?**
 

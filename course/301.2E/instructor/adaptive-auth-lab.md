@@ -1,9 +1,9 @@
-# 301.2E fixture continuity: the same adaptive-authorisation feature
+# 301.2E fixture continuity: the same adaptive-authorization feature
 
 This is the required course fixture. Continue the payments-validation-fixture repository,
-reviewed specifications and task plan from 301.1E: F2.1 genuine travellers and F2.2
+reviewed specifications and task plan from 301.1E: F2.1 genuine travelers and F2.2
 cross-merchant card testing. The 120-minute session follows an admitted execution checkpoint,
-using clearly labelled recorded checkpoints from that same source when required.
+using clearly labeled recorded checkpoints from that same source when required.
 
 ## Admit the actual 301.1E packet
 
@@ -36,10 +36,10 @@ The saved plan has 10 tasks:
 | 2 | Capture blocks and append-only audit storage | none |
 | 3 | Held-payment review, expiry and narratives | 1, 2 |
 | 4 | Replica-local step-up lifecycle | 1 |
-| 5 | Scored authorisation and policy challenges at the gateway | 1, 3, 4 |
+| 5 | Scored authorization and policy challenges at the gateway | 1, 3, 4 |
 | 6 | Shared attempt detection and replica-local block lookup | none |
 | 7 | Attack operations, expiry and merchant notifications | 2, 6 |
-| 8 | Block challenges and the combined authorisation path | 5, 6, 7 |
+| 8 | Block challenges and the combined authorization path | 5, 6, 7 |
 | 9 | Remove `HIGH_VALUE_CROSS_BORDER` after full merchant cutover (added by Verify) | 8 |
 | 10 | Gate and verify the production rollout (added by Verify, no files) | 8 |
 
@@ -125,7 +125,7 @@ versions, task branches, configured check results, learning provenance/active me
 the feature's functional examples, data handling, shared-state behavior and timing claims.
 An in-memory classroom test cannot establish production latency or deployment behavior.
 
-For example, evidence for the traveller path does not establish cross-replica card-testing
+For example, evidence for the traveler path does not establish cross-replica card-testing
 detection. A replay assertion about an attack does not settle its production blocking
 policy. The receiving 301.3E engineer chooses independent methods for those risks from
 the original intent and the candidate, rather than inheriting a blanket approval.

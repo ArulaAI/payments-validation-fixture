@@ -1,6 +1,6 @@
 # 301.1E Define, Audit, Plan
 
-Engineers take adaptive authorisation (F2) from its upstream documents and code to reviewed
+Engineers take adaptive authorization (F2) from its upstream documents and code to reviewed
 technical specs and a verified plan. Nothing is built. 120 minutes, live, hands-on.
 
 | Starts from | Hands on to 301.2E |
@@ -26,7 +26,7 @@ command -v speed         # the build above, not another install
 - `specs/product/`, `specs/design/`, `specs/architecture/`: the seven upstream documents.
   They belong to their authors. A gap in them becomes an owner question, not an edit.
 - `specs/tech/adaptive-auth/`: the two technical drafts engineers finish.
-- `src/`, `test/`: the gateway as it runs today. GW-02 and GW-05 lock in the behaviour the
+- `src/`, `test/`: the gateway as it runs today. GW-02 and GW-05 lock in the behavior the
   feature changes.
 - `.claude/skills/author-tech-spec/`: the authoring skill used in Define and Draft.
 - `.speed/classes.yaml` only: the failure-class rules `speed diagnose` reads in 301.3E. No other

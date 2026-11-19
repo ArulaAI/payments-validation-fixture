@@ -9,7 +9,7 @@ command map and the full walkthrough: Orient, Validate, Define and Draft, Audit,
 Plan, Verify and Handoff. Define is the main teaching block: engineers turn supplied
 PRDs, design and architecture into reviewed technical specifications.
 
-The feature is **all of F2 adaptive authorisation**: F2.1 genuine travellers and
+The feature is **all of F2 adaptive authorization**: F2.1 genuine travelers and
 F2.2 cross-merchant card testing, including their shared gateway and bank-confirmation
 contracts. The held-payment checkout finding is one Validate example.
 

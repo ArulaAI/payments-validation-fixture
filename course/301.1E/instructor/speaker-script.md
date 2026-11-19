@@ -2,16 +2,16 @@
 
 ## Course map
 
-Course 301-1E takes the adaptive authorisation feature from its existing behavior to
+Course 301-1E takes the adaptive authorization feature from its existing behavior to
 a reviewed technical specification and, when the gates and tooling support its scope,
 a verified implementation plan. This script covers the full teaching sequence. Define
-and Draft are its centre: the engineer uses the supplied PRDs, design and architecture
+and Draft are its center: the engineer uses the supplied PRDs, design and architecture
 to investigate decisions and write the tech specs. The table lists the commands before
 the walkthroughs explain when to use them.
 
 | Step | Command or screen | Why we use it | What it produces |
 |---|---|---|---|
-| Orient | `npm test`; read `src/payments/gateway.ts` and `src/risk/rules.ts` | Establish how authorisation behaves before the feature changes it | A baseline test result and a shared picture of the existing behavior |
+| Orient | `npm test`; read `src/payments/gateway.ts` and `src/risk/rules.ts` | Establish how authorization behaves before the feature changes it | A baseline test result and a shared picture of the existing behavior |
 | Validate | `speed validate specs/` | Compare the provided specifications and investigate disagreements | A saved report of findings, plus the command's acceptance or rejection of its response |
 | Dashboard setup (optional) | `speed dashboard status`; `speed dashboard start` if needed | Open an additional workspace for reviewing specification sections | A running dashboard; reuse an existing service when available |
 | Define | IDE and harness TUI; `$author-tech-spec adaptive-auth` in Codex or `/author-tech-spec adaptive-auth` in Claude Code | Review the inputs, investigate consequential questions and record decisions with their owners | An evolving questionnaire, accepted decisions and unresolved owner requests |
@@ -95,8 +95,8 @@ depends on the inputs and answers. Rehearse before committing to a fixed course 
 ### Say
 
 > We are engineers receiving product, design and architecture material for F2 adaptive
-> authorisation. We need to produce an implementable tech spec, then inspect the plan
-> that SPEED builds from it. F2 includes the genuine traveller and the cross-merchant
+> authorization. We need to produce an implementable tech spec, then inspect the plan
+> that SPEED builds from it. F2 includes the genuine traveler and the cross-merchant
 > card-testing attack. Both affect the same gateway and bank-confirmation contracts.
 >
 > First we'll establish what the service does today. Then Validate compares the
@@ -126,12 +126,12 @@ Open `test/gateway.test.ts`, `test/fixtures/traffic.ts`, `src/payments/gateway.t
 
 | Case | What to inspect | What it establishes |
 |---|---|---|
-| GW-02 | Traveller request and high-value cross-border rule | The launch behavior refuses the traveller |
+| GW-02 | Traveler request and high-value cross-border rule | The launch behavior refuses the traveler |
 | GW-03 | Decline response | The current response does not carry the intended safe explanation |
 | GW-05 | Forty cards across twenty merchants | Per-card velocity misses this traffic pattern |
 | GW-06 | A second gateway instance | Velocity state belongs to an instance today |
 
-Read the assertions alongside the observed test run. These characterisation tests can
+Read the assertions alongside the observed test run. These characterization tests can
 pass while preserving the behavior F2 intends to change. This baseline is separate
 from the later implementation acceptance tests.
 
@@ -149,7 +149,7 @@ blocker. Then move to Validate's worked cross-document finding.
 
 ### Three teaching goals
 
-- **Shared intuition:** understand why F2's traveller and card-testing scenarios need
+- **Shared intuition:** understand why F2's traveler and card-testing scenarios need
   consistent product, architecture, design and technical specifications. Follow one
   checkout finding through Validate while keeping the whole feature in view.
 - **Shared language:** distinguish a specification, the Validator's instructions, a
@@ -176,8 +176,8 @@ group exercise.
 
 ### Say
 
-> We're building adaptive authorisation for a card payments service. The product
-> documents describe two problems. A genuine traveller in Tokyo is refused a 2,499
+> We're building adaptive authorization for a card payments service. The product
+> documents describe two problems. A genuine traveler in Tokyo is refused a 2,499
 > pound television because their country differs from the card's issuer. Meanwhile,
 > forty stolen cards are tested across twenty merchants in under three minutes, and
 > every attempt is approved. The existing velocity rule counts attempts per card;
@@ -186,7 +186,7 @@ group exercise.
 > F2.1 gives unusual purchases a scored decision and a way to confirm through the
 > bank. F2.2 detects card testing across merchants, challenges further attempts,
 > notifies merchants and lets analysts release false alarms. Both change the same
-> authorisation gateway and use the bank-confirmation flow and operations console.
+> authorization gateway and use the bank-confirmation flow and operations console.
 >
 > Product has written two PRDs. Architecture describes how the feature fits the
 > platform. Design describes checkout and the analyst's workspace. Engineering has
@@ -252,7 +252,7 @@ the bank provider is unavailable or times out during step-up.
 ### Say
 
 > Product asks for a borderline payment to be held. The tech spec explains that the
-> payment is authorised, capture is blocked, and a review item is created. It also
+> payment is authorized, capture is blocked, and a review item is created. It also
 > sends a payment into that state when the bank can't answer a challenge.
 >
 > So an unavailable bank can leave a real payment waiting for review. What should
@@ -336,7 +336,7 @@ Keep this map of F2's inputs beside the file list. Paths are relative to the fix
 | File | What it contributes to F2 |
 |---|---|
 | `specs/product/overview.md` | Platform principles: ask before refusing, explain decisions, see fraud across merchants and protect card data |
-| `specs/product/adaptive-auth/1-high-value-traveller.md` | Traveller, scored decisions, bank confirmation and held-payment requirements |
+| `specs/product/adaptive-auth/1-high-value-traveller.md` | Traveler, scored decisions, bank confirmation and held-payment requirements |
 | `specs/product/adaptive-auth/2-card-testing.md` | Cross-merchant detection, challenges, notifications and analyst release requirements |
 | `specs/architecture/overview.md` | Existing replicas, storage, latency and data-handling constraints |
 | `specs/architecture/adaptive-auth.md` | Shared gateway, component responsibilities and interactions for both scenarios |
@@ -358,7 +358,7 @@ Keep this map of F2's inputs beside the file list. Paths are relative to the fix
 > and whether that document belongs to the behavior we're checking. Passing the
 > whole folder gives the agent broad context, including material that needs care.
 >
-> Within that input, these documents describe F2 together. The traveller and the
+> Within that input, these documents describe F2 together. The traveler and the
 > card-testing attack share the gateway, bank confirmation and analyst workspace.
 > A change to a shared result or interface needs to make sense for both. We'll
 > check a checkout result today, then carry the full document set into Define.
@@ -506,7 +506,7 @@ the tech spec, although the remaining checkout decision belongs to Design and CX
 ### Say
 
 > Here's the finding we'll follow. It says the design binds its outcome to the
-> authorisation response's status, but the two sets of names don't agree. It also
+> authorization response's status, but the two sets of names don't agree. It also
 > says there's no checkout outcome for a held payment.
 >
 > The report gives us source documents and an explanation. We can use those to
@@ -542,7 +542,7 @@ the missing held and provider-unavailable outcomes and assigns the work to Desig
 > has no held result at all.
 >
 > The bank error screen doesn't resolve this. A bank outage can produce a hold in
-> the tech spec, with an authorised payment and capture blocked. The design's error
+> the tech spec, with an authorized payment and capture blocked. The design's error
 > screen says the bank couldn't confirm and offers another way to pay. The documents
 > haven't specified what the customer should see for the hold.
 >
@@ -593,11 +593,11 @@ proposals with the upstream questions and establish which owners have made a dec
 > check the claim and carry the remaining decision to its owner. When the documents
 > are updated, we'll compare a new report with this preserved run.
 >
-> Now we move into Define for adaptive authorisation. We carry both PRDs, the
+> Now we move into Define for adaptive authorization. We carry both PRDs, the
 > platform and feature architecture, the checkout and review-queue designs, and
 > the drafts we've just inspected. The checkout gap is one item in that work.
 >
-> For the traveller, Product and Risk need to establish the acceptable fraud tradeoff
+> For the traveler, Product and Risk need to establish the acceptable fraud tradeoff
 > and hold policy; Legal owns the exemptions question. For card testing, Product
 > and Risk need to establish the attack-source definition, block lifetime and scope.
 > Engineering checks how those decisions fit the shared gateway and platform
@@ -616,7 +616,7 @@ proposals with the upstream questions and establish which owners have made a dec
 - **Audience and starting point:** engineers can read code; this opening establishes
   both F2 scenarios, their shared boundaries, document roles and the worked checkout
   example before using SPEED vocabulary.
-- **Feature scope:** the lesson leads into Define for F2 adaptive authorisation.
+- **Feature scope:** the lesson leads into Define for F2 adaptive authorization.
   The held-payment checkout gap is one worked finding. The card-testing questions
   in the closing come from the product spec and are not presented as verified
   Validator findings.
@@ -689,7 +689,7 @@ the engineer's RFC review and from independent approval by Product, Design, Risk
 ### Three teaching goals
 
 - **Shared intuition:** an implementable tech spec connects product intent, design,
-  architectural constraints and the code that exists today. Cover both the traveller
+  architectural constraints and the code that exists today. Cover both the traveler
   and cross-merchant card-testing scenarios and their shared contracts.
 - **Shared language:** distinguish a source-derived fact, a proposed option, an
   accepted engineering decision, an owner request and a reviewed RFC edit.
@@ -785,7 +785,7 @@ Check the manifest against the harness's reported inputs. Inspect missing resour
 and the resolved SPEED template path. The optional saved Validate report is historical
 evidence; check its findings against the current input revisions.
 
-Review the harness's summary of current behaviour, intended F2.1 and F2.2 behaviour,
+Review the harness's summary of current behavior, intended F2.1 and F2.2 behavior,
 shared responsibilities and constraints. Follow its source references in the IDE.
 Correct any mistaken statement before confirming the understanding. Confirm only
 after checking it; the confirmation starts the interview and does not approve every
@@ -863,7 +863,7 @@ request when it remains open. Continue independent work on both RFCs while waiti
 keep the unresolved dependency visible.
 
 Show how the accepted answer updates the question and decision records. Check that
-a proposed option is not labelled as an accepted decision merely because the harness
+a proposed option is not labeled as an accepted decision merely because the harness
 recommended it.
 
 #### Guide the interview through the feature
@@ -874,7 +874,7 @@ and ordering. These prompts guide investigation and supply no predetermined answ
 
 | Round | Decisions to investigate | Evidence to keep open | Expected RFC destinations |
 |---|---|---|---|
-| Shared lifecycle | Authorisation ownership; challenge origin, persistence, retry, completion, cancellation and expiry; holds and capture races | Platform and feature architecture, gateway, payments service, both draft state machines | Interface Contract, Data Model, State Machine, API Surface, Validation Rules, Testing |
+| Shared lifecycle | Authorization ownership; challenge origin, persistence, retry, completion, cancellation and expiry; holds and capture races | Platform and feature architecture, gateway, payments service, both draft state machines | Interface Contract, Data Model, State Machine, API Surface, Validation Rules, Testing |
 | Integration and user experience | Merchant facts, payment ownership, typed checkout result mapping, held and unavailable states, analyst actions | Both designs, payment contracts, both RFC API surfaces | Basic Example, Interface Contract, API Surface, Security & Controls, Dependencies, Testing |
 | Card-testing reliability | Detection inputs, attack identity, publication across six replicas, store outages, release and expiry, history and notifications | F2.2 PRD, feature architecture, risk queue design, F2.2 RFC | Data Model, State Machine, Search / Query Strategy, Validation Rules, Migration Strategy, Testing |
 | Policy and data boundaries | Threshold and block-policy owners, retained data, permitted narrative inputs, external processing authority and safe reasons | Product overview, both PRDs, architecture security boundaries, designs | Security & Controls, Key Decisions, Dependencies, Unresolved Questions |
@@ -956,7 +956,7 @@ answer blocks safe integration or cutover, keep that block in the RFC and handof
 
 #### Say
 
-> A decision can affect several sections and both RFCs. Shared step-up behaviour,
+> A decision can affect several sections and both RFCs. Shared step-up behavior,
 > for example, needs consistent contracts, transitions, failure outcomes and tests.
 > Review the proposed text in each affected place before applying it.
 >
@@ -967,7 +967,7 @@ answer blocks safe integration or cutover, keep that block in the RFC and handof
 #### Do
 
 Inspect the proposed diff in the IDE. Check its source references, exact contracts,
-error behaviour and observable acceptance criteria. Accept or request a correction
+error behavior and observable acceptance criteria. Accept or request a correction
 to the proposed wording. Once accepted, check the on-disk edit and its application
 record in `decisions.md`.
 
@@ -1080,7 +1080,7 @@ inspect an incomplete draft; that does not make the draft ready for Plan.
   Package checks confirmed the input paths, shared references and questionnaire
   destinations against the installed RFC headings. The live session also reached the
   initial understanding check and saved its question queue. The complete interview,
-  accepted edits and resume behaviour have not yet been trialled.
+  accepted edits and resume behavior have not yet been trialed.
 - **Before teaching:** rehearse both harness routes through input review, one real
   decision, a reviewed RFC edit, a saved pause and a resumed conversation. Preserve
   the resulting evidence and check that existing IDE edits survive. This script
@@ -1219,8 +1219,8 @@ changes. Archive the new reports with the new input revisions and retain the old
 
 #### Say
 
-> Sizing is a recommendation about organising work. The Auditor does not create new
-> RFC files. Our two drafts already separate the shared traveller contracts from the
+> Sizing is a recommendation about organizing work. The Auditor does not create new
+> RFC files. Our two drafts already separate the shared traveler contracts from the
 > card-testing extension. Any further split must preserve those dependencies.
 
 #### Do
@@ -1323,7 +1323,7 @@ appears. Use the source walkthrough while an agent call is running.
 | Architect validation | Critical validation issues stop task creation. | `validation-report.json` when produced |
 | Task creation and decomposition | Tasks are saved, then checked for size, coordination, bridge dependencies and shared file ownership. A dependency loop stops the plan. | Task JSON, decomposition diagnostics and any automatic dependency patches |
 
-In feature mode every document is labelled with its path (`lib/cmd/plan.sh`, lines 1342
+In feature mode every document is labeled with its path (`lib/cmd/plan.sh`, lines 1342
 to 1366), so agents can tell `1-…` from `2-…`. Check the printed list against the seven
 feature documents before reading the tasks.
 
@@ -1655,7 +1655,7 @@ end to end against the pinned build. Rehearse it and keep evidence that establis
    work with another child's work.
 4. Shared gateway and step-up contracts have explicit ownership and dependency edges.
 5. Verify checks the same complete scope and reports uncovered requirements and owner
-   decisions, including the traveller, attack, release, notification and failure flows.
+   decisions, including the traveler, attack, release, notification and failure flows.
 6. Reports distinguish a pass from skipped, unavailable or unparseable checks, and the
    evidence survives reruns and task repairs.
 

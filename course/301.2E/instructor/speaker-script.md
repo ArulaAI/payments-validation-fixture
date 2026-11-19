@@ -35,7 +35,7 @@ happens before class; learners need no additional homework.
 > route through that intent. Before agents write code, we decide what scope is ready,
 > which branch may change and what remains with another owner.
 >
-> This is the adaptive-authorisation feature you specified in 301.1E. The traveller
+> This is the adaptive-authorization feature you specified in 301.1E. The traveler
 > and card-testing scenarios share the gateway and bank-confirmation contracts. We
 > execute only the reviewed scope; unresolved Risk, Legal, Product and release decisions
 > remain with their owners.
@@ -316,7 +316,7 @@ traceability ratio answer narrower questions than feature acceptance.
 
 Follow the [Learn exercise](../learner/learn.md): three minutes to predict/preserve,
 five to extract/inspect, six to synthesize/trace and six to decide. The commands target
-`adaptive-auth` in the same admitted continuation or its labelled recorded checkpoint.
+`adaptive-auth` in the same admitted continuation or its labeled recorded checkpoint.
 
 Show `cmd_learn`, `learn_extract`, `synthesize` and the actual context bridge. Explain
 observation IDs/source artifacts, auto-discovered conventions, structural quality rejects,
@@ -327,7 +327,7 @@ it is not a complete observation approval screen. Single-player writes can becom
 without mandatory human curation. Preserve before/after memory and the actual context.
 
 Ask each learner to trace one source-to-observation-to-entry chain. If no entry survives,
-record that fact. Do not plant a desirable example. The trainer may use a labelled F2
+record that fact. Do not plant a desirable example. The trainer may use a labeled F2
 teaching claim for the second decision: “Because F2.1 holds on provider unavailability,
 all F2.2 block-match challenges should also hold.” Learners must consult both RFCs and
 reject that unsupported cross-path policy generalization.

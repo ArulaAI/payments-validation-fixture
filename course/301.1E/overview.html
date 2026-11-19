@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Arula Academy 301.1E: guided technical specification authoring, Audit, Plan and Verify for adaptive authorisation.">
+<meta name="description" content="Arula Academy 301.1E: guided technical specification authoring, Audit, Plan and Verify for adaptive authorization.">
 <title>Arula 301.1E | Define, Audit, Plan | Course overview</title>
 <link rel="stylesheet" href="../assets/arula/design-tokens.css">
 <style>
@@ -150,23 +150,23 @@ a { color:inherit; text-decoration:none; border-bottom:1px solid var(--muted); }
 <g font-family="Libre Franklin,Arial,sans-serif" fill="#27292d" text-anchor="middle"><text x="370" y="103" font-size="17">Reviewed RFCs</text><text x="370" y="122" font-size="11">engineer + harness</text></g>
 </svg>
 <p class="cover-art-caption">Product, Design and Architecture supply the inputs. Engineering owns the technical specification.</p></div>
-<div class="cover-bottom"><div><p class="label">The engineer's responsibility</p><p>Read the sources. Investigate the decisions.<br>Review the contracts. Keep ownership visible.</p></div><div><p class="label">The course fixture</p><p>Adaptive authorisation in an existing payments service. Two scenarios. One shared system.</p></div></div>
+<div class="cover-bottom"><div><p class="label">The engineer's responsibility</p><p>Read the sources. Investigate the decisions.<br>Review the contracts. Keep ownership visible.</p></div><div><p class="label">The course fixture</p><p>Adaptive authorization in an existing payments service. Two scenarios. One shared system.</p></div></div>
 <footer class="footer"><span>Course overview · Updated 12 October 2026</span><span class="folio">01 / 08</span></footer>
 </section>
 
 <section class="page" aria-label="The feature">
 <header class="masthead"><span class="brand"><svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3 27 9.5v13L16 29 5 22.5v-13L16 3Z"/><path d="M16 3v13m0 0 11 6.5M16 16 5 22.5M5.3 9.5 16 16l10.7-6.5"/></svg><span>arula</span></span><span class="running">01 / The feature</span></header>
 <p class="eyebrow">One feature. Two failure patterns.</p>
-<h2>Help the genuine customer.<br>Recognise the attack.</h2>
-<p class="lede">F2 adaptive authorisation asks engineering to connect product intent, customer experience and a distributed system. Both scenarios share the gateway and bank-confirmation contracts.</p>
+<h2>Help the genuine customer.<br>Recognize the attack.</h2>
+<p class="lede">F2 adaptive authorization asks engineering to connect product intent, customer experience and a distributed system. Both scenarios share the gateway and bank-confirmation contracts.</p>
 <div class="two">
-<article class="case"><p class="label">F2.1 / Genuine traveller</p><p class="metric">£2,499</p><h3>An unusual purchase<br>gets refused.</h3><p>A traveller in Tokyo buys a television. The launch-era high-value cross-border rule declines the payment.</p><p class="small" style="margin-top:4mm"><strong>Intended behavior:</strong> scored decisions, bank confirmation, safe explanations and analyst review where needed.</p></article>
+<article class="case"><p class="label">F2.1 / Genuine traveler</p><p class="metric">£2,499</p><h3>An unusual purchase<br>gets refused.</h3><p>A traveler in Tokyo buys a television. The launch-era high-value cross-border rule declines the payment.</p><p class="small" style="margin-top:4mm"><strong>Intended behavior:</strong> scored decisions, bank confirmation, safe explanations and analyst review where needed.</p></article>
 <article class="case attack"><p class="label">F2.2 / Card testing</p><p class="metric">40 <span>cards · 20 merchants</span></p><h3>A distributed attack<br>looks ordinary.</h3><p>Stolen cards are tested in under three minutes. Each card is tried once, so the per-card velocity rule misses the pattern.</p><p class="small" style="margin-top:4mm"><strong>Intended behavior:</strong> detect the pattern, challenge matching attempts, notify merchants and support release and expiry.</p></article>
 </div>
 <div class="constraint-strip"><div><p class="number">6</p><p>Stateless gateway replicas</p></div><div><p class="number">40 ms</p><p>Risk-decision p99 budget</p></div><div><p class="number">Vault</p><p>Card-data trust boundary</p></div></div>
 <div class="input-row"><strong>Product</strong><span>Two PRDs, stories, success criteria and the product vision.</span></div>
 <div class="input-row"><strong>Design + architecture</strong><span>Checkout and analyst experiences, component responsibilities and failure constraints.</span></div>
-<div class="input-row"><strong>Engineering</strong><span>Existing code, characterisation tests and two RFC drafts to inspect and develop.</span></div>
+<div class="input-row"><strong>Engineering</strong><span>Existing code, characterization tests and two RFC drafts to inspect and develop.</span></div>
 <footer class="footer"><span>Arula Academy · 301.1E · Define, Audit, Plan</span><span class="folio">02 / 08</span></footer>
 </section>
 

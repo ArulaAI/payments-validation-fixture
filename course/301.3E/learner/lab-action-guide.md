@@ -1,6 +1,6 @@
 # Lab 301.3E: Payments Change Validation
 
-Today you validate the adaptive authorisation change that agents built in 301.2E. It has been
+Today you validate the adaptive authorization change that agents built in 301.2E. It has been
 reviewed, integrated and passes every test. Your job is to decide what is actually true about
 it, repair what is yours to repair, and send the rest to the people who own it.
 
