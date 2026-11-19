@@ -1,4 +1,4 @@
-# Lab 301.3E: Payments Change Validation
+# Lab 301.3E: Diagnose, Judge, Repair
 
 Today you validate the adaptive authorization change that agents built in 301.2E. It has been
 reviewed, integrated and passes every test. Your job is to decide what is actually true about

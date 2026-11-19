@@ -9,7 +9,7 @@ course can run on its own.
 | --- | --- | --- | --- |
 | 301.1E Define, Audit, Plan | The baseline: upstream documents, code and tests | A reviewed spec and an agent-ready plan | [`301.1E/`](301.1E/) |
 | 301.2E Execute, Integrate, Learn | The reviewed 301.1E output | Candidate code and evidence | [`301.2E/`](301.2E/) |
-| 301.3E Payments Change Validation | The 301.2E candidate, with gaps added | Accept, repair or escalate | [`301.3E/`](301.3E/) |
+| 301.3E Diagnose, Judge, Repair | The 301.2E candidate, with gaps added | Accept, repair or escalate | [`301.3E/`](301.3E/) |
 
 The feature is all of F2 adaptive authorization: a genuine traveler declined abroad
 (F2.1) and a card-testing attack approved across merchants (F2.2), sharing one bank

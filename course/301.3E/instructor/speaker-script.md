@@ -1,6 +1,6 @@
 # 301.3E speaker script
 
-Say and do, stage by stage. Timings match the [framework](validate-change.md). Keep
+Say and do, stage by stage. Timings match the [framework](diagnose-judge-repair.md). Keep
 [gap-design.md](gap-design.md) open on your own screen only.
 
 ## Open (part of stage 1)

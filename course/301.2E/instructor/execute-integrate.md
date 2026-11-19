@@ -14,7 +14,7 @@ what can we safely learn from that execution, and what must the next engineer va
 | --- | --- | --- |
 | 301.1E Define, Audit, Plan | Existing payments code, Product/Architecture/Design and both F2 RFCs; reconcile decisions, author, audit, plan and verify | Exact source baseline, reviewed RFC revisions, actual task graph/contract, planning and verification evidence, owner decisions and blockers |
 | 301.2E Execute, Integrate, Learn | That same repository and handoff; supervise execution, recover, inspect integration and review learning | Candidate SHA, original intent, actual included scope, command/check evidence, learning provenance and unresolved owners |
-| 301.3E Payments Change Validation | That candidate and evidence; independently diagnose risks, select methods, repair and revalidate | A technical disposition supported by bounded evidence |
+| 301.3E Diagnose, Judge, Repair | That candidate and evidence; independently diagnose risks, select methods, repair and revalidate | A technical disposition supported by bounded evidence |
 
 The whole feature remains F2.1 genuine travelers and F2.2 cross-merchant card testing.
 Related context does not prove a saved plan covers both. Execute only the scope admitted

@@ -1,4 +1,4 @@
-# 301.3E Payments Change Validation
+# 301.3E Diagnose, Judge, Repair
 
 A 120-minute engineering course that ends the pathway. Engineers take the adaptive
 authorization candidate from 301.2E, which every check calls done, and establish what is
@@ -13,7 +13,7 @@ fix, and which decisions belong to someone else?
 | --- | --- | --- |
 | 301.1E Define, Audit, Plan | Upstream documents, code, two draft tech specs | Reviewed specs, owner questions, a verified plan |
 | 301.2E Execute, Integrate, Learn | That plan | An integrated candidate with its evidence and learning |
-| 301.3E Payments Change Validation | That candidate | A disposition for every finding, a bounded repair and an escalation |
+| 301.3E Diagnose, Judge, Repair | That candidate | A disposition for every finding, a bounded repair and an escalation |
 
 ## Audience and entry
 

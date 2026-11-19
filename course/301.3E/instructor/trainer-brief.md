@@ -1,13 +1,13 @@
 # 301.3E trainer brief
 
-Teach **Payments Change Validation** in 120 minutes. Learners validate the integrated 301.2E
+Teach **Diagnose, Judge, Repair** in 120 minutes. Learners validate the integrated 301.2E
 candidate, repair the defects that are theirs, and escalate the one decision that is not.
 
 ## Pickup order
 
 | Resource | Use |
 | --- | --- |
-| [Framework](validate-change.md) | Eight timed stages and the completion standard |
+| [Framework](diagnose-judge-repair.md) | Eight timed stages and the completion standard |
 | [Speaker script](speaker-script.md) | What to say and do, with prompts and checkpoints |
 | [Lab guide](../learner/lab-action-guide.md) | The learners' commands and checklists |
 | [Gap design](gap-design.md) | The answer key: every gap, its file and line, and the right action |

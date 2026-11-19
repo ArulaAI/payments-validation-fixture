@@ -1,4 +1,4 @@
-# 301.3E Payments Change Validation
+# 301.3E Diagnose, Judge, Repair
 
 Engineers validate the adaptive authorization change that agents built in 301.2E. It is
 reviewed, integrated and green. They decide what is true about it, repair what is theirs to

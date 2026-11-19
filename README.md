@@ -75,7 +75,7 @@ check.
 | --- | --- | --- | --- |
 | [301.1E Define, Audit, Plan](course/301.1E/) | Seven upstream documents, the code and two draft tech specs | Validate the documents, settle what is theirs to decide, audit the specs, plan and verify | Reviewed tech specs, owner questions and a 10-task plan |
 | [301.2E Execute, Integrate, Learn](course/301.2E/) | That plan | Supervise agents building it, recover stopped tasks, decide what may be integrated, review what the run teaches | A built candidate with its review findings, blocked tasks and learning |
-| [301.3E Payments Change Validation](course/301.3E/) | The integrated candidate, green on every check | Test each claim against what it cites; confirm, refute or escalate; repair what is theirs | Defect reports, a verified repair and one escalation to the owners |
+| [301.3E Diagnose, Judge, Repair](course/301.3E/) | The integrated candidate, green on every check | Test each claim against what it cites; confirm, refute or escalate; repair what is theirs | Defect reports, a verified repair and one escalation to the owners |
 
 The story is the same at every step. Engineers decide what the sources support, send every
 other decision to its named owner, and say what each tool checked and what it could not see.
