@@ -79,7 +79,11 @@ end of the slot, leave your run alone and move to the recorded checkpoint in a n
 ```sh
 git clone "$HOME/Lab/301.2E/after-run.bundle" "$HOME/Lab/301.2E/checkpoint"
 cd "$HOME/Lab/301.2E/checkpoint"
+for b in $(git branch -r | grep -v HEAD | sed 's#origin/##'); do git branch -q "$b" "origin/$b" 2>/dev/null; done
 ```
+
+The last line gives SPEED the task branches it reads locally; a clone holds them only as
+`origin/...`.
 
 Write down which folder each later command runs in.
 

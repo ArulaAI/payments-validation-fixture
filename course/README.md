@@ -57,4 +57,4 @@ pages use.
 | --- | --- | --- | --- |
 | 301.1E | Made from this branch | Complete. Run once from the snapshot on 18 Nov (SPEED on Codex); known issues not yet fixed | Done |
 | 301.2E | Made from that 301.1E run. Recorded checkpoint in `instructor/checkpoint/` | Complete, matched to the recorded run. No Claude-provider or cohort rehearsal yet | Done |
-| 301.3E | Not made. Needs the 301.2E candidate and its added gaps | Gap design drafted. The rest not written | Not written |
+| 301.3E | Made from continuing the 301.2E run, with five gaps | Complete. Diagnose run on the snapshot; review, eval, plan, verify and run not rehearsed | Done |
