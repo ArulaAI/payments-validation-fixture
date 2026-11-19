@@ -34,8 +34,8 @@ classes:
     title: Broken invariant under generated sequences or retry
     rules:
       - look: added-lines
-        match: '\b(retry|attempt|maxAttempts)\b.*\b(refund|charge|capture|authoris|authoriz|payment)\b|\b(refund|charge|capture|authoris|authoriz|payment)\b.*\b(retry|attempt|maxAttempts)\b'
-        say: "{n} added line(s) combining a retry/repeat construct with a payment-affecting call — a routing candidate for invariant/property testing, not a confirmed broken invariant"
+        match: '\b(retry|attempt|maxAttempts|settle\w*|complete\w*|challenge\w*)\b.*\b(refund|charge|capture|void|authoris\w*|authoriz\w*|payment)\b|\b(refund|charge|capture|void|authoris\w*|authoriz\w*|payment)\b.*\b(retry|attempt|maxAttempts|settle\w*|complete\w*|challenge\w*)\b'
+        say: "{n} added line(s) combining a retry, settlement or challenge step with a payment-affecting call — a routing candidate for invariant/property testing, not a confirmed broken invariant"
 
   - id: F5
     title: Sycophantic self-approval

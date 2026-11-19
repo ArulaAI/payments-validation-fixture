@@ -3,7 +3,7 @@
 Facilitator reference for 301.3E. **Ours, not the learner's.** It stays in `instructor/`
 and out of every snapshot.
 
-This is the answer key for the 301.3E snapshot (`snapshot/fixture.bundle`, HEAD `2ef1b16`).
+This is the answer key for the 301.3E snapshot (`snapshot/fixture.bundle`, HEAD `3acf255`).
 Files and lines below are fixed against that candidate.
 
 ## How the gaps get there

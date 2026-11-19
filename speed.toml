@@ -9,5 +9,7 @@ timeout = 2400
 max_tasks = 8
 
 [diagnose]
-# F1 to F8 for speed diagnose. Copied from SPEED tests/test_diagnose_round0_fixture.py.
+# F1 to F8 for speed diagnose, from SPEED tests/test_diagnose_round0_fixture.py with F4
+# widened to step-up settlement. F8 compares new names with the F2.1 tech spec.
 classes_file = ".speed/classes.yaml"
+spec_file = "specs/tech/adaptive-auth/1-high-value-traveller.md"
