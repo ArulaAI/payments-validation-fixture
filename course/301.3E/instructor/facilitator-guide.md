@@ -1,6 +1,6 @@
 # 301.3E facilitator guide
 
-Private teaching guidance. Keep this file and [gap-design.md](gap-design.md) out of learner
+Private teaching guidance. Keep this file and [facilitator-gap-map.md](facilitator-gap-map.md) out of learner
 repositories and agent context.
 
 ## What to protect

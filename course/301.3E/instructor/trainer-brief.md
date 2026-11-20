@@ -7,10 +7,10 @@ candidate, repair the defects that are theirs, and escalate the one decision tha
 
 | Resource | Use |
 | --- | --- |
-| [Framework](diagnose-judge-repair.md) | Eight timed stages and the completion standard |
+| [Framework](framework.md) | Eight timed stages and the completion standard |
 | [Speaker script](speaker-script.md) | What to say and do, with prompts and checkpoints |
 | [Lab guide](../learner/lab-action-guide.md) | The learners' commands and checklists |
-| [Gap design](gap-design.md) | The answer key: every gap, its file and line, and the right action |
+| [Facilitator gap map](facilitator-gap-map.md) | The answer key: every gap, its file and line, and the right action |
 | [Facilitator guide](facilitator-guide.md) | Stage keys, interventions and grading |
 | [Assessment](assessment.md) | Individual packets and rubric |
 | [Rehearsal](rehearsal.md) | What has and has not been run |
@@ -33,7 +33,7 @@ G1 to G4 are confirm-and-repair. G5 is escalate-only: nobody in the room decides
 ## Before class
 
 1. Give each learner or pair a lab folder with the snapshot cloned in it and the branch line
-   from the README run. Keep `gap-design.md` out of every learner folder.
+   from the README run. Keep `facilitator-gap-map.md` out of every learner folder.
 2. Check each machine has Bash 3.2 or later, Node 22 or later, Python 3.11 or later, Git, jq
    and Claude Code signed in.
 3. Check `command -v speed` points at the SPEED checkout at `a8bde62`.
@@ -44,7 +44,8 @@ G1 to G4 are confirm-and-repair. G5 is escalate-only: nobody in the room decides
 
 Slots are 10 / 15 / 15 / 15 / 15 / 15 / 15 / 15 minutes plus a 5-minute close. Review, Eval,
 Plan, Verify and Run call models and their waits are inside the slots. They have not been
-timed with Claude yet; see [rehearsal.md](rehearsal.md).
+timed with Claude yet; see [rehearsal.md](rehearsal.md). The assessment packet is handed out
+at the close and completed after class.
 
 ## Boundaries
 

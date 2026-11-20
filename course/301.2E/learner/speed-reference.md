@@ -1,4 +1,4 @@
-# 301.2E SPEED command and harness reference
+# 301.2E SPEED command reference
 
 This reference describes the pinned SPEED build, commit `a8bde62` (see
 [SPEED version](../../README.md#speed-version)). It was checked against that commit. The
@@ -30,6 +30,33 @@ during classroom execution.
 
 The feature course uses task execution, not `--defect` mode. A later confirmed defect
 can enter the established defect workflow under its own approved scope.
+
+## Behavior the course relies on
+
+| Observed source behavior | Lesson and operator response |
+| --- | --- |
+| Global options such as `--feature` and `--json` are read wherever they appear | Teach one form, `speed run --feature NAME`, matching the lab guide |
+| MAIN_BRANCH wins; otherwise Run records the starting branch, reuses a valid recorded base, then falls back to default-branch detection | Inspect environment, current branch and feature base together. Syntax gates now use this base instead of hardcoded main |
+| Run can baseline-commit all dirty project files | Use a clean independent classroom repository and inspect what will enter history |
+| Run merges dependencies into the target before spawning dependent work (`lib/cmd/run.sh:873`), and merges a completed task into the target (`lib/git.sh:348`). In the recorded run all eight built tasks were merged into `main` before Review | Save the baseline before the first Run and inspect history throughout execution |
+| Populated `agent_model` takes precedence over Run's model fallback | Read actual per-task models instead of inferring them from a command flag |
+| An ancestor task branch may be treated as already integrated during branch audit | Verify real implementation commits and behavior, particularly after provider startup failures |
+| Run's exit/JSON completion can omit blocked/pending scope from the failure test | Inspect all task counts and the admitted requirement scope |
+| Integrate considers done tasks; it warns about a done task with no branch and no merge commit, then continues | Require an admission check for expected tasks, existing refs and actual included work |
+| Review diffs a task from the commit its Run started from, recorded on the task, so a dependent task's diff can include merged producer work. Coherence and post-integration Guardian diffs compare with the moving target and can omit merged work | Reconstruct the candidate from the original baseline and inspect actual model inputs |
+| Integrate's regression does not fail on unconfigured test, lint or typecheck commands; with none configured it warns that it checked nothing | Read the regression summary and require the intended target checks |
+| Contract checks verify declared artifact existence | Run behavior-specific tests and hand remaining independent validation to 301.3E |
+| Specification traceability extracts requirements heuristically and can miss a requirements table | Read the extracted requirements and reconcile the full requirement-to-task/test matrix manually |
+| Guardian now sends human verdict text to stderr and emits verdict JSON on stdout only with --json | Retain both streams and the actual report path; missing/unparseable verdicts are not alignment |
+| Guardian distinguishes a verified conflict from an interpretive concern with an owner | Preserve the cited text, severity and required owner decision |
+| Integrate stops before completion on a failed regression, a failed contract check or a Guardian rejection. Other gaps do not stop it, and a feature completed by an earlier Integrate stays completed when a rerun fails | A required failed/unavailable check blocks the affected candidate, regardless of feature state |
+| Integrate refuses a missing target branch, uncommitted tracked changes or a target checked out in another worktree | Set MAIN_BRANCH to the admitted target, start from a clean tree and read why it stopped |
+| `integrate --yes` runs observation extraction without asking | Leave it out in class so extraction stays in the Learn stage |
+| Run's persistent dependency-merge conflict message mentions `integrate --continue`, but its parser accepts no such option | Diagnose the actual Git state and use supported recovery actions |
+| Recover can kill tracked processes and remove worktrees | Confirm a dead original run and preserve useful work first |
+
+These are boundaries to teach in the installed version. The course does not patch
+SPEED. Any desired product correction needs its own issue, scope and authorized change.
 
 ## Run in source order
 
@@ -113,33 +140,6 @@ flagged or unparseable Guardian result, unconfigured regression, a failed contex
 and the traceability ratio do not stop it. Read every result before assigning a
 candidate disposition.
 
-## Behavior the course handles explicitly
-
-| Observed source behavior | Lesson and operator response |
-| --- | --- |
-| Global options such as `--feature` and `--json` are read wherever they appear | Teach one form, `speed run --feature NAME`, matching the workbook |
-| MAIN_BRANCH wins; otherwise Run records the starting branch, reuses a valid recorded base, then falls back to default-branch detection | Inspect environment, current branch and feature base together. Syntax gates now use this base instead of hardcoded main |
-| Run can baseline-commit all dirty project files | Use a clean independent classroom repository and inspect what will enter history |
-| Run merges dependencies into the target before spawning dependent work (`lib/cmd/run.sh:873`), and merges a completed task into the target (`lib/git.sh:348`). In the recorded run all eight built tasks were merged into `main` before Review | Save the baseline before the first Run and inspect history throughout execution |
-| Populated `agent_model` takes precedence over Run's model fallback | Read actual per-task models instead of inferring them from a command flag |
-| An ancestor task branch may be treated as already integrated during branch audit | Verify real implementation commits and behavior, particularly after provider startup failures |
-| Run's exit/JSON completion can omit blocked/pending scope from the failure test | Inspect all task counts and the admitted requirement scope |
-| Integrate considers done tasks; it warns about a done task with no branch and no merge commit, then continues | Require an admission check for expected tasks, existing refs and actual included work |
-| Review diffs a task from the commit its Run started from, recorded on the task, so a dependent task's diff can include merged producer work. Coherence and post-integration Guardian diffs compare with the moving target and can omit merged work | Reconstruct the candidate from the original baseline and inspect actual model inputs |
-| Integrate's regression does not fail on unconfigured test, lint or typecheck commands; with none configured it warns that it checked nothing | Read the regression summary and require the intended target checks |
-| Contract checks verify declared artifact existence | Run behavior-specific tests and hand remaining independent validation to 301.3E |
-| Specification traceability extracts requirements heuristically and can miss a requirements table | Read the extracted requirements and reconcile the full requirement-to-task/test matrix manually |
-| Guardian now sends human verdict text to stderr and emits verdict JSON on stdout only with --json | Retain both streams and the actual report path; missing/unparseable verdicts are not alignment |
-| Guardian distinguishes a verified conflict from an interpretive concern with an owner | Preserve the cited text, severity and required owner decision |
-| Integrate stops before completion on a failed regression, a failed contract check or a Guardian rejection. Other gaps do not stop it, and a feature completed by an earlier Integrate stays completed when a rerun fails | A required failed/unavailable check blocks the affected candidate, regardless of feature state |
-| Integrate refuses a missing target branch, uncommitted tracked changes or a target checked out in another worktree | Set MAIN_BRANCH to the admitted target, start from a clean tree and read why it stopped |
-| `integrate --yes` runs observation extraction without asking | Leave it out in class so extraction stays in the Learn stage |
-| Run's persistent dependency-merge conflict message mentions `integrate --continue`, but its parser accepts no such option | Diagnose the actual Git state and use supported recovery actions |
-| Recover can kill tracked processes and remove worktrees | Confirm a dead original run and preserve useful work first |
-
-These are boundaries to teach in the installed version. The course does not patch
-SPEED. Any desired product correction needs its own issue, scope and authorized change.
-
 ## Learn in source order
 
 `cmd_learn` chooses extraction, summary, synthesis or an extension. Single-player extraction
@@ -159,7 +159,7 @@ entries (`lib/learn/synthesize.py:796`). Inspect the exact task fields passed an
 approval gate. `--pending`, `--merge` and `--curate` are separate multi-player operations.
 `--post-merge` is an optional correction-signal extension, with heuristic approval labels.
 
-See the required [Learn exercise](learn.md) and preserve actual memory
+See the required [Learn exercise](lab-action-guide.md#5-learn-20-min) and preserve actual memory
 changes in the 301.3E handoff.
 
 ## Source anchors

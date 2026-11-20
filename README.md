@@ -88,8 +88,8 @@ Every course folder has the same shape:
 | --- | --- |
 | `README.md` | Set up and run the course. Start here |
 | `snapshot/fixture.bundle` | The fixture as the course starts, with its git history |
-| `learner/` | What engineers use in the session |
-| `instructor/` | Trainer brief, framework, speaker script, facilitator guide, assessment, rehearsal record and answer keys |
+| `learner/` | `lab-action-guide.md` and `speed-reference.md`, plus support files |
+| `instructor/` | `trainer-brief.md`, `framework.md`, `speaker-script.md`, `facilitator-guide.md`, `facilitator-gap-map.md`, `assessment.md`, `rehearsal.md` |
 | `overview.html`, `overview.pdf` | The course overview, one page per section |
 
 To start, clone that course's snapshot and follow its README:
@@ -122,11 +122,9 @@ a bundle.
 
 ### Answer keys
 
-Answer keys live in `instructor/` and never go in a snapshot:
-
-- 301.1E: [`facilitator-gap-map.md`](course/301.1E/instructor/facilitator-gap-map.md), the gaps in the upstream documents and their owners;
-- 301.2E: the stage keys in [`facilitator-guide.md`](course/301.2E/instructor/facilitator-guide.md);
-- 301.3E: [`gap-design.md`](course/301.3E/instructor/gap-design.md), every gap with its file and line.
+Each course keeps its answer key in `instructor/facilitator-gap-map.md` (every gap, where it
+is and who owns it) and its stage keys in `instructor/facilitator-guide.md`. Neither goes in
+a snapshot.
 
 ### Status
 

@@ -2,16 +2,13 @@
 
 Course framework for engineers who receive a PRD, an architecture and a design from other
 functions and are responsible for the tech spec and the plan built from it. Covers purpose,
-the six stages, who does the work in each (the engineer or SPEED), what SPEED grounds
+the seven stages, who does the work in each (the engineer or SPEED), what SPEED grounds
 itself on, and what is still undecided. It is a framework rather than a lesson script.
 
 301.1E replaces the Define and Plan half of the earlier 301.1 framework draft. It ends
 with a verified task plan, which is where 301.2E picks up.
 
-## The question the course answers
-
-**Is this feature defined well enough to plan, and does the plan still say what the specs
-meant?**
+**Governing question:** Is this feature defined well enough to plan, and does the plan still say what the specs meant?
 
 A traveler in Tokyo is refused a 2,499 pound television by a rule written at launch.
 Meanwhile forty stolen card numbers are approved across twenty merchants in three
@@ -24,7 +21,15 @@ owns the tech spec, and the course is about doing that job well:
 - writing a tech spec that is honest about what is still open
 - knowing what `speed audit` and `speed plan` actually check, and what they cannot see
 
-## Audience and ground rules
+## One fixture across the pathway
+
+| Course | Input | Output |
+| --- | --- | --- |
+| 301.1E Define, Audit, Plan | Upstream documents, code, two draft tech specs | Reviewed specs, owner questions, a verified plan |
+| 301.2E Execute, Integrate, Learn | That plan | An integrated candidate with its evidence and learning |
+| 301.3E Diagnose, Judge, Repair | That candidate | A disposition for every finding, a bounded repair and an escalation |
+
+## Audience and entry
 
 Experienced engineers who want to run SPEED and read how it works. Sessions are hands-on.
 Each stage is part of one Define, Audit, Plan loop on one feature, not a standalone lesson.
@@ -34,6 +39,34 @@ the engineer writes a suggestion on that section in Define, then switches role a
 decides it as the owner would. Nobody edits a document they do not own. The aim is that
 an engineer leaves knowing what a PM or a designer has to commit to, not only what they
 wrote.
+
+## The 120-minute progression
+
+| Stage | Minutes | Engineer's job | Retained output |
+| --- | ---: | --- | --- |
+| 1 Orient | 6 | Run the tests; read GW-02, GW-05 and the two rules behind them | The behavior the specs must change |
+| 2 Validate | 12 | Check one Validate finding against its sources | A verdict with file and line citations |
+| 3 Define and Draft | 33 | Work the eight topics with the authoring skill; decide engineering's part, route the rest | Reviewed tech-spec edits and owner questions |
+| 4 Audit | 13 | Read both audits; decide one finding | One disposition with its effect on Plan |
+| 5 Plan | 15 | Read the task graph, the Gateway tasks and the cross-cutting rules | An understood plan and the defaults nobody decided |
+| 6 Verify | 10 | Compare the two coverage numbers; read any repairs | What was verified, for which scope |
+| 7 Handoff | 10 | Say what can go ahead, what waits and who decides | A handoff, possibly blocked |
+| Close | 5 | Name one decision at home with no owner | |
+| Total | 104 | Introductions and transitions take the remaining minutes | |
+
+The stage blocks under [Stages in detail](#stages-in-detail-earlier-design) are the earlier
+design of these stages. They predate the separate Validate stage and the authoring skill, so
+their minutes and the `/define` dashboard route do not match the table above. The lab guide
+and speaker script follow the table.
+
+## Outcomes
+
+| Capability | Evidence |
+| --- | --- |
+| Read documents against each other and the code | Cites file and line for each Validate verdict |
+| Send what is missing to its owner | Each open item names an owner and an interim default |
+| Write a tech spec honest about what is open | Accepted edits match the decision made; nothing in another team's document changes |
+| Know what Audit, Plan and Verify check | Reads status and findings together; explains a Verify pass for its scope |
 
 ## Fixture
 
@@ -102,7 +135,10 @@ code). The marker tells an engineer how far to trust a result. A deterministic c
 exactly as good as what it measures. An LLM check can notice things no rule encodes, and
 can also miss what is plainly there.
 
-## Stages
+## Stages in detail (earlier design)
+
+The earlier design of the stages, kept for what each one asks of the engineer and of SPEED.
+The progression table above is the current schedule.
 
 ### 01 Orient (0 to 10 min)
 
@@ -331,7 +367,7 @@ Two things the room should see:
 Several stages use SPEED behavior that was built alongside the course. The pinned build,
 commit `a8bde62`, has an architecture spec type, multi-file features and feature-level
 `plan`. `audit --feature`, per-file Define tabs and role switching are still open. See
-[`speed-requirements.md`](speed-requirements.md) for each behavior, what SPEED does
+[`speed-reference.md`](../learner/speed-reference.md) for each behavior, what SPEED does
 today, and the course moment that depends on it.
 
 ## Not yet decided
@@ -347,5 +383,20 @@ today, and the course moment that depends on it.
 - **Time pressure on the draft.** Thirty minutes assumes the agent drafts and the engineer
   corrects.
 - **What the role switch looks like.** Depends on how SPEED implements it (dependency 7).
-- **Assessment.** Whether 301.1E ends with an individual transfer exercise like 301 does,
-  and on what feature.
+
+## Completion and resources
+
+Submit the Validate verdict, the topic lines from Define, one Audit disposition and the
+reading of Verify. The assessment packet is handed out at the close and completed after class. A precise blocked handoff meets the objective.
+
+| Resource | Use |
+| --- | --- |
+| [Speaker script](speaker-script.md) | Presenter wording and timed walkthrough |
+| [Lab guide](../learner/lab-action-guide.md) | Learner commands and checklists |
+| [Facilitator gap map](facilitator-gap-map.md) | Answer key |
+| [Facilitator guide](facilitator-guide.md) | Stage keys, interventions and recovery |
+| [Assessment](assessment.md) | Packets and rubric |
+| [Trainer brief](trainer-brief.md) | Preparation and timing |
+| [Rehearsal](rehearsal.md) | What has been run |
+| [SPEED reference](../learner/speed-reference.md) | Commands and required SPEED behavior |
+

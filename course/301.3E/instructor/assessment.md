@@ -1,8 +1,12 @@
 # 301.3E independent assessment
 
-Each learner is scored on their own work in the lab, plus one short unfamiliar packet. The
-packets are constructed teaching cases, not records from the run. Release one per learner and
-keep the keys in this file.
+Each learner is scored on their own work in the lab, plus one short unfamiliar packet.
+
+## Administration
+
+Release one packet per learner at the close. Learners complete it after class (about 8
+minutes), and grading happens after class too. The packets are
+constructed teaching cases, not records from the run. Keep the keys in this file.
 
 ## Practical submission
 

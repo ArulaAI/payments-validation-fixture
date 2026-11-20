@@ -34,14 +34,14 @@ against this commit.
 ## What each folder holds
 
 Every course folder has the same shape, so whoever picks up a course finds the same things
-in the same places. Parts not yet made are listed under [Status](#status).
+in the same places, with the same names.
 
 | Path | What it is |
 | --- | --- |
 | `README.md` | How to set up and run the course. Start here |
 | `snapshot/fixture.bundle` | The fixture as the course starts, with its git history. Clone it to begin |
-| `learner/` | What engineers use in the session: the lab guide, figures, templates |
-| `instructor/` | Speaker script, trainer brief, gap maps, assessment and answer keys |
+| `learner/` | `lab-action-guide.md` and `speed-reference.md`, plus support files (figures, assets) |
+| `instructor/` | `trainer-brief.md`, `framework.md`, `speaker-script.md`, `facilitator-guide.md`, `facilitator-gap-map.md` (answer key), `assessment.md`, `rehearsal.md` |
 | `overview.html`, `overview.pdf` | The course overview, for anyone deciding whether to run it |
 
 Snapshots are made with [`make-snapshot.sh`](make-snapshot.sh). 301.1E's comes from the

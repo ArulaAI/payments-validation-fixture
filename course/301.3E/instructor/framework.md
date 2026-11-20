@@ -45,16 +45,17 @@ capability. Each learner clones the 301.3E snapshot. No homework or extra instal
 | Specify a repair others can check | Each defect report names a check that fails now and passes after |
 | Repair without weakening evidence | The repair adds or restores tests; none is removed |
 
-## Completion
+## Completion and resources
 
 Submit the disposition list, the defect reports, the escalation note and the repair evidence.
+The assessment packet is handed out at the close and completed after class.
 A precise escalation meets the objective for G5; a chosen block policy does not.
 
 | Resource | Use |
 | --- | --- |
 | [Speaker script](speaker-script.md) | Timed say/do sequence |
 | [Lab guide](../learner/lab-action-guide.md) | Learner commands and checklists |
-| [Gap design](gap-design.md) | Answer key |
+| [Facilitator gap map](facilitator-gap-map.md) | Answer key |
 | [Facilitator guide](facilitator-guide.md) | Stage keys and interventions |
 | [Assessment](assessment.md) | Packets and rubric |
 | [Trainer brief](trainer-brief.md) | Preparation and timing |

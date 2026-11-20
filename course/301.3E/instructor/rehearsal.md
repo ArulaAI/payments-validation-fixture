@@ -2,7 +2,7 @@
 
 Pinned SPEED source: `a8bde62` (see [SPEED version](../../README.md#speed-version)).
 
-## How the candidate was made
+## How the snapshot was made
 
 The 301.3E snapshot continues the recorded 301.2E run (see the
 [301.2E rehearsal](../../301.2E/instructor/rehearsal.md)) from its checkpoint.
@@ -16,12 +16,12 @@ The 301.3E snapshot continues the recorded 301.2E run (see the
    spec traceability and completed feature state were written in SPEED's own formats. SPEED's
    Review, Coherence and Integrate did not produce them.
 4. Gaps G1 to G4 were added as agent-style commits on their task branches and merged. G5 came
-   from the run. See [gap-design.md](gap-design.md).
+   from the run. See [facilitator-gap-map.md](facilitator-gap-map.md).
 5. A course-setup commit configures `speed diagnose`, and a `baseline` branch marks the 301.2E
    start commit.
 6. Logs use lab paths and a neutral learner identity, as in 301.2E.
 
-## What has been run against the snapshot
+## What has been run
 
 | Check | Result |
 | --- | --- |
@@ -31,13 +31,14 @@ The 301.3E snapshot continues the recorded 301.2E run (see the
 | G2 mutant (`>=` to `>` at `src/risk/policy.ts:53`) | Survives all 239 tests |
 | G3 partial capture | Status stays `authorised`; all 239 tests pass |
 
+## Observed limits
+
+One timing-sensitive test ("a replica retries the winning expire audit…") fails now and then.
+It passed in every run after the gap work, but has failed twice across many runs.
+
 ## Not yet run
 
 - `speed review`, `speed eval`, `speed plan --defects`, `speed verify` and `speed run` on this
   snapshot. They call models. Their output, timing and behavior in this lab are unconfirmed.
 - Any run with Claude Code as provider, and any cohort.
 
-## Known issue
-
-One timing-sensitive test ("a replica retries the winning expire audit…") fails now and then.
-It passed in every run after the gap work, but has failed twice across many runs.

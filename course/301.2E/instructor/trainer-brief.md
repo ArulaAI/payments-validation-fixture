@@ -8,13 +8,14 @@ integrated, and check what the run teaches future agents.
 
 | Resource | Use |
 | --- | --- |
-| [Framework](execute-integrate.md) | Seven timed stages and the completion standard |
+| [Framework](framework.md) | Seven timed stages and the completion standard |
 | [Speaker script](speaker-script.md) | What to say and do, with prompts and checkpoints |
-| [Workbook](../learner/learner-workbook.md) | The learners' commands and records |
-| [Fixture continuity](adaptive-auth-lab.md) | The plan, its dependencies and the owners |
-| [Learn](../learner/learn.md) | The required feedback-loop exercise |
+| [Lab guide](../learner/lab-action-guide.md) | The learners' commands and records |
+| [Fixture continuity](framework.md#fixture-continuity) | The plan and its dependencies |
+| [Facilitator gap map](facilitator-gap-map.md) | The answer key: owner questions the plan carries and what the run surfaces |
+| [Learn](../learner/lab-action-guide.md#5-learn-20-min) | The required feedback-loop exercise |
 | [Reference](../learner/speed-reference.md) | SPEED behavior at `a8bde62` |
-| [Recovery](../learner/recovery-flow.md) | The four recovery cases |
+| [Recovery](../learner/lab-action-guide.md#3-recover-a-stopped-task-15-min) | The four recovery cases |
 | [Assessment](assessment.md) | Individual packets and rubric |
 | [Facilitator guide](facilitator-guide.md) | Keys, interventions and grading |
 | [Rehearsal](rehearsal.md) | What the recorded run did and what is still unchecked |
@@ -34,6 +35,19 @@ Be ready for three things learners will notice in stage 1:
 - Verify's repair added tasks 9 and 10, taking the plan above the 301.1E cap of 8.
 - `inspect-handoff.py` reports exactly two errors: task 10 declares no files, and Verify
   did not pass. Both are true.
+
+### What the checkpoint holds
+
+The run's end state after two rounds of Run and Review:
+
+- Tasks 1 to 8 built and merged into `main`; 186 tests pass.
+- Review asked for changes on every built task. Each task's `review_feedback` holds its
+  latest findings, 28 major and 2 minor in all.
+- Task 4 blocked on a spec question; tasks 9 and 10 blocked on production sign-offs.
+- Coherence and Integrate reported "No completed tasks". Nothing was integrated.
+- No learning memory yet. Learners run Learn themselves in stage 5.
+
+[rehearsal.md](rehearsal.md) has the full record, including how the run was made.
 
 ## Before class
 
@@ -56,20 +70,7 @@ stage 2. At the end of stage 2, every learner moves to the checkpoint in a new f
 Leave live runs alone; do not stop or reset them to fit the clock, and do not suggest they
 produced the checkpoint.
 
-## What the checkpoint holds
-
-The run's end state after two rounds of Run and Review:
-
-- Tasks 1 to 8 built and merged into `main`; 186 tests pass.
-- Review asked for changes on every built task. Each task's `review_feedback` holds its
-  latest findings, 28 major and 2 minor in all.
-- Task 4 blocked on a spec question; tasks 9 and 10 blocked on production sign-offs.
-- Coherence and Integrate reported "No completed tasks". Nothing was integrated.
-- No learning memory yet. Learners run Learn themselves in stage 5.
-
-[rehearsal.md](rehearsal.md) has the full record, including how the run was made.
-
-## Learning and assessment boundaries
+## Boundaries
 
 Single-player Learn writes memory that later agents read, with no approval screen.
 Learners review it before and after. `--curate` belongs to multi-player mode; it is not an

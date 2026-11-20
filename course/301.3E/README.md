@@ -38,17 +38,25 @@ branch line. `baseline` is the commit 301.2E started from; every task is already
 - `speed.toml` points diagnose at the F2.1 tech spec, and `.speed/classes.yaml` holds the F1
   to F8 rules.
 - Gaps learners are meant to find. They read as the agents' own work. The answer key is
-  [`instructor/gap-design.md`](instructor/gap-design.md) and never goes in a snapshot.
+  [`instructor/facilitator-gap-map.md`](instructor/facilitator-gap-map.md) and never goes in a snapshot.
 
 ## For learners
 
-Open [`learner/lab-action-guide.md`](learner/lab-action-guide.md). Each step says what is
+Open [`learner/lab-action-guide.md`](learner/lab-action-guide.md). Each stage says what is
 happening, what to run and what to look for.
+[`learner/speed-reference.md`](learner/speed-reference.md) covers the SPEED commands the
+course uses.
 
 ## For instructors
 
 Read [`instructor/trainer-brief.md`](instructor/trainer-brief.md) first, then
 [`instructor/speaker-script.md`](instructor/speaker-script.md) and
 [`instructor/facilitator-guide.md`](instructor/facilitator-guide.md).
-[`instructor/gap-design.md`](instructor/gap-design.md) is the answer key.
-[`overview.pdf`](overview.pdf) is the one-page-per-section course overview.
+
+| File | Holds |
+| --- | --- |
+| [`instructor/framework.md`](instructor/framework.md) | The stages, outcomes and completion standard |
+| [`instructor/facilitator-gap-map.md`](instructor/facilitator-gap-map.md) | The answer key: every gap, where it is and who owns it |
+| [`instructor/assessment.md`](instructor/assessment.md) | Individual packets and rubric |
+| [`instructor/rehearsal.md`](instructor/rehearsal.md) | What has been run and what has not |
+| [`overview.pdf`](overview.pdf) | The one-page-per-section course overview |

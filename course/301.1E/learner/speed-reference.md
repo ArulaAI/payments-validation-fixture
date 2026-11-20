@@ -1,6 +1,22 @@
-# SPEED requirements for 301.1E
+# 301.1E SPEED command reference
 
-For whoever is building the SPEED changes. 301.1E was written against these behaviors
+This reference describes the pinned SPEED build, commit `a8bde62` (see
+[SPEED version](../../README.md#speed-version)). Every command and behavior below was checked
+against that commit.
+
+## Command map
+
+| Command | Inputs and effects | What to inspect |
+| --- | --- | --- |
+| `speed validate specs/` | Sends every Markdown file under `specs/` to the Validator in one call and reports where they disagree. Writes `.speed/logs/validation.log`. Ends with "Validation FAILED" when it finds critical gaps | Each finding against its sources; a finding is a claim |
+| `/author-tech-spec adaptive-auth` in Claude Code, `$author-tech-spec adaptive-auth` in Codex | The authoring skill reads the documents, code and both drafts, then works through eight topics. Writes `.speed/authoring/adaptive-auth/` and edits the tech specs only after you approve | `git diff` of both specs before accepting an edit |
+| `speed audit <spec-file>` | Checks one spec against its template and linked documents at four levels: structure, completeness, consistency and size | Status and findings together; `WARN` with exit 0 still has gaps |
+| `speed plan --feature adaptive-auth` | Runs the Guardian and an audit gate, drafts tasks from a code index, then checks coverage and size. May ask `[y/N]` to add tasks for critical coverage gaps. Writes `.speed/features/adaptive-auth/` | Task order, the Gateway tasks, `cross_cutting_concerns.json`, each task's `assumptions` |
+| `speed verify --feature adaptive-auth` | A blind reader checks the plan against the specs; on critical findings a fix agent edits the tasks, up to three times | `.speed/features/adaptive-auth/logs/plan-verification.log` and the diff of the task files |
+
+## Behavior the course relies on
+
+*For trainers and SPEED maintainers.* 301.1E was written against these behaviors
 before they existed. Some now exist. Each row names the course moment that breaks if the
 behavior lands differently, so a change in plan here tells us exactly which part of the
 course to revisit.
@@ -9,22 +25,7 @@ Checked against the pinned SPEED build, commit `a8bde62` (see
 [SPEED version](../../README.md#speed-version)). "Today" describes that commit. **Met**
 means the commit does what the row asks; **Open** means it does not yet.
 
-## Spec layout the course uses
-
-```
-specs/
-  product/overview.md                         product vision (Guardian input)
-  product/adaptive-auth/1-high-value-traveller.md
-  product/adaptive-auth/2-card-testing.md
-  architecture/overview.md                    platform architecture
-  architecture/adaptive-auth.md               feature architecture
-  design/adaptive-auth/1-checkout-challenge.md
-  design/adaptive-auth/2-risk-review-queue.md
-  tech/adaptive-auth/1-high-value-traveller.md  draft learners finish
-  tech/adaptive-auth/2-card-testing.md          draft learners finish
-```
-
-## Required behavior
+### Required behavior
 
 | # | Behavior | Today | Course moment that needs it |
 |---|---|---|---|
@@ -36,7 +37,7 @@ specs/
 | 6 | Define shows one tab per spec file, including architecture, and accepts section suggestions on each | **Open.** Tabs are `prd`, `design`, `rfc` and `rfc-<slug>` (`dashboard/backend/resolvers/ceremony_claims.py:55`) | Define: engineers send inputs to the PM, designer and architect |
 | 7 | One person can switch roles in Define (engineer, then PM, designer, architect) without restarting the dashboard | **Open.** The actor comes from `SPEED_ACTOR`, then git `user.name`, and is cached for the life of the process (`dashboard/backend/resolvers/ceremony_types.py:960`) | Define: engineers act as the owner and accept or dismiss suggestions |
 
-## Behavior the course relies on that exists today
+### Behavior that exists today
 
 These are not requests. They are listed so that a refactor does not remove them without
 anyone noticing.
@@ -61,7 +62,24 @@ anyone noticing.
 | Agent prompts are readable markdown in `agents/`, and the verify fix prompt is inline | `agents/*.md`, `lib/cmd/verify.sh:499` | Engineers read each prompt at the stage where it runs |
 | The Define codebase dimension checks backticked references against the semantic graph and git | `dashboard/backend/ceremony_validator.py:486` | Define |
 
+## Spec layout the course uses
+
+```
+specs/
+  product/overview.md                         product vision (Guardian input)
+  product/adaptive-auth/1-high-value-traveller.md
+  product/adaptive-auth/2-card-testing.md
+  architecture/overview.md                    platform architecture
+  architecture/adaptive-auth.md               feature architecture
+  design/adaptive-auth/1-checkout-challenge.md
+  design/adaptive-auth/2-risk-review-queue.md
+  tech/adaptive-auth/1-high-value-traveller.md  draft learners finish
+  tech/adaptive-auth/2-card-testing.md          draft learners finish
+```
+
 ## Open questions for the SPEED work
+
+*For trainers and SPEED maintainers.*
 
 1. Does `audit --feature` produce one report per file, one for the feature, or both? The
    course shows learners the cross-document findings, so it needs to tell them which file
@@ -85,3 +103,13 @@ anyone noticing.
    (`lib/context/layer1_domain_clustering.py:316`). The fixture is TypeScript. If the
    semantic graph misses the gateway's imports, the decomposition gate's cluster and
    bridge-symbol checks lose their best example in the course.
+
+## Source anchors
+
+| Source | Relevant implementation |
+| --- | --- |
+| `lib/cmd/project.sh` | `speed validate` and `speed new` |
+| `lib/cmd/audit.sh`, `agents/audit.md` | Audit levels, template lookup and placeholder rule |
+| `lib/cmd/plan.sh`, `agents/architect*.md` | Guardian and audit gates, Architect passes, coverage prompt |
+| `lib/cmd/verify.sh` | Blind verification and repair passes |
+| `.claude/skills/author-tech-spec/`, `.agents/skills/author-tech-spec/` | The authoring skill (in the fixture, not in SPEED) |

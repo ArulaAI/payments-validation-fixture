@@ -44,7 +44,7 @@ Verify result.
 - [`learner/assets/handoff-301-1e.json`](learner/assets/handoff-301-1e.json) records the
   baseline, file digests, scope and blockers.
 
-## What a run produces
+### The recorded checkpoint
 
 The course was run once from this snapshot. Its end state is
 [`instructor/checkpoint/after-run.bundle`](instructor/checkpoint/after-run.bundle). Use it
@@ -65,14 +65,22 @@ when a live run overruns its slot.
 
 ## For learners
 
-Open [`learner/learner-workbook.md`](learner/learner-workbook.md). The Learn and recovery
-stages have their own guides in [`learner/`](learner/). The record templates are in
-[`learner/assets/templates/`](learner/assets/templates/).
+Open [`learner/lab-action-guide.md`](learner/lab-action-guide.md). Each stage says what is
+happening, what to run and what to look for. Stage 3 holds the recovery cases and stage 5 the Learn exercise. The record
+templates are in [`learner/assets/templates/`](learner/assets/templates/).
+[`learner/speed-reference.md`](learner/speed-reference.md) covers the SPEED commands the
+course uses.
 
 ## For instructors
 
 Read [`instructor/trainer-brief.md`](instructor/trainer-brief.md) first, then
 [`instructor/speaker-script.md`](instructor/speaker-script.md) and
-[`instructor/facilitator-guide.md`](instructor/facilitator-guide.md). The transfer packets
-are in [`instructor/assessment.md`](instructor/assessment.md); release one per engineer.
-[`overview.pdf`](overview.pdf) is the one-page-per-section course overview.
+[`instructor/facilitator-guide.md`](instructor/facilitator-guide.md).
+
+| File | Holds |
+| --- | --- |
+| [`instructor/framework.md`](instructor/framework.md) | The stages, outcomes and completion standard |
+| [`instructor/facilitator-gap-map.md`](instructor/facilitator-gap-map.md) | The answer key: every gap, where it is and who owns it |
+| [`instructor/assessment.md`](instructor/assessment.md) | Individual packets and rubric |
+| [`instructor/rehearsal.md`](instructor/rehearsal.md) | What has been run and what has not |
+| [`overview.pdf`](overview.pdf) | The one-page-per-section course overview |

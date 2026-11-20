@@ -36,11 +36,19 @@ command -v speed         # the build above, not another install
 
 Open [`learner/lab-action-guide.md`](learner/lab-action-guide.md). Each stage says what is
 happening, what to run and what to look for.
+[`learner/speed-reference.md`](learner/speed-reference.md) covers the SPEED commands the
+course uses.
 
 ## For instructors
 
 Read [`instructor/trainer-brief.md`](instructor/trainer-brief.md) first, then
-[`instructor/speaker-script.md`](instructor/speaker-script.md).
-[`instructor/facilitator-gap-map.md`](instructor/facilitator-gap-map.md) lists the gaps in
-the upstream documents and who owns each. [`overview.pdf`](overview.pdf) is the
-one-page-per-section course overview.
+[`instructor/speaker-script.md`](instructor/speaker-script.md) and
+[`instructor/facilitator-guide.md`](instructor/facilitator-guide.md).
+
+| File | Holds |
+| --- | --- |
+| [`instructor/framework.md`](instructor/framework.md) | The stages, outcomes and completion standard |
+| [`instructor/facilitator-gap-map.md`](instructor/facilitator-gap-map.md) | The answer key: every gap, where it is and who owns it |
+| [`instructor/assessment.md`](instructor/assessment.md) | Individual packets and rubric |
+| [`instructor/rehearsal.md`](instructor/rehearsal.md) | What has been run and what has not |
+| [`overview.pdf`](overview.pdf) | The one-page-per-section course overview |

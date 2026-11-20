@@ -14,7 +14,7 @@ not approve anything on an owner's behalf.
 | `templates/` | Execution ledger, integration admission, learning review, scoring and 301.3E handoff |
 
 Run against the snapshot, `inspect-handoff.py` passes 97 checks and reports two true
-errors: task 10 declares no files, and Verify did not pass. The workbook explains both.
+errors: task 10 declares no files, and Verify did not pass. The lab guide explains both.
 
 Keep evidence folders outside the repository. Start with the
-[workbook](../learner-workbook.md).
+[lab guide](../lab-action-guide.md).

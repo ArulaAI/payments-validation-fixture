@@ -1,11 +1,17 @@
 # 301.3E speaker script
 
-Say and do, stage by stage. Timings match the [framework](diagnose-judge-repair.md). Keep
-[gap-design.md](gap-design.md) open on your own screen only.
+Say and do, stage by stage. Timings match the [framework](framework.md).
 
-## Open (part of stage 1)
+## Presenter setup
 
-### Say
+Before learners arrive, clone the snapshot once, run the branch line from the README, and
+check `npm test` (239 pass) and `MAIN_BRANCH=baseline speed diagnose --feature adaptive-auth
+--task 2` (signals, not zeros). Keep [facilitator-gap-map.md](facilitator-gap-map.md) on your
+own screen only.
+
+### Opening
+
+#### Say
 
 > Everything about this change says it is finished. Tests are green, review approved every
 > task, integration passed and the feature is marked complete. Today we find out what is true.
@@ -124,3 +130,7 @@ assertions in the repair's diff.
 ### Say
 
 > Which green check in your own project would still pass if the code were wrong?
+
+### Do
+
+Release one assessment packet per learner; they complete it after class.

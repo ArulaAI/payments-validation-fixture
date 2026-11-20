@@ -1,11 +1,50 @@
-# 301-1E recovery: one payment, one unresolved decision
+# 301.1E facilitator guide
+
+Private teaching guidance. Keep this file and [facilitator-gap-map.md](facilitator-gap-map.md)
+out of learner repositories and agent context.
+
+## What to protect
+
+The upstream documents read the way such documents usually get written. Never tell learners
+the gaps were planted; they were not. The course cares that engineers find each gap, send it
+to the right owner, and keep the tech spec honest about what is still open. Nothing is built
+today: if a learner starts `speed run`, stop it.
+
+## Stage keys
+
+| Stage | A good answer |
+| --- | --- |
+| 1 Orient | 93 tests pass. Explains that GW-02 expects the traveler to be declined and GW-05 expects the attack to be approved, and names the two rules in `src/risk/rules.ts` behind them |
+| 2 Validate | Reaches one verdict on the decline-reason finding (confirmed, partly confirmed or refuted) with file and line citations, and skips findings about `specs/product/payments.md` |
+| 3 Define and Draft | Each topic written as `decided: … \| open: … → owner`. Topic 1: checkout may only cancel; the bank result comes only from our side. No edits to another team's document |
+| 4 Audit | Reads status and findings together. Decides one finding as a correction, an owner, or no action. Does not split a spec because sizing suggested it |
+| 5 Plan | Answers `n` at the coverage prompt when the gaps belong to other repositories. Finds GW-02's new expectation in a Gateway task and the topic 1 rule among the cross-cutting concerns |
+| 6 Verify | Explains why "all requirements covered" and "8 of 14 covered" disagree. Reads the repair diff, including any tasks Verify added |
+| 7 Handoff | States what was verified and for which scope, what waits, and who decides each waiting item |
+
+## Interventions
+
+| Learner behavior | Response |
+| --- | --- |
+| Treats a Validate finding as fact | Ask for the file and line that support it |
+| Decides a policy question in the tech spec | Return it to its owner; record it as open with a default |
+| Accepts an edit without reading the diff | Ask what changed in both specs |
+| Splits a spec because Audit suggested it | Ask whether sizing changes what Plan needs |
+| Reads Verify's pass as complete coverage | Ask which requirement is partial |
+
+## Grading
+
+Use the [assessment](assessment.md) rubric. A decision without a cited source earns no
+evidence credit. An owner question routed to the right owner with a default earns full credit.
+
+## Recovery: one payment, one unresolved decision
 
 Recovery starts with an engineer checking a finding against the current sources.
 If the answer needs a business or design decision, a human owner supplies that answer.
 The agent then drafts the correction, the engineer reviews it, and the relevant checks
 run again. This example concerns specification and plan recovery before implementation.
 
-## The concrete example
+### The concrete example
 
 A traveler buys a £2,499 television. In the proposed F2.1 flow, the risk assessment
 holds the payment for review. An analyst later declines it, so the payment is voided.
@@ -29,7 +68,7 @@ The current sources establish:
 This is a documented open decision. It is not evidence that an implementation was run
 or that a fresh Validator discovered the problem.
 
-## Follow the recovery
+### Follow the recovery
 
 ```mermaid
 flowchart TD
@@ -56,7 +95,7 @@ flowchart TD
 | 5. Rebuild the plan | Engineer runs affected Audit and Plan, then checks the resulting task and dependencies. | Audit the edited sources and generate tasks from the revised contract. | A task for the decided notification behavior, where in scope, with an observable acceptance criterion. |
 | 6. Check and hand off | Engineer reviews Verify's report, any task-file changes and the exact covered scope. Accept the stated scope only when its blockers are resolved. | Verify coverage; mechanically repair task records when appropriate and recheck. | A reviewed plan or an explicit blocked handoff. |
 
-## What an answer would change
+### What an answer would change
 
 For illustration, consider this **unapproved teaching proposal**:
 
@@ -77,7 +116,7 @@ Until the owners answer, Question 6 remains open. Continue independent authoring
 build preparation; keep the review-queue cutover blocked. The engineer does not approve
 Product or Legal policy on their behalf.
 
-## What the engineer says to the harness
+### What the engineer says to the harness
 
 ```text
 Use the current checkout design and F2.1 RFC. The held screen already exists; close
@@ -88,7 +127,7 @@ Legal decisions as pending until answered. Propose RFC diffs only from recorded 
 wait for my review of the wording. Keep independent work moving and cutover blockers visible.
 ```
 
-## Two other recovery routes
+### Two other recovery routes
 
 - **The spec is clear; only the task is wrong.** Review and correct the task, then
   Verify again. There is no new Product decision to obtain. The pinned `speed verify`

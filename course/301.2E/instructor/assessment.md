@@ -17,6 +17,22 @@ not observed provider runs. A learner may request a missing artifact; identifyin
 necessary missing input is part of the assessment. The trainer supplies the requested
 case fact, rather than silently allowing the learner to invent it.
 
+## Practical submission
+
+Use the same admitted 301.1E adaptive-auth continuation. Attach evidence created during
+guided practice; the 20-minute transfer slot does not repeat the whole execution. Attach:
+
+1. An annotated plan with actual scope, target, dependencies and models.
+2. An execution ledger with command exits, task states, commits and individual checks.
+3. A recovery decision linked to one real failure or an explicitly marked case analysis.
+4. An integration admission and a candidate comparison from the retained pre-run baseline.
+5. A learning review tracing source evidence, observations, active entries, scope and rejected claims.
+6. A handoff naming failures, unavailable checks, memory changes, owner questions and next action.
+
+The assessment packet and its compulsory learning question supply unfamiliar diagnosis. The practical submission demonstrates
+the learner's own use of the workflow. A constructed packet does not substitute for
+performing a live lab when live command performance is being certified.
+
 ## Packet A A convincing completion summary
 
 Give the learner this packet without the facilitator key:
@@ -84,22 +100,6 @@ implemented memory-approval gate. This question is required with Packet A, B or 
 Written counterfactual: the owner later accepts a versioned change to this outage policy.
 What source, plan, tests and active-memory evidence must change before future reuse?
 
-## Practical submission
-
-Use the same admitted 301.1E adaptive-auth continuation. Attach evidence created during
-guided practice; the 20-minute transfer slot does not repeat the whole execution. Attach:
-
-1. An annotated plan with actual scope, target, dependencies and models.
-2. An execution ledger with command exits, task states, commits and individual checks.
-3. A recovery decision linked to one real failure or an explicitly marked case analysis.
-4. An integration admission and a candidate comparison from the retained pre-run baseline.
-5. A learning review tracing source evidence, observations, active entries, scope and rejected claims.
-6. A handoff naming failures, unavailable checks, memory changes, owner questions and next action.
-
-The assessment packet and its compulsory learning question supply unfamiliar diagnosis. The practical submission demonstrates
-the learner's own use of the workflow. A constructed packet does not substitute for
-performing a live lab when live command performance is being certified.
-
 ## Scoring rubric
 
 | Dimension | Points | Full-credit evidence |
@@ -117,7 +117,7 @@ Working pass threshold: 80 points, at least half the points in every dimension a
 critical boundary error. Calibrate this threshold against observed delivery before
 using it as a commercial certification standard.
 
-## Critical boundary errors
+## Critical errors
 
 A learner must correct and reassess any of the following:
 

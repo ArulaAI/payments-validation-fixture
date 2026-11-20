@@ -1,12 +1,12 @@
 # 301.2E speaker script
 
 Teach Execute, Integrate, Learn from the actual 301.1E adaptive-auth handoff to a
-candidate, reviewed learning and an independent-validation handoff in 120 minutes. The learner workbook contains the runnable classroom commands; this script
+candidate, reviewed learning and an independent-validation handoff in 120 minutes. The lab guide contains the runnable classroom commands; this script
 adds the explanation, source walkthrough, learner decisions and recovery checkpoints.
 
 ## Presenter setup
 
-Read the [framework](execute-integrate.md),
+Read the [framework](framework.md),
 [SPEED reference](../learner/speed-reference.md) and
 [trainer brief](trainer-brief.md). Keep the facilitator answer key outside
 the learner's repository and harness context.
@@ -42,7 +42,7 @@ happens before class; learners need no additional homework.
 
 ### Do
 
-Follow workbook stage 1. Show the independent root, approved target, frozen source
+Follow lab guide stage 1. Show the independent root, approved target, frozen source
 baseline, specification digests, handoff and actual saved task files. Trace one accepted
 F2 requirement to a task, declared files, dependent consumer and intended check. Preserve
 the original scope and any F2.2 gaps. A new installation's feature-planning capability
@@ -121,7 +121,7 @@ needed to judge whether it was adequate.
 
 ### Do
 
-Capture the pre-run state and use the workbook's recorded Run command. While it runs,
+Capture the pre-run state and use the lab guide's recorded Run command. While it runs,
 use the second terminal to inspect status, worktrees, task records and branch history.
 Do not edit the active task records to steer a live run.
 
@@ -172,7 +172,7 @@ stops early, that failure becomes the next recovery exercise.
 
 ### Do
 
-Use a stopped task from the checkpoint. The [recovery flow](../learner/recovery-flow.md)
+Use a stopped task from the checkpoint. The [recovery flow](../learner/lab-action-guide.md#3-recover-a-stopped-task-15-min)
 has three real cases from the recorded run (the empty-diff environment failure, task 4's
 spec question, and tasks 9 and 10 waiting for sign-off) and one constructed case, marked
 as such.
@@ -223,7 +223,7 @@ uncommitted work, or if the missing answer belonged to Product.
 
 ### Do
 
-Use the workbook's Review and Coherence commands. Read the actual reports and input
+Use the lab guide's Review and Coherence commands. Read the actual reports and input
 scope. Review can change task dispositions; `coherence --resolve` creates repair work,
 so it is a separate decision from reading Coherence findings.
 
@@ -258,7 +258,7 @@ Capture before-integration state. Open `cmd_integrate` and `agents/integrator.md
 the command so learners see the agent's authority and the merge target. The merge agent
 has write-capable tools. It may resolve a conflict; the engineer must inspect that diff.
 
-Run the workbook's recorded Integrate command. The workbook sets `MAIN_BRANCH`, so
+Run the lab guide's recorded Integrate command. The lab guide sets `MAIN_BRANCH`, so
 Integrate does not ask about the branch. Before merging, it stops if tracked files have
 uncommitted changes. If no blocking check fails, it asks whether to run observation extraction.
 Choose `n` to defer extraction to the required Learn stage that immediately follows.
@@ -294,7 +294,7 @@ notices such a gap should block the affected scope.
 
 If Run's dependency-merge conflict message suggests `speed integrate --continue`,
 inspect the parser: that option is unsupported here. Distinguish a real Git merge in
-progress from a completed partial integration. Use the recovery guide's evidence-first
+progress from a completed partial integration. Use lab-guide stage 3's evidence-first
 decision; do not run a destructive reset or guess a generic continuation command.
 
 ### Checkpoint
@@ -303,7 +303,7 @@ Each pair identifies the candidate SHA, actual included work, target checks and 
 unexamined behavior. The learner can explain why a file/symbol contract pass and a
 traceability ratio answer narrower questions than feature acceptance.
 
-## 5 Learn from execution evidence: 20 minutes
+## 5 Learn: 20 minutes
 
 ### Say
 
@@ -314,7 +314,7 @@ traceability ratio answer narrower questions than feature acceptance.
 
 ### Do
 
-Follow the [Learn exercise](../learner/learn.md): three minutes to predict/preserve,
+Follow the [Learn exercise](../learner/lab-action-guide.md#5-learn-20-min): three minutes to predict/preserve,
 five to extract/inspect, six to synthesize/trace and six to decide. The commands target
 `adaptive-auth` in the same admitted continuation or its labeled recorded checkpoint.
 
@@ -340,7 +340,7 @@ an owner-approved requirement have different authority. A review note is not a c
 that automatically prevents memory injection. Unsafe active advice blocks subsequent
 agents until an accountable correction is made and checked.
 
-## 6 Assess unfamiliar work independently: 20 minutes
+## 6 Individual transfer: 20 minutes
 
 Give each learner one input packet from the assessment guide, without its facilitator
 key. Use 12 minutes for diagnosis, five for the response and three for the written counterfactual. They may consult the commands and source reference but must
@@ -353,7 +353,7 @@ Do not tell the learner the defect before scoring their reasoning.
 The live practical submission demonstrates command/evidence performance. A constructed
 packet demonstrates unfamiliar diagnosis. Record the basis of each result accurately.
 
-## 7 Hand off to 301.3E: 10 minutes
+## 7 Handoff: 10 minutes
 
 ### Say
 
@@ -377,3 +377,10 @@ promotion.
 Ask: “What changed your confidence, what did the tooling leave unanswered, and what
 would the next reviewer need to check independently?” Retain answers with the rubric
 and use actual delivery time and support burden to revise the next course run.
+
+## Close: inside stage 7
+
+### Say
+
+> One question to take back to your own work: which agent output in your project do you
+> accept without reading what it was given?

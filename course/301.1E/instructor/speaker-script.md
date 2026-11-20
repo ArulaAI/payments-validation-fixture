@@ -1,42 +1,6 @@
-# Course 301-1E speaker script
+# 301.1E speaker script
 
-## Course map
-
-Course 301-1E takes the adaptive authorization feature from its existing behavior to
-a reviewed technical specification and, when the gates and tooling support its scope,
-a verified implementation plan. This script covers the full teaching sequence. Define
-and Draft are its center: the engineer uses the supplied PRDs, design and architecture
-to investigate decisions and write the tech specs. The table lists the commands before
-the walkthroughs explain when to use them.
-
-| Step | Command or screen | Why we use it | What it produces |
-|---|---|---|---|
-| Orient | `npm test`; read `src/payments/gateway.ts` and `src/risk/rules.ts` | Establish how authorization behaves before the feature changes it | A baseline test result and a shared picture of the existing behavior |
-| Validate | `speed validate specs/` | Compare the provided specifications and investigate disagreements | A saved report of findings, plus the command's acceptance or rejection of its response |
-| Dashboard setup (optional) | `speed dashboard status`; `speed dashboard start` if needed | Open an additional workspace for reviewing specification sections | A running dashboard; reuse an existing service when available |
-| Define | IDE and harness TUI; `$author-tech-spec adaptive-auth` in Codex or `/author-tech-spec adaptive-auth` in Claude Code | Review the inputs, investigate consequential questions and record decisions with their owners | An evolving questionnaire, accepted decisions and unresolved owner requests |
-| Draft | The same authoring session, editing `specs/tech/adaptive-auth/` | Turn accepted decisions into reviewed contracts, states and acceptance criteria under SPEED's RFC headings | Numbered tech specs and a saved coverage review |
-| Audit | `speed audit specs/tech/adaptive-auth/1-high-value-traveller.md`, then the equivalent command for `2-card-testing.md` | Check each RFC's structure, substance, consistency and size | Two reports and a reviewed list of findings; Audit takes one spec file per run |
-| Plan | `speed plan --feature adaptive-auth` | Build one plan from every adaptive-auth document, and inspect its gates | Task records, dependencies, a contract when generated, and planning reports |
-| Verify | `speed verify --feature adaptive-auth` | Check the generated plan against the specifications | Verifier findings, any task-record repairs, and decisions that still need an owner |
-| Handoff | Review the specs, plan and remaining decisions | Give the Execute course a concrete starting point | The checked plan, tech files and open decisions with their owners |
-
-The script uses the pinned SPEED build, commit `a8bde62` (see
-[SPEED version](../../README.md#speed-version)). Audit and Plan take their scope
-differently there. `speed audit` takes one spec file, so each RFC is audited on its own;
-`speed audit --feature adaptive-auth` stops with a usage error. `speed plan --feature
-adaptive-auth`, with no file, plans the whole feature: both PRDs, the feature
-architecture, both designs and both RFCs, with `specs/architecture/overview.md` as shared
-constraints. Verify then checks the plan against the same document list. The dashboard's
-tabs for every spec file and role switching are still open in
-[SPEED requirements for 301.1E](speed-requirements.md). The guided authoring route below
-uses the IDE and native harness TUI and requires no dashboard or hooks. Verify needs an
-existing task plan for the selected feature.
-
-Supporting inspection commands such as `git`, `jq` and `command -v` appear beside
-the evidence they help explain in each walkthrough.
-
-## Presenter preparation and evidence
+## Presenter setup
 
 Use this script as the presenter guide. Learners work from `specs/`, the implementation
 and the skill's input manifest. Facilitator notes and seeded-defect answer keys are not
@@ -86,11 +50,47 @@ Use normal interactive shell commands with the exit capture immediately after th
 The command's printed report, the process exit and the engineer's judgment are separate
 pieces of evidence. Avoid a pipeline when capturing the command's exit code.
 
-Allow time for investigation and agent calls. The Validate timings below are relative
-to that walkthrough. Budget the largest block for Define and Draft; its question count
-depends on the inputs and answers. Rehearse before committing to a fixed course duration.
+Each stage heading gives its class slot; agent calls run inside the slot. Budget the largest
+block for Define and Draft; its question count depends on the inputs and answers. The
+course slots were run once (see [rehearsal.md](rehearsal.md)); confirm them with a cohort.
 
-## Orient: establish the starting point
+### Course map
+
+Course 301-1E takes the adaptive authorization feature from its existing behavior to
+a reviewed technical specification and, when the gates and tooling support its scope,
+a verified implementation plan. This script covers the full teaching sequence. Define
+and Draft are its center: the engineer uses the supplied PRDs, design and architecture
+to investigate decisions and write the tech specs. The table lists the commands before
+the walkthroughs explain when to use them.
+
+| Step | Command or screen | Why we use it | What it produces |
+|---|---|---|---|
+| Orient | `npm test`; read `src/payments/gateway.ts` and `src/risk/rules.ts` | Establish how authorization behaves before the feature changes it | A baseline test result and a shared picture of the existing behavior |
+| Validate | `speed validate specs/` | Compare the provided specifications and investigate disagreements | A saved report of findings, plus the command's acceptance or rejection of its response |
+| Dashboard setup (optional) | `speed dashboard status`; `speed dashboard start` if needed | Open an additional workspace for reviewing specification sections | A running dashboard; reuse an existing service when available |
+| Define | IDE and harness TUI; `$author-tech-spec adaptive-auth` in Codex or `/author-tech-spec adaptive-auth` in Claude Code | Review the inputs, investigate consequential questions and record decisions with their owners | An evolving questionnaire, accepted decisions and unresolved owner requests |
+| Draft | The same authoring session, editing `specs/tech/adaptive-auth/` | Turn accepted decisions into reviewed contracts, states and acceptance criteria under SPEED's RFC headings | Numbered tech specs and a saved coverage review |
+| Audit | `speed audit specs/tech/adaptive-auth/1-high-value-traveller.md`, then the equivalent command for `2-card-testing.md` | Check each RFC's structure, substance, consistency and size | Two reports and a reviewed list of findings; Audit takes one spec file per run |
+| Plan | `speed plan --feature adaptive-auth` | Build one plan from every adaptive-auth document, and inspect its gates | Task records, dependencies, a contract when generated, and planning reports |
+| Verify | `speed verify --feature adaptive-auth` | Check the generated plan against the specifications | Verifier findings, any task-record repairs, and decisions that still need an owner |
+| Handoff | Review the specs, plan and remaining decisions | Give the Execute course a concrete starting point | The checked plan, tech files and open decisions with their owners |
+
+The script uses the pinned SPEED build, commit `a8bde62` (see
+[SPEED version](../../README.md#speed-version)). Audit and Plan take their scope
+differently there. `speed audit` takes one spec file, so each RFC is audited on its own;
+`speed audit --feature adaptive-auth` stops with a usage error. `speed plan --feature
+adaptive-auth`, with no file, plans the whole feature: both PRDs, the feature
+architecture, both designs and both RFCs, with `specs/architecture/overview.md` as shared
+constraints. Verify then checks the plan against the same document list. The dashboard's
+tabs for every spec file and role switching are still open in
+[SPEED requirements for 301.1E](../learner/speed-reference.md). The guided authoring route below
+uses the IDE and native harness TUI and requires no dashboard or hooks. Verify needs an
+existing task plan for the selected feature.
+
+Supporting inspection commands such as `git`, `jq` and `command -v` appear beside
+the evidence they help explain in each walkthrough.
+
+## 1 Orient: 6 minutes
 
 ### Say
 
@@ -145,7 +145,7 @@ The learner should be able to identify both scenarios, the shared gateway, the e
 test evidence and the supplied documents. Carry any failed prerequisite as an explicit
 blocker. Then move to Validate's worked cross-document finding.
 
-## Validate (0 to 25 min)
+## 2 Validate: 12 minutes
 
 ### Three teaching goals
 
@@ -163,15 +163,15 @@ blocker. Then move to Validate's worked cross-document finding.
 
 | Minutes | What happens |
 |---|---|
-| 0 to 4 | Introduce both F2 scenarios, their shared boundaries and the checkout example |
-| 4 to 7 | Run Validate and establish which documents it receives |
-| 7 to 12 | Follow file collection into the Validator's instructions and provider call |
-| 12 to 16 | Follow the response into the saved report and JSON check |
-| 16 to 22 | Check the recorded checkout finding against the documents |
-| 22 to 25 | Carry the confirmed gap and both scenarios' open questions into Define |
+| 0 to 2 | Introduce both F2 scenarios, their shared boundaries and the checkout example |
+| 2 to 3 | Run Validate and establish which documents it receives |
+| 3 to 5 | Follow file collection into the Validator's instructions and provider call |
+| 5 to 7 | Follow the response into the saved report and JSON check |
+| 7 to 10 | Check the recorded checkout finding against the documents |
+| 10 to 12 | Carry the confirmed gap and both scenarios' open questions into Define |
 
-Agent waiting time is additional. Keep the source walkthrough available while the call
-runs. This is a presenter-led worked example; it introduces no learner quiz or new
+The Validate call takes about 3 minutes and runs inside the slot. Keep the source walkthrough
+available while it runs. This is a presenter-led worked example; it introduces no learner quiz or new
 group exercise.
 
 ### Say
@@ -657,15 +657,15 @@ proposals with the upstream questions and establish which owners have made a dec
   locations. This draft was checked against source and preserved evidence; no fresh
   agent invocation or spoken rehearsal was performed while preparing it.
 
-## Optional dashboard setup
+### Optional dashboard setup
 
-### Say
+#### Say
 
 > The IDE and native harness are sufficient for this authoring workflow. The dashboard
 > is an optional additional view. Use it when it helps inspect the available records.
 > The planned multi-file Define experience needs its own implementation and rehearsal.
 
-### Do
+#### Do
 
 ```sh
 speed dashboard status
@@ -684,7 +684,7 @@ record the limitation and continue with the IDE and TUI. Do not restart someone 
 service. A dashboard commitment or automatic ratification is a separate record from
 the engineer's RFC review and from independent approval by Product, Design, Risk or Legal.
 
-## Define and Draft: guided RFC authoring
+## 3 Define and Draft: 33 minutes
 
 ### Three teaching goals
 
@@ -1086,7 +1086,7 @@ inspect an incomplete draft; that does not make the draft ready for Plan.
   the resulting evidence and check that existing IDE edits survive. This script
   describes that rehearsal; it does not establish that it has passed.
 
-## Audit: check the RFCs and investigate findings
+## 4 Audit: 13 minutes
 
 ### Three teaching goals
 
@@ -1244,7 +1244,7 @@ Proceed to Plan only for a scope whose blocking decisions are resolved. Warnings
 an explicit disposition. If a blocker remains, demonstrate the Plan source walkthrough
 and blocked handoff below; do not manufacture an approval to complete the exercise.
 
-## Plan: inspect how specifications become tasks
+## 5 Plan: 15 minutes
 
 ### Three teaching goals
 
@@ -1435,7 +1435,7 @@ all skipped checks, warnings, unresolved assumptions and uncovered feature scope
 If Plan failed, retain its evidence and owner request; do not Verify an old task set as
 though it were the output of the failed run.
 
-## Verify: check meaning and review task repairs
+## 6 Verify: 10 minutes
 
 ### Three teaching goals
 
@@ -1561,7 +1561,7 @@ Retain the final parsed result, actual exit code, input scope, before/after task
 repair history and unresolved owners. A pass here checks a plan; no feature code has
 been implemented or accepted through this course workflow.
 
-## Handoff: make the next course's starting point explicit
+## 7 Handoff: 10 minutes
 
 ### Say
 
@@ -1638,6 +1638,17 @@ evidence folder. Use this outline and fill it with observed values:
 Course 301-1E stops at this handoff. `speed run` belongs to Execute and is not run as
 part of the speaker walkthrough.
 
+## Close: 5 minutes
+
+### Say
+
+> One question to take back to your own work: which decision in your project has no
+> named owner?
+
+### Do
+
+Release one assessment packet per learner; they complete it after class.
+
 ## Feature-wide course readiness and recovery
 
 ### Before relying on the whole-feature commands
@@ -1645,8 +1656,9 @@ part of the speaker walkthrough.
 The script's complete teaching sequence is available above. The pinned build plans and
 verifies the whole feature with `--feature`. Audit still takes one file, and Define's
 per-file tabs and role switching are still open in
-[course requirements](speed-requirements.md). Nothing in this script has been rehearsed
-end to end against the pinned build. Rehearse it and keep evidence that establishes:
+[course requirements](../learner/speed-reference.md). The course has been run once end to end against the pinned build, with Codex as SPEED's
+provider (see [rehearsal.md](rehearsal.md)). Rehearse it with Claude Code and keep evidence
+that establishes:
 
 1. Feature selection resolves both RFCs, both PRDs, both designs, architecture and
    product vision with recorded revisions and dependencies.
@@ -1693,4 +1705,4 @@ the resolved installation; check its revision before relying on implementation d
 | Audit | Current drafts and linked sources; preserved `audit-1791684994.json` | `lib/cmd/audit.sh`, `cmd_audit`, `agents/audit.md` |
 | Plan | Product overview, every adaptive-auth document, shared platform architecture; preserved Guardian rejection | `lib/cmd/plan.sh`, `cmd_plan`, `lib/shared.sh`, `lib/features.sh`, `lib/context/`, `lib/decomposition_gate.py`, `agents/product-guardian.md`, `agents/architect-skeleton.md`, `agents/architect-enrich.md`, `agents/architect.md`, `agents/coverage-verifier.md` |
 | Verify | Saved `spec_documents`, task JSON, contract and cross-cutting data | `lib/cmd/verify.sh`, `cmd_verify`, `agents/plan-verifier.md`, inline Fix Agent prompt |
-| Handoff | Reviewed evidence index, RFC coverage and owner decisions | [Course SPEED requirements](speed-requirements.md) |
+| Handoff | Reviewed evidence index, RFC coverage and owner decisions | [Course SPEED requirements](../learner/speed-reference.md) |
