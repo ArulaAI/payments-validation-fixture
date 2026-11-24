@@ -3,11 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "bin": {
+    "workbench": "bin/workbench"
+  },
   "engines": {
     "node": ">=22"
   },
   "scripts": {
-    "test": "node --test \"test/**/*.test.ts\""
+    "test": "node --test \"test/**/*.test.ts\"",
+    "score": "node workbench/score.ts",
+    "verify": "node workbench/verify.ts",
+    "workbench:doctor": "node workbench/doctor.ts",
+    "diff": "node workbench/diff.ts",
+    "sync-contract": "node workbench/sync-contract.ts"
   },
   "optionalDevDependencies": {
     "typescript": "^5.9.3"
