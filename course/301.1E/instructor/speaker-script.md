@@ -631,7 +631,7 @@ proposals with the upstream questions and establish which owners have made a dec
   promise that `--feature adaptive-auth` filters this directory collection.
 - **Source evidence:** SPEED source lines from the pinned build, commit `a8bde62`;
   fixture lines from fixture HEAD `69af0a2` plus its working tree on 11 October 2026.
-  The facilitator gap map contains older descriptions of the architecture; use the
+  The facilitator gap map marks the gaps the current specs have resolved; use the
   current specs for the worked example.
 - **Historical evidence:** the recorded provider result matches `validation.log`.
   Its nine critical gaps are claims from that run, not a guaranteed result of a fresh

@@ -202,9 +202,10 @@ sizing. Sizing is always a warning, never a failure.
 **Produces:** one audit report per tech spec file. Upstream gaps go back to Define.
 
 The room leaves with: shared intuition for what the audit can and cannot see. It finds
-the TODO in a design and the success criterion with no number. It does not find that the
-architecture's scoring service is stateless while card testing needs memory across
-merchants, because it is a model reading documents, not a check against the code.
+the success criterion with no number and the vague acceptance criterion. It does not find
+that F2.2 never defines "one source" while the 3 October attack in the fixture rotated IP
+country on every attempt, because it is a model reading documents, not a check against
+the code.
 Passing the audit does not mean the requirements are right.
 
 ### 05 Plan (85 to 105 min)
